@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>403</width>
-    <height>304</height>
+    <width>433</width>
+    <height>254</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,10 +19,17 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>403</width>
+     <width>433</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuQDroneShow">
+    <property name="title">
+     <string>Fichier</string>
+    </property>
+    <addaction name="actionNouveau"/>
+   </widget>
+   <addaction name="menuQDroneShow"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -33,6 +40,11 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionNouveau">
+   <property name="text">
+    <string>nouveau</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
