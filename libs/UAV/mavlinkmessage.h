@@ -29,6 +29,8 @@
 #ifndef MAVLINKMESSAGE_H
 #define MAVLINKMESSAGE_H
 
+#include <tuple>
+
 /**
  * @brief The MAVLinkMessage class represents one MAVLink message.
  *        It is the base class for other types of MAVLink messages
@@ -38,34 +40,21 @@ class MAVLinkMessage
 public:
   MAVLinkMessage();
 
-
+  std::tuple<int,char[]> toByteArray() const = 0;
 
 private:
-  //convenience functions
-
-  /**
-   * @brief finalize the MAVLink message
-   *
-   * This function calcultes the checksum and sets length and aircraft id correctly
-   * It assumes that the message id and the payload are already correctly set.
-   */
-  uint16_t _finalize_message(uint8_t chan = MAVLINK_COMM_0);
-
-
-//member variables
-
   //constants
   const bool MAVLINK_CRC_EXTRA;
   const uint8_t MAVLINK_STX;
 
   //mavlink_message struct variables
-  const uint8_t m_header;
-  const uint8_t m_sequenceNumber;
-  const uint8_t m_systemID;
-  const uint8_t m_componenentID;
-  const uint8_t m_messageID;
-  uint8_t m_length;
-  uint16_t m_checksum;
+  const uint8_t m_header;         ///< 0xFE (MAVLink header)
+  const uint8_t m_length;         ///< message payload length
+  const uint8_t m_sequenceNumber; ///< sequence number. Rolls between 0x00 and 0xFF
+  const uint8_t m_systemID;       ///< system ID
+  const uint8_t m_componentID;    ///< component ID
+  const uint8_t m_messageID;      ///< message ID
+  uint16_t m_checksum;            ///< checksum for error detection
 
 };
 
