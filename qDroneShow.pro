@@ -4,7 +4,10 @@
 #
 #-------------------------------------------------
 
-QT       += core gui qml serialport
+QT       += core \
+            gui \
+            qml \
+            serialport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -38,7 +41,10 @@ SOURCES += \
     libs/QGC/UAS.cc \
     libs/QGC/UDPLink.cc \
     libs/UAV/uav.cpp \
-    libs/UAV/mavlinkmessage.cpp
+    libs/UAV/mavlinkmessage.cpp \
+    libs/UAV/link.cpp \
+    libs/UAV/mavlinkheartbeat.cpp \
+    libs/UAV/mavlinkcommand.cpp
 
 HEADERS  += include/mainwindow.h \
     libs/Vehicle/UASInterface.h \
@@ -342,6 +348,9 @@ HEADERS  += include/mainwindow.h \
     libs/QGC/UASInterface.h \
     libs/QGC/UDPLink.h \
     libs/UAV/uav.h \
-    libs/UAV/mavlinkmessage.h
+    libs/UAV/mavlinkmessage.h \
+    libs/UAV/link.h \
+    libs/UAV/mavlinkheartbeat.h \
+    libs/UAV/mavlinkcommand.h
 
 FORMS    += mainwindow.ui

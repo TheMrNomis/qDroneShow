@@ -17,6 +17,15 @@
  * along with qDroneShow. If not, see <http://www.gnu.org/licenses/>
  * ======================================================================*/
 
+/*=======================================================================
+ * This file is based on the MAVLink C library, which is licensed under
+ * the terms of the GNU Lesser General Public License (LGPL).
+ *
+ * See <https://github.com/mavlink/mavlink> for more information.
+ *
+ * Copyright (C) 2009-2014 Lorenz Meier <mail@qgroundcontrol.org>
+ * ======================================================================*/
+
 #include "mavlinkmessage.h"
 
 MAVLinkMessage::MAVLinkMessage()
@@ -24,3 +33,30 @@ MAVLinkMessage::MAVLinkMessage()
 
 }
 
+/**
+ * @brief finalize the MAVLink message
+ *
+ * This function calcultes the checksum and sets length and aircraft id correctly
+ * It assumes that the message id and the payload are already correctly set.
+ *
+ * @return
+ */
+uint16_t MAVLinkMessage::_finalize_message(uint8_t chan = MAVLINK_COMM_0)
+{
+  // This code part is the same for all messages;
+  msg->magic = MAVLINK_STX;
+  msg->len = length;
+  msg->sysid = system_id;
+  msg->compid = component_id;
+  // One sequence number per component
+  msg->seq = mavlink_get_channel_status(chan)->current_tx_seq;
+  mavlink_get_channel_status(chan)->current_tx_seq = mavlink_get_channel_status(chan)->current_tx_seq+1;
+  msg->checksum = crc_calculate(((const uint8_t*)(msg)) + 3, MAVLINK_CORE_HEADER_LEN);
+  crc_accumulate_buffer(&msg->checksum, _MAV_PAYLOAD(msg), msg->len);
+  if(MAVLINK_CRC_EXTRA)
+    crc_accumulate(crc_extra, &msg->checksum);
+  mavlink_ck_a(msg) = (uint8_t)(msg->checksum & 0xFF);
+  mavlink_ck_b(msg) = (uint8_t)(msg->checksum >> 8);
+
+  return length + MAVLINK_NUM_NON_PAYLOAD_BYTES;
+}

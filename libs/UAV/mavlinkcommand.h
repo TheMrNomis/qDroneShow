@@ -26,47 +26,16 @@
  * Copyright (C) 2009-2014 Lorenz Meier <mail@qgroundcontrol.org>
  * ======================================================================*/
 
-#ifndef MAVLINKMESSAGE_H
-#define MAVLINKMESSAGE_H
+#include "mavlinkmessage.h"
 
-/**
- * @brief The MAVLinkMessage class represents one MAVLink message.
- *        It is the base class for other types of MAVLink messages
- */
-class MAVLinkMessage
+#ifndef MAVLINKCOMMAND_H
+#define MAVLINKCOMMAND_H
+
+
+class MAVLinkCommand : public MAVLinkMessage
 {
 public:
-  MAVLinkMessage();
-
-
-
-private:
-  //convenience functions
-
-  /**
-   * @brief finalize the MAVLink message
-   *
-   * This function calcultes the checksum and sets length and aircraft id correctly
-   * It assumes that the message id and the payload are already correctly set.
-   */
-  uint16_t _finalize_message(uint8_t chan = MAVLINK_COMM_0);
-
-
-//member variables
-
-  //constants
-  const bool MAVLINK_CRC_EXTRA;
-  const uint8_t MAVLINK_STX;
-
-  //mavlink_message struct variables
-  const uint8_t m_header;
-  const uint8_t m_sequenceNumber;
-  const uint8_t m_systemID;
-  const uint8_t m_componenentID;
-  const uint8_t m_messageID;
-  uint8_t m_length;
-  uint16_t m_checksum;
-
+  MAVLinkCommand();
 };
 
-#endif // MAVLINKMESSAGE_H
+#endif // MAVLINKCOMMAND_H

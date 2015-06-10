@@ -63,6 +63,7 @@ public:
 signals:
 
 public slots:
+  void executeCommand(MAV_CMD command, int confirmation = 0, float param1 = 0.0f, float param2 = 0.0f, float param3 = 0.0f, float param4 = 0.0f, float param5 = 0.0f, float param6 = 0.0f, float param7 = 0.0f, int component = 0);
 
 private:
   bool m_isArmed;
