@@ -24,3 +24,9 @@ UAV::UAV(QObject *parent) : QObject(parent)
 
 }
 
+void UAV::execute(MAVLinkMessage what)
+{
+  for(auto i = links.cbegin(); i != links.cend(); i++)
+    (*i)->sendMessage(what);
+}
+
