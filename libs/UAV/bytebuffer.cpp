@@ -29,57 +29,57 @@ ByteBuffer::ByteBuffer(bool bytesSwap, bool alignedFields):
 
 void ByteBuffer::operator <<(uint8_t n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(int8_t n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(uint16_t n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(int16_t n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(uint32_t n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(int32_t n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(uint64_t n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(int64_t n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(char n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(float n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(double n)
 {
-  _push_back((const char*) n, sizeof(n));
+  _push_back((const char*)&n, sizeof(n));
 }
 
 void ByteBuffer::operator <<(ByteBuffer const& n)
@@ -107,23 +107,23 @@ void ByteBuffer::_push_back(const char* t, int length)
   }
 }
 
-char ByteBuffer::operator [](unsigned int i) const
+char const ByteBuffer::operator [](unsigned int i) const
 {
   return m_buffer[i];
 }
 
-char ByteBuffer::operator [](int i) const
+char const ByteBuffer::operator [](int i) const
 {
   return m_buffer[i];
 }
 
 //iterator functions
-ByteBuffer::const_iterator ByteBuffer::cbegin()
+ByteBuffer::const_iterator ByteBuffer::cbegin() const
 {
   return ByteBuffer::const_iterator(m_buffer.cbegin());
 }
 
-ByteBuffer::const_iterator ByteBuffer::cend()
+ByteBuffer::const_iterator ByteBuffer::cend() const
 {
   return ByteBuffer::const_iterator(m_buffer.cend());
 }
@@ -131,7 +131,7 @@ ByteBuffer::const_iterator ByteBuffer::cend()
 ByteBuffer::const_iterator& ByteBuffer::const_iterator::operator ++()
 {
   ++m_it;
-  return &this;
+  return *this;
 }
 
 ByteBuffer::const_iterator  ByteBuffer::const_iterator::operator ++(int)
@@ -144,7 +144,7 @@ ByteBuffer::const_iterator  ByteBuffer::const_iterator::operator ++(int)
 ByteBuffer::const_iterator& ByteBuffer::const_iterator::operator --()
 {
   --m_it;
-  return &this;
+  return *this;
 }
 
 ByteBuffer::const_iterator  ByteBuffer::const_iterator::operator --(int)
@@ -169,5 +169,13 @@ bool ByteBuffer::const_iterator::operator !=(ByteBuffer::const_iterator const& i
   return !operator ==(i);
 }
 
-ByteBuffer::const_iterator::const_iterator(std::vector<char>::const_iterator<char> it):m_it(it){}
-ByteBuffer::const_iterator::const_iterator(ByteBuffer::const_iterator const& it):m_it(it){}
+ByteBuffer::const_iterator::const_iterator(std::vector<char>::const_iterator it):m_it(it){}
+ByteBuffer::const_iterator::const_iterator(ByteBuffer::const_iterator const& it):m_it(it.m_it){}
+
+std::ostream& operator <<(std::ostream& out, ByteBuffer const& b)
+{
+  for(ByteBuffer::const_iterator it = b.cbegin(); it != b.cend(); ++it)
+    out << "[" << std::bitset<8>(*it) << "]";
+  return out;
+}
+

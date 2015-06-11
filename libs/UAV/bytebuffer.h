@@ -20,6 +20,9 @@
 #ifndef BYTEBUFFER_H
 #define BYTEBUFFER_H
 
+#include <bitset>
+#include <iostream>
+#include <cstdint>
 #include <vector>
 
 class ByteBuffer
@@ -45,7 +48,10 @@ public:
 
   class const_iterator
   {
+    friend class ByteBuffer;
   public:
+    const_iterator(std::vector<char>::const_iterator it);
+    const_iterator(ByteBuffer::const_iterator const& it);
     ByteBuffer::const_iterator& operator ++();
     ByteBuffer::const_iterator  operator ++(int);
     ByteBuffer::const_iterator& operator --();
@@ -54,19 +60,15 @@ public:
     bool operator ==(ByteBuffer::const_iterator const& i) const;
     bool operator !=(ByteBuffer::const_iterator const& i) const;
   private:
-    const_iterator(std::vector<char>::const_iterator<char> it);
-    const_iterator(ByteBuffer::const_iterator const& it);
-
-    std::vector<char>::const_iterator<char> m_it;
+    std::vector<char>::const_iterator m_it;
   };
 
-  ByteBuffer::const_iterator cbegin();
-  ByteBuffer::const_iterator cend();
+  ByteBuffer::const_iterator cbegin() const;
+  ByteBuffer::const_iterator cend() const;
 
 
 private:
   void _push_back(const char* t, int length);
-
 
   const bool m_MAVLINK_NEED_BYTE_SWAP;
   const bool m_MAVLINK_ALIGNED_FIELDS;
@@ -74,4 +76,5 @@ private:
   std::vector<char> m_buffer;
 };
 
+std::ostream& operator <<(std::ostream& out, ByteBuffer const& b);
 #endif // BYTEBUFFER_H
