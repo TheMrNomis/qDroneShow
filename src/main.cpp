@@ -18,10 +18,11 @@
  * ======================================================================*/
 
 #include <QApplication>
+#include <iostream>
 
-#include "QGC/UAS.h"
+#include "UAV/bytebuffer.h"
 
-#include "mainwindow.h"
+//#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +31,22 @@ int main(int argc, char *argv[])
 //    w.show();
 
 //    return a.exec();
+
+  bool MAVLINK_NEED_BYTE_SWAP = true;
+  ByteBuffer buf(MAVLINK_NEED_BYTE_SWAP);
+  uint64_t n(0xFFFEFDFCFBFAF9F8);
+  buf << n;
+
+  std::cout << "MAVLINK_NEED_BYTE_SWAP : " << MAVLINK_NEED_BYTE_SWAP << std::endl;
+  std::cout << "n = " << std::bitset<8*sizeof(n)>(n) << std::endl;
+
+  std::cout << "buf : " << buf << std::endl;
+
+  char* nb = (char*)&n;
+  std::cout << "char: ";
+  for(int i = 0; i < sizeof(n) ; ++i)
+    std::cout << "[" << std::bitset<8>(nb[i]) << "]";
+  std::cout << std::endl;
 
   return 0;
 }
