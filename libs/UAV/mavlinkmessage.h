@@ -29,7 +29,7 @@
 #ifndef MAVLINKMESSAGE_H
 #define MAVLINKMESSAGE_H
 
-#include <tuple>
+#include "bytebuffer.h"
 
 /**
  * @brief The MAVLinkMessage class represents one MAVLink message.
@@ -38,9 +38,15 @@
 class MAVLinkMessage
 {
 public:
-  MAVLinkMessage();
+  MAVLinkMessage(uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra = true, uint8_t stx = 254);
 
-  std::tuple<int,char[]> toByteArray() const = 0;
+  /**
+   * @brief transforms the MAVLinkMessage into a ByteBuffer
+   *
+   * The ByteBuffer that is generated can then be sent over a telemetry,
+   * or whatever link you have between the GCS and the MAV.
+   */
+  ByteBuffer toByteBuffer() const = 0;
 
 private:
   //constants
@@ -49,7 +55,7 @@ private:
 
   //mavlink_message struct variables
   const uint8_t m_header;         ///< 0xFE (MAVLink header)
-  const uint8_t m_length;         ///< message payload length
+  uint8_t m_length;         ///< message payload length
   const uint8_t m_sequenceNumber; ///< sequence number. Rolls between 0x00 and 0xFF
   const uint8_t m_systemID;       ///< system ID
   const uint8_t m_componentID;    ///< component ID

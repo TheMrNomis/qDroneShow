@@ -28,7 +28,15 @@
 
 #include "mavlinkmessage.h"
 
-MAVLinkMessage::MAVLinkMessage()
+MAVLinkMessage::MAVLinkMessage(uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra, uint8_t stx) :
+  MAVLINK_CRC_EXTRA(crc_extra),
+  MAVLINK_STX(stx),
+  m_header(0xFE),
+  m_length(0),
+  m_sequenceNumber(sequenceNumber),
+  m_systemID(systemID),
+  m_componentID(componentID),
+  m_messageID(messageID)
 {
 
 }
@@ -45,9 +53,9 @@ uint16_t MAVLinkMessage::_finalize_message(uint8_t chan = MAVLINK_COMM_0)
 {
   // This code part is the same for all messages;
   msg->magic = MAVLINK_STX;
-  msg->len = length;
-  msg->sysid = system_id;
-  msg->compid = component_id;
+  msg->len = m_length;
+  msg->sysid = m_systemID;
+  msg->compid = m_componentID;
   // One sequence number per component
   msg->seq = mavlink_get_channel_status(chan)->current_tx_seq;
   mavlink_get_channel_status(chan)->current_tx_seq = mavlink_get_channel_status(chan)->current_tx_seq+1;

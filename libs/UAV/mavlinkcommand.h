@@ -31,7 +31,6 @@
 #ifndef MAVLINKCOMMAND_H
 #define MAVLINKCOMMAND_H
 
-
 class MAVLinkCommand : public MAVLinkMessage
 {
 public:

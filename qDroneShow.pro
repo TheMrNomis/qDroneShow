@@ -44,7 +44,8 @@ SOURCES += \
     libs/UAV/mavlinkmessage.cpp \
     libs/UAV/link.cpp \
     libs/UAV/mavlinkheartbeat.cpp \
-    libs/UAV/mavlinkcommand.cpp
+    libs/UAV/mavlinkcommand.cpp \
+    libs/UAV/bytebuffer.cpp
 
 HEADERS  += include/mainwindow.h \
     libs/Vehicle/UASInterface.h \
@@ -351,6 +352,8 @@ HEADERS  += include/mainwindow.h \
     libs/UAV/mavlinkmessage.h \
     libs/UAV/link.h \
     libs/UAV/mavlinkheartbeat.h \
-    libs/UAV/mavlinkcommand.h
+    libs/UAV/mavlinkcommand.h \
+    libs/UAV/bytebuffer.h \
+    libs/UAV/mavlinkcmd.h
 
 FORMS    += mainwindow.ui
