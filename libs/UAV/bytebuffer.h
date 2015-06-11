@@ -38,8 +38,10 @@ public:
   void operator <<(char);
   void operator <<(float);
   void operator <<(double);
+  void operator <<(ByteBuffer const&);
 
   char const operator [](unsigned int) const;
+  char const operator [](int) const;
 
   class const_iterator
   {

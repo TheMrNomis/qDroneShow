@@ -82,6 +82,12 @@ void ByteBuffer::operator <<(double n)
   _push_back((const char*) n, sizeof(n));
 }
 
+void ByteBuffer::operator <<(ByteBuffer const& n)
+{
+  for(auto i = n.m_buffer.cbegin(); i != n.m_buffer.cend(); ++i)
+    m_buffer.push_back(*i);
+}
+
 void ByteBuffer::_push_back(const char* t, int length)
 {
   if(m_MAVLINK_NEED_BYTE_SWAP)
@@ -101,7 +107,15 @@ void ByteBuffer::_push_back(const char* t, int length)
   }
 }
 
+char ByteBuffer::operator [](unsigned int i) const
+{
+  return m_buffer[i];
+}
 
+char ByteBuffer::operator [](int i) const
+{
+  return m_buffer[i];
+}
 
 //iterator functions
 ByteBuffer::const_iterator ByteBuffer::cbegin()
