@@ -66,7 +66,7 @@ public:
    * @brief write a MAVLinkMessage to this link
    * @param msg the message to transmit
    */
-  void operator<<(MAVLinkMessage const& msg) const;
+  void operator<<(MAVLinkMessage const& msg);
 
 signals:
   /**
@@ -79,7 +79,7 @@ signals:
    *
    * @param data the new bytes
    */
-  void bytesReceived(LinkInterface* link, QByteArray data);
+  //void bytesReceived(LinkInterface* link, QByteArray data);
 
   /**
    * @brief This signal is emitted instantly when the link is connected
@@ -98,25 +98,22 @@ signals:
 
 public slots:
   /**
-   * @brief This method allows to write bytes to the interface.
-   *
-   * If the underlying communication is packet oriented,
-   * one write command equals a datagram. In case of serial
-   * communication arbitrary byte lengths can be written
-   *
-   * @param bytes The pointer to the byte array containing the data
-   * @param length The length of the data array
-   **/
-  virtual void writeBytes(const char *bytes, qint64 length) = 0;
-
-  /**
    * @brief Sends a MAVLinkMessage through this link
    * @param message the message to transmit
    */
-  virtual void sendMessage(MAVLinkMessage const& message) const;
+  virtual void sendMessage(MAVLinkMessage const& message);
 
 protected:
+  /**
+   * @brief This method allows to write bytes to the interface.
+   *
+   * @param bytes The buffer of bytes to be written on the interface
+   **/
+  virtual void _writeBytes(ByteBuffer bytes) = 0;
+
   bool m_isConnected;
+
+
 };
 
 #endif // LINK_H

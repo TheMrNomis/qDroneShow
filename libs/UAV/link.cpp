@@ -24,7 +24,12 @@ Link::Link(QObject *parent) : QObject(parent)
 
 }
 
-Link::operator<<(MAVLinkMessage const& msg) const
+void Link::operator<<(MAVLinkMessage const& msg)
 {
   sendMessage(msg);
+}
+
+void Link::sendMessage(MAVLinkMessage const& message)
+{
+  _writeBytes(message.toByteBuffer());
 }

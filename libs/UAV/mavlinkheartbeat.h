@@ -35,7 +35,8 @@
 class MAVLinkHeartbeat : public MAVLinkMessage
 {
 public:
-  MAVLinkHeartbeat();
+  MAVLinkHeartbeat(uint8_t systemID, uint8_t componentID, uint8_t type, uint8_t autopilot,
+                   uint8_t baseMode, uint32_t customMode, uint8_t systemStatus);
 };
 
 #endif // MAVLINKHEARTBEAT_H

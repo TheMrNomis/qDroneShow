@@ -20,8 +20,10 @@
 #ifndef UAV_H
 #define UAV_H
 
+#include <iostream>
 #include <QObject>
 
+#include "mavlinkcmd.h"
 #include "mavlinkmessage.h"
 #include "link.h"
 
@@ -34,7 +36,6 @@ class UAV : public QObject
     Q_OBJECT
 public:
   explicit UAV(QObject *parent = 0);
-  ~UAV();
 
   virtual double getLocalX() const;
   virtual double getLocalY() const;
@@ -64,7 +65,7 @@ public:
 signals:
 
 public slots:
-  void executeCommand(MAV_CMD command, int confirmation = 0, float param1 = 0.0f, float param2 = 0.0f, float param3 = 0.0f, float param4 = 0.0f, float param5 = 0.0f, float param6 = 0.0f, float param7 = 0.0f, int component = 0);
+  //void executeCommand(MAV_CMD command, int confirmation = 0, float param1 = 0.0f, float param2 = 0.0f, float param3 = 0.0f, float param4 = 0.0f, float param5 = 0.0f, float param6 = 0.0f, float param7 = 0.0f, int component = 0);
 
   /**
    * @brief get the UAV to execute the MAVLink order

@@ -24,6 +24,80 @@ UAV::UAV(QObject *parent) : QObject(parent)
 
 }
 
+double UAV::getLocalX() const
+{
+  //TODO
+  return 0;
+}
+double UAV::getLocalY() const
+{
+  //TODO
+  return 0;
+}
+double UAV::getLocalZ() const
+{
+  //TODO
+  return 0;
+}
+bool UAV::localPositionKnown() const
+{
+  //TODO
+  return false;
+}
+
+double UAV::getLatitude() const
+{
+  //TODO
+  return 0;
+}
+double UAV::getLongitude() const
+{
+  //TODO
+  return 0;
+}
+double UAV::getAltitudeAMSL() const
+{
+  //TODO
+  return 0;
+}
+double UAV::getAltitudeRelative() const
+{
+  //TODO
+  return 0;
+}
+bool UAV::globalPositionKnown() const
+{
+  //TODO
+  return 0;
+}
+
+double UAV::getRoll() const
+{
+  //TODO
+  return 0;
+}
+double UAV::getPitch() const
+{
+  //TODO
+  return 0;
+}
+double UAV::getYaw() const
+{
+  //TODO
+  return 0;
+}
+
+bool UAV::isArmed() const
+{
+  //TODO
+  return false;
+}
+
+//void UAV::executeCommand(MAV_CMD command, int confirmation = 0, float param1 = 0.0f, float param2 = 0.0f, float param3 = 0.0f, float param4 = 0.0f, float param5 = 0.0f, float param6 = 0.0f, float param7 = 0.0f, int component = 0)
+//{
+
+//}
+
 void UAV::execute(MAVLinkMessage what)
 {
   for(auto i = links.cbegin(); i != links.cend(); i++)

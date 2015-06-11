@@ -28,17 +28,23 @@
 
 #include "mavlinkmessage.h"
 
-MAVLinkMessage::MAVLinkMessage(uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra, uint8_t stx) :
+MAVLinkMessage::MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra, uint8_t stx) :
   MAVLINK_CRC_EXTRA(crc_extra),
   MAVLINK_STX(stx),
   m_header(0xFE),
-  m_length(0),
+  m_length(length),
   m_sequenceNumber(sequenceNumber),
   m_systemID(systemID),
   m_componentID(componentID),
-  m_messageID(messageID)
+  m_messageID(messageID),
+  m_payload()
 {
 
+}
+
+ByteBuffer MAVLinkMessage::toByteBuffer() const
+{
+  return ByteBuffer();
 }
 
 /**
@@ -49,22 +55,22 @@ MAVLinkMessage::MAVLinkMessage(uint8_t sequenceNumber, uint8_t systemID, uint8_t
  *
  * @return
  */
-uint16_t MAVLinkMessage::_finalize_message(uint8_t chan = MAVLINK_COMM_0)
-{
-  // This code part is the same for all messages;
-  msg->magic = MAVLINK_STX;
-  msg->len = m_length;
-  msg->sysid = m_systemID;
-  msg->compid = m_componentID;
-  // One sequence number per component
-  msg->seq = mavlink_get_channel_status(chan)->current_tx_seq;
-  mavlink_get_channel_status(chan)->current_tx_seq = mavlink_get_channel_status(chan)->current_tx_seq+1;
-  msg->checksum = crc_calculate(((const uint8_t*)(msg)) + 3, MAVLINK_CORE_HEADER_LEN);
-  crc_accumulate_buffer(&msg->checksum, _MAV_PAYLOAD(msg), msg->len);
-  if(MAVLINK_CRC_EXTRA)
-    crc_accumulate(crc_extra, &msg->checksum);
-  mavlink_ck_a(msg) = (uint8_t)(msg->checksum & 0xFF);
-  mavlink_ck_b(msg) = (uint8_t)(msg->checksum >> 8);
+//ByteBuffer MAVLinkMessage::_finalize_message(uint8_t chan = MAVLINK_COMM_0)
+//{
+//  // This code part is the same for all messages;
+//  msg->magic = MAVLINK_STX;
+//  msg->len = m_length;
+//  msg->sysid = m_systemID;
+//  msg->compid = m_componentID;
+//  // One sequence number per component
+//  msg->seq = mavlink_get_channel_status(chan)->current_tx_seq;
+//  mavlink_get_channel_status(chan)->current_tx_seq = mavlink_get_channel_status(chan)->current_tx_seq+1;
+//  msg->checksum = crc_calculate(((const uint8_t*)(msg)) + 3, MAVLINK_CORE_HEADER_LEN);
+//  crc_accumulate_buffer(&msg->checksum, _MAV_PAYLOAD(msg), msg->len);
+//  if(MAVLINK_CRC_EXTRA)
+//    crc_accumulate(crc_extra, &msg->checksum);
+//  mavlink_ck_a(msg) = (uint8_t)(msg->checksum & 0xFF);
+//  mavlink_ck_b(msg) = (uint8_t)(msg->checksum >> 8);
 
-  return length + MAVLINK_NUM_NON_PAYLOAD_BYTES;
-}
+//  return length + MAVLINK_NUM_NON_PAYLOAD_BYTES;
+//}

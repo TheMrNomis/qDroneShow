@@ -29,6 +29,7 @@
 #ifndef MAVLINKMESSAGE_H
 #define MAVLINKMESSAGE_H
 
+#include <iostream>
 #include "bytebuffer.h"
 
 /**
@@ -38,7 +39,7 @@
 class MAVLinkMessage
 {
 public:
-  MAVLinkMessage(uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra = true, uint8_t stx = 254);
+  MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra = true, uint8_t stx = 254);
 
   /**
    * @brief transforms the MAVLinkMessage into a ByteBuffer
@@ -46,20 +47,24 @@ public:
    * The ByteBuffer that is generated can then be sent over a telemetry,
    * or whatever link you have between the GCS and the MAV.
    */
-  ByteBuffer toByteBuffer() const = 0;
+  virtual ByteBuffer toByteBuffer() const;
 
 private:
+//methods
+  void _finalizeMessage();
+//member vars
   //constants
   const bool MAVLINK_CRC_EXTRA;
   const uint8_t MAVLINK_STX;
 
   //mavlink_message struct variables
   const uint8_t m_header;         ///< 0xFE (MAVLink header)
-  uint8_t m_length;         ///< message payload length
+  const uint8_t m_length;         ///< message payload length
   const uint8_t m_sequenceNumber; ///< sequence number. Rolls between 0x00 and 0xFF
   const uint8_t m_systemID;       ///< system ID
   const uint8_t m_componentID;    ///< component ID
   const uint8_t m_messageID;      ///< message ID
+  ByteBuffer m_payload;           ///< payload
   uint16_t m_checksum;            ///< checksum for error detection
 
 };

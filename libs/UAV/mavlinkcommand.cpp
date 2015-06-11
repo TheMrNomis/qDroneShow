@@ -28,8 +28,8 @@
 
 #include "mavlinkcommand.h"
 
-MAVLinkCommand::MAVLinkCommand()
-{
+//MAVLinkCommand::MAVLinkCommand()
+//{
 
-}
+//}
 

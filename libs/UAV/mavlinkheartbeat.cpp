@@ -28,7 +28,9 @@
 
 #include "mavlinkheartbeat.h"
 
-MAVLinkHeartbeat::MAVLinkHeartbeat()
+MAVLinkHeartbeat::MAVLinkHeartbeat(uint8_t systemID, uint8_t componentID, uint8_t type, uint8_t autopilot,
+                                   uint8_t baseMode, uint32_t customMode, uint8_t systemStatus):
+  MAVLinkMessage(9,0,systemID,componentID,50)
 {
 
 }
