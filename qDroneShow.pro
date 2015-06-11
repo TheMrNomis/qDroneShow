@@ -17,29 +17,8 @@ TEMPLATE = app
 INCLUDEPATH += include/ \
     libs/
 
-SOURCES += \
-    src/main.cpp \
+SOURCES += src/main.cpp \
     src/mainwindow.cpp \
-    libs/Vehicle/UAS.cc \
-    libs/Vehicle/MAVLinkProtocol.cc \
-    libs/Vehicle/QGCTemporaryFile.cc \
-    libs/Vehicle/LinkManager.cc \
-    libs/Vehicle/LinkConfiguration.cc \
-    libs/Vehicle/SerialLink.cc \
-    libs/Vehicle/TCPLink.cc \
-    libs/Vehicle/UDPLink.cc \
-    libs/Vehicle/QGCSingleton.cc \
-    libs/Vehicle/QGC.cc \
-    libs/QGC/LinkConfiguration.cc \
-    libs/QGC/LinkManager.cc \
-    libs/QGC/MAVLinkProtocol.cc \
-    libs/QGC/QGC.cc \
-    libs/QGC/QGCSingleton.cc \
-    libs/QGC/QGCTemporaryFile.cc \
-    libs/QGC/SerialLink.cc \
-    libs/QGC/TCPLink.cc \
-    libs/QGC/UAS.cc \
-    libs/QGC/UDPLink.cc \
     libs/UAV/uav.cpp \
     libs/UAV/mavlinkmessage.cpp \
     libs/UAV/link.cpp \
@@ -48,11 +27,6 @@ SOURCES += \
     libs/UAV/bytebuffer.cpp
 
 HEADERS  += include/mainwindow.h \
-    libs/Vehicle/UASInterface.h \
-    libs/Vehicle/UAS.h \
-    libs/Vehicle/MAVLinkProtocol.h \
-    libs/Vehicle/QGCMAVLink.h \
-    libs/Vehicle/LinkInterface.h \
     libs/MAVLink/ardupilotmega/ardupilotmega.h \
     libs/MAVLink/ardupilotmega/mavlink.h \
     libs/MAVLink/ardupilotmega/mavlink_msg_ahrs.h \
@@ -321,39 +295,12 @@ HEADERS  += include/mainwindow.h \
     libs/MAVLink/mavlink_helpers.h \
     libs/MAVLink/mavlink_types.h \
     libs/MAVLink/protocol.h \
-    libs/Vehicle/QGCTemporaryFile.h \
-    libs/Vehicle/LinkManager.h \
-    libs/Vehicle/LinkConfiguration.h \
-    libs/Vehicle/SerialInterface.h \
-    libs/Vehicle/SerialLink.h \
-    libs/Vehicle/TCPLink.h \
-    libs/Vehicle/UDPLink.h \
-    libs/Vehicle/QGCSingleton.h \
-    libs/Vehicle/ProtocolInterface.h \
-    libs/Vehicle/QGCConfig.h \
-    libs/Vehicle/QGC.h \
-    libs/QGC/LinkConfiguration.h \
-    libs/QGC/LinkInterface.h \
-    libs/QGC/LinkManager.h \
-    libs/QGC/MAVLinkProtocol.h \
-    libs/QGC/ProtocolInterface.h \
-    libs/QGC/QGC.h \
-    libs/QGC/QGCConfig.h \
-    libs/QGC/QGCMAVLink.h \
-    libs/QGC/QGCSingleton.h \
-    libs/QGC/QGCTemporaryFile.h \
-    libs/QGC/SerialInterface.h \
-    libs/QGC/SerialLink.h \
-    libs/QGC/TCPLink.h \
-    libs/QGC/UAS.h \
-    libs/QGC/UASInterface.h \
-    libs/QGC/UDPLink.h \
     libs/UAV/uav.h \
     libs/UAV/mavlinkmessage.h \
     libs/UAV/link.h \
     libs/UAV/mavlinkheartbeat.h \
     libs/UAV/mavlinkcommand.h \
-    libs/UAV/bytebuffer.h \
+    libs/UAV/bytebuffer.h #\
     libs/UAV/mavlinkcmd.h
 
 FORMS    += mainwindow.ui
