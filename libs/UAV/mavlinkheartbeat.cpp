@@ -28,10 +28,14 @@
 
 #include "mavlinkheartbeat.h"
 
-MAVLinkHeartbeat::MAVLinkHeartbeat(uint8_t systemID, uint8_t componentID, uint8_t type, uint8_t autopilot,
-                                   uint8_t baseMode, uint32_t customMode, uint8_t systemStatus):
-  MAVLinkMessage(9,0,systemID,componentID,50)
+MAVLinkHeartbeat::MAVLinkHeartbeat(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,uint8_t type, uint8_t autopilot,
+                 uint8_t baseMode, uint32_t customMode, uint8_t systemStatus):
+  MAVLinkMessage(9,sequenceNumber,systemID,componentID,0,true,0x32)
 {
-
+  m_payload << customMode;
+  m_payload << type;
+  m_payload << autopilot;
+  m_payload << baseMode;
+  m_payload << systemStatus;
+  m_payload << (uint8_t)3; //protocol version
 }
-

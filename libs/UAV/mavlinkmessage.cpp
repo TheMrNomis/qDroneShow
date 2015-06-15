@@ -28,9 +28,9 @@
 
 #include "mavlinkmessage.h"
 
-MAVLinkMessage::MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra, uint8_t stx) :
-  MAVLINK_CRC_EXTRA(crc_extra),
-  MAVLINK_STX(stx),
+MAVLinkMessage::MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra, uint8_t crc_extra_value) :
+  m_MAVLINK_CRC_EXTRA(crc_extra),
+  m_CRC_EXTRA(crc_extra_value),
   m_header(0xFE),
   m_length(length),
   m_sequenceNumber(sequenceNumber),
@@ -42,35 +42,87 @@ MAVLinkMessage::MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t s
 
 }
 
-ByteBuffer MAVLinkMessage::toByteBuffer() const
+MAVLinkMessage::MAVLinkMessage(ByteBuffer & buffer, bool crc_extra, uint8_t crc_extra_value):
+  m_MAVLINK_CRC_EXTRA(crc_extra),
+  m_CRC_EXTRA(crc_extra_value),
+  m_header(0),
+  m_length(0),
+  m_sequenceNumber(0),
+  m_systemID(),
+  m_componentID(0),
+  m_messageID(0),
+  m_payload()
 {
-  return ByteBuffer();
+  buffer >> m_header;
+  buffer >> m_length;
+  buffer >> m_sequenceNumber;
+  buffer >> m_systemID;
+  buffer >> m_componentID;
+  buffer >> m_messageID;
+  for(int i = 0; i < m_length; ++i)
+    buffer >> m_payload;
 }
 
-/**
- * @brief finalize the MAVLink message
- *
- * This function calcultes the checksum and sets length and aircraft id correctly
- * It assumes that the message id and the payload are already correctly set.
- *
- * @return
- */
-//ByteBuffer MAVLinkMessage::_finalize_message(uint8_t chan = MAVLINK_COMM_0)
-//{
-//  // This code part is the same for all messages;
-//  msg->magic = MAVLINK_STX;
-//  msg->len = m_length;
-//  msg->sysid = m_systemID;
-//  msg->compid = m_componentID;
-//  // One sequence number per component
-//  msg->seq = mavlink_get_channel_status(chan)->current_tx_seq;
-//  mavlink_get_channel_status(chan)->current_tx_seq = mavlink_get_channel_status(chan)->current_tx_seq+1;
-//  msg->checksum = crc_calculate(((const uint8_t*)(msg)) + 3, MAVLINK_CORE_HEADER_LEN);
-//  crc_accumulate_buffer(&msg->checksum, _MAV_PAYLOAD(msg), msg->len);
-//  if(MAVLINK_CRC_EXTRA)
-//    crc_accumulate(crc_extra, &msg->checksum);
-//  mavlink_ck_a(msg) = (uint8_t)(msg->checksum & 0xFF);
-//  mavlink_ck_b(msg) = (uint8_t)(msg->checksum >> 8);
+ByteBuffer MAVLinkMessage::toByteBuffer() const
+{
+  ByteBuffer buffer;
 
-//  return length + MAVLINK_NUM_NON_PAYLOAD_BYTES;
-//}
+  buffer << m_header;
+  buffer << m_length;
+  buffer << m_sequenceNumber;
+  buffer << m_systemID;
+  buffer << m_componentID;
+  buffer << m_messageID;
+  buffer << m_payload;
+  buffer << _calculateChecksum(buffer);
+
+  return buffer;
+}
+
+ByteBuffer MAVLinkMessage::_calculateChecksum(ByteBuffer const& buffer) const
+{
+  Checksum cs/*(buffer)*/;
+  ByteBuffer retBuffer;
+
+  for(int i = 1; i < 6; ++i)
+    cs.accumulate(buffer[i]);
+
+  cs.accumulate(m_payload);
+
+  if(m_MAVLINK_CRC_EXTRA)
+    cs.accumulate(m_CRC_EXTRA);
+
+  uint16_t checksum = (uint16_t)cs;
+
+  retBuffer << (uint8_t)(checksum & 0xFF);
+  retBuffer << (uint8_t)(checksum >> 8);
+
+  return retBuffer;
+}
+
+MAVLinkMessage::Checksum::Checksum():
+  m_X25_INIT_CRC(0xffff),
+  m_X25_VALIDATE_CRC(0xf0b8)
+{
+  m_crc = m_X25_INIT_CRC;
+}
+
+void MAVLinkMessage::Checksum::accumulate(uint8_t data)
+{
+  uint8_t tmp;
+  uint8_t tmp2 = (uint8_t)(m_crc &0xff);
+  tmp = data ^ tmp2;
+  tmp ^= (tmp<<4);
+  m_crc = (m_crc >>8) ^ (tmp<<8) ^ (tmp <<3) ^ (tmp>>4);
+}
+
+void MAVLinkMessage::Checksum::accumulate(ByteBuffer data)
+{
+  for(auto it = data.cbegin(); it != data.cend(); ++it)
+    accumulate((uint8_t)*it);
+}
+
+MAVLinkMessage::Checksum::operator uint16_t() const
+{
+  return m_crc;
+}
