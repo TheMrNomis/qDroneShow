@@ -48,7 +48,7 @@ public:
    *
    * @return True if the connection is established, false otherwise
    **/
-  virtual bool isConnected() const = 0;
+  virtual bool isConnected() const;
 
   /**
    * @brief connect this link
@@ -66,7 +66,7 @@ public:
    * @brief write a MAVLinkMessage to this link
    * @param msg the message to transmit
    */
-  void operator<<(MAVLinkMessage const& msg);
+  Link& operator<<(MAVLinkMessage const& msg);
 
 signals:
   /**
@@ -79,7 +79,7 @@ signals:
    *
    * @param data the new bytes
    */
-  //void bytesReceived(LinkInterface* link, QByteArray data);
+  void bytesReceived(ByteBuffer data);
 
   /**
    * @brief This signal is emitted instantly when the link is connected
@@ -91,10 +91,10 @@ signals:
    **/
   void disconnected();
 
-  /**
-   * @brief Communication error occured
-   **/
+  /** @brief Communication error occured */
   void communicationError(const QString& title, const QString& error);
+
+  void communicationUpdate(const QString& linkname, const QString& text);
 
 public slots:
   /**
@@ -102,6 +102,8 @@ public slots:
    * @param message the message to transmit
    */
   virtual void sendMessage(MAVLinkMessage const& message);
+
+  virtual ByteBuffer readBytes() = 0;
 
 protected:
   /**

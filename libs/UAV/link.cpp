@@ -24,9 +24,12 @@ Link::Link(QObject *parent) : QObject(parent)
 
 }
 
-void Link::operator<<(MAVLinkMessage const& msg)
+bool Link::isConnected() const {return m_isConnected;}
+
+Link& Link::operator<<(MAVLinkMessage const& msg)
 {
   sendMessage(msg);
+  return *this;
 }
 
 void Link::sendMessage(MAVLinkMessage const& message)
