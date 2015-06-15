@@ -58,6 +58,9 @@ public:
   char const operator [](unsigned int) const;
   char const operator [](int) const;
 
+  size_t size() const;
+  operator char*() const;
+
   class const_iterator
   {
     friend class ByteBuffer;

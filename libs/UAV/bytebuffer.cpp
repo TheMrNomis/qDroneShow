@@ -49,6 +49,18 @@ char const ByteBuffer::operator [](int i) const
   return m_buffer[i];
 }
 
+size_t ByteBuffer::size() const {return m_buffer.size();}
+ByteBuffer::operator char*() const
+{
+  char * buffer = new char[m_buffer.size()];
+
+  int i(0);
+  for(auto it = m_buffer.cbegin(); it != m_buffer.cend(); ++it)
+    buffer[i++] = *it;
+
+  return buffer;
+}
+
 //iterator functions
 ByteBuffer::const_iterator ByteBuffer::cbegin() const
 {
