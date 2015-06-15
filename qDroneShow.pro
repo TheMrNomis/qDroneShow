@@ -24,7 +24,9 @@ SOURCES += src/main.cpp \
     libs/UAV/link.cpp \
     libs/UAV/mavlinkheartbeat.cpp \
     libs/UAV/mavlinkcommand.cpp \
-    libs/UAV/bytebuffer.cpp
+    libs/UAV/bytebuffer.cpp \
+    formationwidget.cpp \
+    libs/UAV/udplink.cpp
 
 HEADERS  += include/mainwindow.h \
     libs/MAVLink/ardupilotmega/ardupilotmega.h \
@@ -300,7 +302,11 @@ HEADERS  += include/mainwindow.h \
     libs/UAV/link.h \
     libs/UAV/mavlinkheartbeat.h \
     libs/UAV/mavlinkcommand.h \
-    libs/UAV/bytebuffer.h #\
+    libs/UAV/bytebuffer.h \ #\
+    libs/UAV/ardupilotmega.h \
+    formationwidget.h \
+    libs/UAV/udplink.h
     libs/UAV/mavlinkcmd.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    formationwidget.ui
