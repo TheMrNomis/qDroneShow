@@ -27,84 +27,16 @@ ByteBuffer::ByteBuffer(bool bytesSwap, bool alignedFields):
 
 }
 
-void ByteBuffer::operator <<(uint8_t n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
-void ByteBuffer::operator <<(int8_t n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
-void ByteBuffer::operator <<(uint16_t n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
-void ByteBuffer::operator <<(int16_t n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
-void ByteBuffer::operator <<(uint32_t n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
-void ByteBuffer::operator <<(int32_t n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
-void ByteBuffer::operator <<(uint64_t n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
-void ByteBuffer::operator <<(int64_t n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
-void ByteBuffer::operator <<(char n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
-void ByteBuffer::operator <<(float n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
-void ByteBuffer::operator <<(double n)
-{
-  _push_back((const char*)&n, sizeof(n));
-}
-
 void ByteBuffer::operator <<(ByteBuffer const& n)
 {
   for(auto i = n.m_buffer.cbegin(); i != n.m_buffer.cend(); ++i)
     m_buffer.push_back(*i);
 }
 
-void ByteBuffer::_push_back(const char* t, int length)
+void ByteBuffer::operator >>(ByteBuffer &receiptBuffer)
 {
-  if(m_MAVLINK_NEED_BYTE_SWAP)
-  {
-    for(int i = length-1; i >= 0; i--)
-      m_buffer.push_back(t[i]);
-  }
-  else if(!m_MAVLINK_ALIGNED_FIELDS)
-  {
-    for(int i = 0; i < length; i++)
-      m_buffer.push_back(t[i]);
-  }
-  else
-  {
-    for(int i = 0; i < length; i++)
-      m_buffer.push_back(t[i]);
-  }
+  receiptBuffer << m_buffer.front();
+  m_buffer.pop_front();
 }
 
 char const ByteBuffer::operator [](unsigned int i) const
@@ -169,7 +101,7 @@ bool ByteBuffer::const_iterator::operator !=(ByteBuffer::const_iterator const& i
   return !operator ==(i);
 }
 
-ByteBuffer::const_iterator::const_iterator(std::vector<char>::const_iterator it):m_it(it){}
+ByteBuffer::const_iterator::const_iterator(std::deque<char>::const_iterator it):m_it(it){}
 ByteBuffer::const_iterator::const_iterator(ByteBuffer::const_iterator const& it):m_it(it.m_it){}
 
 std::ostream& operator <<(std::ostream& out, ByteBuffer const& b)
