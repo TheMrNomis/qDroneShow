@@ -27,10 +27,28 @@ ByteBuffer::ByteBuffer(bool bytesSwap, bool alignedFields):
 
 }
 
+ByteBuffer::ByteBuffer(ByteBuffer const& buffer, bool bytesSwap = false, bool alignedFields = true):
+  ByteBuffer(bytesSwap, alignedFields)
+{
+  load(buffer);
+}
+
+ByteBuffer::ByteBuffer(const char * data, size_t length, bool bytesSwap = false, bool alignedFields = true):
+  ByteBuffer(bytesSwap, alignedFields)
+{
+  for(unsigned int i = 0; i < length; ++i)
+    m_buffer.push_back(data[i]);
+}
+
+void ByteBuffer::operator =(ByteBuffer const& buffer)
+{
+  m_buffer.clear();
+  load(buffer);
+}
+
 void ByteBuffer::operator <<(ByteBuffer const& n)
 {
-  for(auto i = n.m_buffer.cbegin(); i != n.m_buffer.cend(); ++i)
-    m_buffer.push_back(*i);
+  load(n);
 }
 
 void ByteBuffer::operator >>(ByteBuffer &receiptBuffer)
@@ -59,6 +77,12 @@ ByteBuffer::operator char*() const
     buffer[i++] = *it;
 
   return buffer;
+}
+
+void ByteBuffer::load(ByteBuffer const& buffer)
+{
+  for(auto it = buffer.m_buffer.cbegin(); it != buffer.m_buffer.cend(); ++it)
+    m_buffer.push_back(*it);
 }
 
 //iterator functions

@@ -34,6 +34,12 @@ public:
    */
   ByteBuffer(bool bytesSwap = false, bool alignedFields = true);
 
+  ByteBuffer(ByteBuffer const& buffer, bool bytesSwap = false, bool alignedFields = true);
+
+  ByteBuffer(const char * data, size_t length, bool bytesSwap = false, bool alignedFields = true);
+
+  void operator = (ByteBuffer const& buffer);
+
   /**
    * @brief add n to the buffer
    */
@@ -87,6 +93,8 @@ private:
   const bool m_MAVLINK_ALIGNED_FIELDS;
 
   std::deque<char> m_buffer;
+
+  void load(ByteBuffer const& buffer);
 };
 
 std::ostream& operator <<(std::ostream& out, ByteBuffer const& b);
