@@ -27,7 +27,14 @@ SOURCES += src/main.cpp \
     libs/UAV/bytebuffer.cpp \
     formationwidget.cpp \
     libs/UAV/udplink.cpp \
-    libs/UAV/UAS.cpp
+    libs/UAV/UAS.cpp \
+    libs/UAV/mavlink_msg_cmd_ack.cpp \
+    libs/MAVLink/common/mavlink_msg_cmd.cpp \
+    libs/MAVLink/common/mavlink_msg_cmd_ack.cpp \
+    libs/MAVLink/common/mavlink_msg_heartbeat.cpp \
+    libs/MAVLink/bytebuffer.cpp \
+    libs/MAVLink/mavlinkmessage.cpp \
+    libs/MAVLink/common/mavlink_msg_set_mode.cpp
 
 HEADERS  += include/mainwindow.h \
     libs/MAVLink/ardupilotmega/ardupilotmega.h \
@@ -309,7 +316,15 @@ HEADERS  += include/mainwindow.h \
     libs/UAV/udplink.h \
     libs/UAV/UAS.h \
     libs/UAV/UASInterface.h \
-    libs/UAV/enums.h
+    libs/UAV/enums.h \
+    libs/UAV/mavlink_msg_cmd_ack.h \
+    libs/MAVLink/common/mavlink_msg_cmd.h \
+    libs/MAVLink/common/mavlink_msg_cmd_ack.h \
+    libs/MAVLink/bytebuffer.h \
+    libs/MAVLink/mavlink_enums.h \
+    libs/MAVLink/mavlinkmessage.h \
+    libs/MAVLink/common/mavlink.h \
+    libs/MAVLink/common/mavlink_msg_set_mode.h
 
 FORMS    += mainwindow.ui \
     formationwidget.ui
