@@ -27,13 +27,13 @@ ByteBuffer::ByteBuffer(bool bytesSwap, bool alignedFields):
 
 }
 
-ByteBuffer::ByteBuffer(ByteBuffer const& buffer, bool bytesSwap = false, bool alignedFields = true):
+ByteBuffer::ByteBuffer(ByteBuffer const& buffer, bool bytesSwap, bool alignedFields):
   ByteBuffer(bytesSwap, alignedFields)
 {
   load(buffer);
 }
 
-ByteBuffer::ByteBuffer(const char * data, size_t length, bool bytesSwap = false, bool alignedFields = true):
+ByteBuffer::ByteBuffer(const char * data, size_t length, bool bytesSwap, bool alignedFields):
   ByteBuffer(bytesSwap, alignedFields)
 {
   for(unsigned int i = 0; i < length; ++i)
