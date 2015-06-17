@@ -103,7 +103,7 @@ public slots:
    */
   virtual void sendMessage(MAVLinkMessage const& message);
 
-  virtual ByteBuffer readBytes() = 0;
+  virtual void readBytes() = 0;
 
 protected:
   /**
