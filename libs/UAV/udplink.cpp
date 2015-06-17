@@ -1,7 +1,8 @@
 #include "udplink.h"
 
 UDPLink::UDPLink(QString ip, unsigned int port):
-  m_socket(this),
+  Link(),
+  m_socket(),
   m_connectState(false),
   m_ip(ip),
   m_port(port)
@@ -9,9 +10,22 @@ UDPLink::UDPLink(QString ip, unsigned int port):
 
 }
 
-virtual void UDPLink::_writeBytes(ByteBuffer bytes)
+bool UDPLink::connect()
 {
+  _hardwareConnect();
+  return false;
+}
 
+bool UDPLink::disconnect()
+{
+  return false;
+}
+
+void UDPLink::_writeBytes(ByteBuffer bytes)
+{
+  char* data = (char *)bytes;
+  size_t length = bytes.size();
+  m_socket->writeDatagram(data, length, m_ip, (quint16)m_port);
 }
 
 bool UDPLink::_hardwareConnect()
@@ -26,7 +40,7 @@ bool UDPLink::_hardwareConnect()
   } else {
       emit communicationError("UDP Link Error", "Error binding UDP port");
   }
-  return _connectState;
+  return m_connectState;
 }
 
 void UDPLink::_restartConnection()
@@ -34,19 +48,19 @@ void UDPLink::_restartConnection()
 
 }
 
-ByteBuffer UDPLink::readBytes()
+void UDPLink::readBytes()
 {
   //TODO
-  while (_socket->hasPendingDatagrams())
+  while (m_socket->hasPendingDatagrams())
   {
       QByteArray datagram;
-      datagram.resize(_socket->pendingDatagramSize());
+      datagram.resize(m_socket->pendingDatagramSize());
 
       QHostAddress sender;
       quint16 senderPort;
-      _socket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
+      m_socket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
 
-      // FIXME TODO Check if this method is better than retrieving the data by individual processes
-      emit bytesReceived(this, datagram);
+      ByteBuffer buffer(datagram.data(), datagram.size());
+      emit bytesReceived(buffer);
   }
 }

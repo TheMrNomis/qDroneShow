@@ -3,21 +3,19 @@
 
 #include <QString>
 #include <QUdpSocket>
+#include <QNetworkProxy>
+#include "link.h"
 
 class UDPLink : public Link
 {
 public:
   UDPLink(QString ip, unsigned int port);
 
-  virtual bool isConnected() const;
   virtual bool connect();
   virtual bool disconnect();
 
-signals:
-  //void bytesReceived(LinkInterface* link, QByteArray data);
-  void connected();
-  void disconnected();
-  void communicationError(const QString& title, const QString& error);
+public slots:
+  virtual void readBytes();
 
 private:
   virtual void _writeBytes(ByteBuffer bytes);
