@@ -26,16 +26,28 @@
  * Copyright (C) 2009-2014 Lorenz Meier <mail@qgroundcontrol.org>
  * ======================================================================*/
 
-#include "mavlinkheartbeat.h"
+#include "../mavlinkmessage.h"
 
-MAVLinkHeartbeat::MAVLinkHeartbeat(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,uint8_t type, uint8_t autopilot,
-                 uint8_t baseMode, uint32_t customMode, uint8_t systemStatus):
-  MAVLinkMessage(9,sequenceNumber,systemID,componentID,0,true,0x32)
+#ifndef MAVLINKHEARTBEAT_H
+#define MAVLINKHEARTBEAT_H
+
+
+class MAVLink_msg_heartbeat : public MAVLinkMessage
 {
-  m_payload << customMode;
-  m_payload << type;
-  m_payload << autopilot;
-  m_payload << baseMode;
-  m_payload << systemStatus;
-  m_payload << (uint8_t)3; //protocol version
-}
+public:
+  /**
+   * @brief creates a MAVLinkHeartbeat
+   * @param systemID The identifier of the receiving system
+   * @param componentID The identifier of the component on the receiving system
+   * @param sequenceNumber The number of the message in the sequence (0 -> 254)
+   * @param type Type of the MAV (quadrotor, helicopter, etc., up to 15 types, defined in MAV_TYPE ENUM)
+   * @param autopilot Autopilot type / class. defined in MAV_AUTOPILOT ENUM
+   * @param baseMode System mode bitfield, see MAV_MODE_FLAG ENUM
+   * @param customMode A bitfield for use for autopilot-specific flags.
+   * @param systemStatus System status flag, see MAV_STATE ENUM
+   */
+  MAVLink_msg_heartbeat(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,uint8_t type, uint8_t autopilot,
+                   uint8_t baseMode, uint32_t customMode, uint8_t systemStatus);
+};
+
+#endif // MAVLINKHEARTBEAT_H

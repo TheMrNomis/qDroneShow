@@ -26,28 +26,20 @@
  * Copyright (C) 2009-2014 Lorenz Meier <mail@qgroundcontrol.org>
  * ======================================================================*/
 
-#include "mavlinkmessage.h"
+#include "../mavlinkmessage.h"
 
-#ifndef MAVLINKHEARTBEAT_H
-#define MAVLINKHEARTBEAT_H
+#ifndef MAVLINK_MSG_CMD_H
+#define MAVLINK_MSG_CMD_H
 
-
-class MAVLinkHeartbeat : public MAVLinkMessage
+class MAVLink_msg_cmd : public MAVLinkMessage
 {
 public:
-  /**
-   * @brief creates a MAVLinkHeartbeat
-   * @param systemID The identifier of the receiving system
-   * @param componentID The identifier of the component on the receiving system
-   * @param sequenceNumber The number of the message in the sequence (0 -> 254)
-   * @param type Type of the MAV (quadrotor, helicopter, etc., up to 15 types, defined in MAV_TYPE ENUM)
-   * @param autopilot Autopilot type / class. defined in MAV_AUTOPILOT ENUM
-   * @param baseMode System mode bitfield, see MAV_MODE_FLAG ENUM
-   * @param customMode A bitfield for use for autopilot-specific flags.
-   * @param systemStatus System status flag, see MAV_STATE ENUM
-   */
-  MAVLinkHeartbeat(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,uint8_t type, uint8_t autopilot,
-                   uint8_t baseMode, uint32_t customMode, uint8_t systemStatus);
+  MAVLink_msg_cmd(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,
+                 uint8_t target_system, uint8_t target_component,
+                 uint16_t command, uint8_t confirmation,
+                 float param1, float param2, float param3,
+                 float param4, float param5, float param6,
+                 float param7);
 };
 
-#endif // MAVLINKHEARTBEAT_H
+#endif // MAVLINK_MSG_CMD_H

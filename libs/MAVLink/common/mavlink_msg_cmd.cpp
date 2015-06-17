@@ -26,20 +26,25 @@
  * Copyright (C) 2009-2014 Lorenz Meier <mail@qgroundcontrol.org>
  * ======================================================================*/
 
-#include "mavlinkmessage.h"
+#include "mavlink_msg_cmd.h"
 
-#ifndef MAVLINKCOMMAND_H
-#define MAVLINKCOMMAND_H
-
-class MAVLinkCommand : public MAVLinkMessage
+MAVLink_msg_cmd::MAVLink_msg_cmd(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,
+               uint8_t target_system, uint8_t target_component,
+               uint16_t command, uint8_t confirmation,
+               float param1, float param2, float param3,
+               float param4, float param5, float param6,
+               float param7):
+  MAVLinkMessage(33,sequenceNumber,systemID,componentID,76,true,152)
 {
-public:
-  MAVLinkCommand(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,
-                 uint8_t target_system, uint8_t target_component,
-                 uint16_t command, uint8_t confirmation,
-                 float param1, float param2, float param3,
-                 float param4, float param5, float param6,
-                 float param7);
-};
-
-#endif // MAVLINKCOMMAND_H
+  m_payload << param1;
+  m_payload << param2;
+  m_payload << param3;
+  m_payload << param4;
+  m_payload << param5;
+  m_payload << param6;
+  m_payload << param7;
+  m_payload << command;
+  m_payload << target_system;
+  m_payload << target_component;
+  m_payload << confirmation;
+}
