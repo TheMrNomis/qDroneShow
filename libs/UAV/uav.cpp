@@ -113,12 +113,11 @@ void UAV::addLink(Link* link)
   connect(link, SIGNAL(bytesReceived(ByteBuffer)), this, SLOT(receiveBytes(ByteBuffer)));
 }
 
-void launch();
-/** @brief Write this waypoint to the list of waypoints */
-//void UAV::setWaypoint(Waypoint* wp); FIXME tbd
-/** @brief Set currently active waypoint */
-//void UAV::setWaypointActive(int id); FIXME tbd
-/** @brief Order the robot to return home **/
+void UAV::launch()
+{
+  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, 0, MAV_CMD_NAV_TAKEOFF, 1));
+}
+
 void UAV::home()
 {
   //TODO
@@ -127,47 +126,49 @@ void UAV::home()
 /** @brief Order the robot to land **/
 void UAV::land()
 {
-  //TODO
+  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCSsystemID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_NAV_LAND,1,0,0,0,0,0,0,0));
 }
 
 /** @brief Order the robot to pair its receiver **/
 void UAV::pairRX(int rxType, int rxSubType)
 {
-  //TODO
+  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_START_RX_PAIR, 0, rxType, rxSubType, 0,0,0,0,0));
 }
 
 void UAV::halt()
 {
-  //TODO
+  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_OVERRIDE_GOTO, 1, MAV_GOTO_DO_HOLD, MAV_GOTO_HOLD_AT_CURRENT_POSITION,0,0,0,0,0));
 }
 
 void UAV::go()
 {
-  //TODO
+  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_OVERRIDE_GOTO, 1, MAV_GOTO_DO_CONTINUE, MAV_GOTO_HOLD_AT_CURRENT_POSITION,0,0,0,0,0));
 }
 
 /** @brief Stops the robot system. If it is an MAV, the robot starts the emergency landing procedure **/
 void UAV::emergencySTOP()
 {
   //TODO
+  halt();
 }
 
 /** @brief Kills the robot. All systems are immediately shut down (e.g. the main power line is cut). This might lead to a crash **/
 bool UAV::emergencyKILL()
 {
   //TODO
+  halt();
 }
 
 /** @brief Shut the system cleanly down. Will shut down any onboard computers **/
 void UAV::shutdown()
 {
-  //TODO
+  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN, 1,0,2,0,0,0,0,0));
 }
 
 /** @brief Set the target position for the robot to navigate to. */
 void UAV::setTargetPosition(float x, float y, float z, float yaw)
 {
-  //TODO
+  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_NAV_PATHPLANNING, 1,1,1,0,yaw,x,y,z));
 }
 
 //low battery alarm
@@ -184,36 +185,32 @@ void UAV::stopLowBattAlarm()
 //arming
 void UAV::armSystem()
 {
-  //TODO
+  setMode(m_baseMode | MAV_MODE_FLAG_SAFETY_ARMED, m_customMode);
 }
 
 void UAV::disarmSystem()
 {
-  //TODO
+  setMode(m_baseMode & ~(MAV_MODE_FLAG_SAFETY_ARMED), m_customMode);
 }
 
 void UAV::toggleArmedState()
 {
-  if(m_systemIsArmed)
-    disarmSystem();
-  else
-    armSystem();
+  setMode(m_baseMode ^ MAV_MODE_FLAG_SAFETY_ARMED, m_customMode);
 }
 
 //autonomy
 void UAV::goAutonomous()
 {
-  //TODO
+  setMode((m_baseMode & ~(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)) | (MAV_MODE_FLAG_AUTO_ENABLED | MAV_MODE_FLAG_STABILIZE_ENABLED | MAV_MODE_FLAG_GUIDED_ENABLED), 0);
 }
 
 void UAV::goManual()
-{
-  //TODO
+{setMode((m_baseMode & ~(MAV_MODE_FLAG_AUTO_ENABLED | MAV_MODE_FLAG_STABILIZE_ENABLED | MAV_MODE_FLAG_GUIDED_ENABLED))  | MAV_MODE_FLAG_MANUAL_INPUT_ENABLED, 0);
 }
 
 void UAV::toggleAutonomy()
 {
-  //TODO
+  setMode(m_baseMode ^ MAV_MODE_FLAG_AUTO_ENABLED ^ MAV_MODE_FLAG_MANUAL_INPUT_ENABLED ^ MAV_MODE_FLAG_GUIDED_ENABLED ^ MAV_MODE_FLAG_STABILIZE_ENABLED, 0);
 }
 
 //messages
@@ -230,18 +227,16 @@ void UAV::receiveMessage(ByteBuffer const& msg)
 
 void UAV::sendMessage(MAVLinkMessage const& msg)
 {
-  sendMessage(msg.toByteBuffer());
-}
-
-void UAV::sendMessage(ByteBuffer const& msg)
-{
-  //TODO
+  execute(msg);
 }
 
 //mode & state
 void UAV::setMode(MAV_MODE baseMode, uint32_t customMode)
 {
-  //TODO
+  if(receivedMode)
+  {
+    execute(MAVLink_msg_set_mode(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, baseMode, customMode));
+  }
 }
 
 void UAV::updateState()
@@ -268,9 +263,13 @@ void UAV::setHomePosition(double latitude, double longitude, double altitude)
 
 void UAV::executeCommand(MAV_CMD command, int confirmation = 0, float param1 = 0.0f, float param2 = 0.0f, float param3 = 0.0f, float param4 = 0.0f, float param5 = 0.0f, float param6 = 0.0f, float param7 = 0.0f)
 {
-  execute(MAVLinkCommand(m_GCSsystemID,m_GCScomponentID,m_sequenceNumber++,m_UAVsystemID,m_UAVcomponentID,command,confirmation,param1,param2,param3,param4,param5,param6,param7));
+  execute(MAVLink_msg_cmd(m_GCSsystemID,m_GCScomponentID,m_sequenceNumber++,m_UAVsystemID,m_UAVcomponentID,command,confirmation,param1,param2,param3,param4,param5,param6,param7));
 }
 
+void UAV::executeCommandAck(int num, bool success)
+{
+  execute(MAVLink_msg_cmd_ack(m_GCSsystemID,m_GCSsystemID,m_sequenceNumber++,num, success? 0:1));
+}
 
 void UAV::execute(MAVLinkMessage what)
 {
@@ -281,7 +280,7 @@ void UAV::execute(MAVLinkMessage what)
 void UAV::sendHeartbeat()
 {
   //TODO : check if params are OK
-  execute(MAVLinkHeartbeat(m_systemID, 1, m_sequenceNumber++,m_type,m_autopilot,m_baseMode,m_customMode,m_status));
+  execute(MAVLink_msg_heartbeat(m_UAVsystemID, 1, m_sequenceNumber++,m_type,m_autopilot,m_baseMode,m_customMode,m_status));
 }
 
 //getters & setters

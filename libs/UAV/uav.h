@@ -33,11 +33,9 @@
 #include <QObject>
 #include <QDateTime>
 
-#include "mavlinkmessage.h"
-#include "mavlinkheartbeat.h"
-#include "mavlinkcommand.h"
+#include "MAVLink/common/mavlink.h"
+
 #include "link.h"
-#include "enums.h"
 
 /**
  * @brief This class represents one vehicle (Unmanned Aerial Vehicle)
@@ -98,7 +96,6 @@ public:
   void receiveMessage(MAVLinkMessage const& msg);
   void receiveMessage(ByteBuffer const& msg);
   void sendMessage(MAVLinkMessage const& msg);
-  void sendMessage(ByteBuffer const& msg);
 
   //mode & state
   void setMode(MAV_MODE baseMode, uint32_t customMode);
@@ -134,7 +131,15 @@ signals:
   void bearingToWaypointChanged(double val,QString name);
 
 public slots:
+  /**
+   * @brief Sends a command to be executed on the UAV
+   * @param command the commandID, as defined bu MAV_CMD enum
+   * @param confirmation 0: first transmission of the command, 1->255: confirmating the transmission (for ex: the kill command)
+   * @param param1-7 the params, as defined by MAV_CMD enum
+   */
   void executeCommand(MAV_CMD command, int confirmation = 0, float param1 = 0.0f, float param2 = 0.0f, float param3 = 0.0f, float param4 = 0.0f, float param5 = 0.0f, float param6 = 0.0f, float param7 = 0.0f);
+
+  void executeCommandAck(int num, bool success);
 
   /**
    * @brief get the UAV to execute the MAVLink order
@@ -297,7 +302,7 @@ private:
 
   //parameters
   bool blockHomePositionChanges;   ///< Block changes to the home position
-  bool receivedMode;          ///< True if mode was retrieved from current conenction to UAS
+  bool receivedMode;          ///< True if mode was retrieved from current connection to UAS
 
 };
 
