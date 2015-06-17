@@ -28,8 +28,23 @@
 
 #include "mavlinkcommand.h"
 
-//MAVLinkCommand::MAVLinkCommand()
-//{
-
-//}
-
+MAVLinkCommand::MAVLinkCommand(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,
+               uint8_t target_system, uint8_t target_component,
+               uint16_t command, uint8_t confirmation,
+               float param1, float param2, float param3,
+               float param4, float param5, float param6,
+               float param7):
+  MAVLinkMessage(33,sequenceNumber,systemID,componentID,76,true,152)
+{
+  m_payload << param1;
+  m_payload << param2;
+  m_payload << param3;
+  m_payload << param4;
+  m_payload << param5;
+  m_payload << param6;
+  m_payload << param7;
+  m_payload << command;
+  m_payload << target_system;
+  m_payload << target_component;
+  m_payload << confirmation;
+}
