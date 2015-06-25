@@ -64,6 +64,12 @@ public:
   char const operator [](unsigned int) const;
   char const operator [](int) const;
 
+  /**
+   * @brief deletes n bytes from the front of the buffer
+   * @param n the number of bytes to delete
+   */
+  void pop_front(unsigned int n = 1);
+
   size_t size() const;
   operator char*() const;
 

@@ -67,6 +67,12 @@ char const ByteBuffer::operator [](int i) const
   return m_buffer[i];
 }
 
+void ByteBuffer::pop_front(unsigned int n = 1)
+{
+  for(unsigned int i = 0; i < n && m_buffer.size() > 0; ++i)
+    m_buffer.pop_front();
+}
+
 size_t ByteBuffer::size() const {return m_buffer.size();}
 ByteBuffer::operator char*() const
 {
