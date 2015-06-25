@@ -23,7 +23,6 @@
 #include <QMainWindow>
 #include <QtSerialPort/QSerialPortInfo>
 #include "UAV/uav.h"
-#include "UAV/udplink.h"
 #include "UAV/seriallink.h"
 
 namespace Ui {
@@ -39,7 +38,6 @@ public:
   ~MainWindow();
 
 private slots:
-  void connectUDP();
   void connectSerial();
 
   void updateSerialPort(int newSerial);

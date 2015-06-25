@@ -27,8 +27,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_serialPort()
 {
   ui->setupUi(this);
-  QObject::connect(ui->ButtonConnectUDP, SIGNAL(released()), this, SLOT(connectUDP()));
-  QObject::connect(ui->ButtonDisconnectUDP, SIGNAL(released()), m_uav, SLOT(disconnectLinks()));
 
   QObject::connect(ui->ButtonConnectSerial, SIGNAL(released()), this, SLOT(connectSerial()));
   QObject::connect(ui->ButtonDisconnectSerial, SIGNAL(released()), m_uav, SLOT(disconnectLinks()));
@@ -55,15 +53,6 @@ MainWindow::~MainWindow()
 {
   delete m_uav;
   delete ui;
-}
-
-void MainWindow::connectUDP()
-{
-  QString IP(ui->EditIP->text());
-  unsigned int port(ui->EditPort->text().toUInt());
-  std::cout << "connecting " << IP.toStdString() << ":" << port << std::endl;
-  m_uav->addLink(new UDPLink(IP, port));
-  m_uav->connectLinks();
 }
 
 void MainWindow::connectSerial()
