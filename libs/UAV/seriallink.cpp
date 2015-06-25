@@ -72,16 +72,37 @@ bool SerialLink::disconnect()
 
 void SerialLink::_readBytes()
 {
-  //std::cout << "Data on interface !" << std::endl;
+  //we get the data from the serial port
   QByteArray data = m_serialPort->readAll();
   ByteBuffer dataBuf(data.data(), data.size());
+  //put it on the data buffer
   m_dataBuffer << dataBuf;
+  //and extract (if any) the messages on the data buffer
   _extractMAVLinkMessage();
 }
 
 void SerialLink::_extractMAVLinkMessage()
 {
-  //TODO
+  //MAVLink messages start by a 0xFE byte
+  while(m_dataBuffer[0] != 0xFE)
+    m_dataBuffer.pop_front();
+  //MAVLink messages are at least 8 bytes long (6 bytes header + 2 bytes CRC)
+  if(m_dataBuffer.size() >= 8)
+  {
+    //check if we have the whole message
+    uint8_t msgLength = m_dataBuffer[1] + 8;
+    if(m_dataBuffer.size() >= msgLength)
+    {
+      //dump the whole message onto a ByteBuffer
+      ByteBuffer messageBuffer;
+      for(unsigned int i = 0; i < msgLength; ++i)
+        m_dataBuffer >> messageBuffer;
+      //cast the Buffer to a MAVLink message, and send it
+      emit(messageReceived(MAVLinkMessage(m_dataBuffer)));
+      //then, check again if there is another message
+      _extractMAVLinkMessage();
+    }
+  }
 }
 
 void SerialLink::_writeBytes(ByteBuffer bytes)
