@@ -37,9 +37,9 @@ public:
   MAVLink_msg_cmd(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,
                  uint8_t target_system, uint8_t target_component,
                  uint16_t command, uint8_t confirmation,
-                 float param1, float param2, float param3,
-                 float param4, float param5, float param6,
-                 float param7);
+                 float param1 = 0, float param2 = 0, float param3 = 0,
+                 float param4 = 0, float param5 = 0, float param6 = 0,
+                 float param7 = 0);
 };
 
 #endif // MAVLINK_MSG_CMD_H
