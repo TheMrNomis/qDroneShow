@@ -1,4 +1,4 @@
-/*======================================================================
+/*=======================================================================
  * qDroneShow Aerial vehicle show planification
  *
  * Copyright (C) 2015 - Amaury Louarn <amaury.louarn@homnomnom.fr>
@@ -17,9 +17,20 @@
  * along with qDroneShow. If not, see <http://www.gnu.org/licenses/>
  * ======================================================================*/
 
+/*=======================================================================
+ * This file contains fragments of code from the QGroundControl project,
+ * which is released under the terms of the GNU General Public License,
+ * version 3.
+ *
+ * Copyright (C) 2009 - 2015 QGROUNDCONTROL PROJECT
+ * <http://www.qgroundcontrol.org>
+ * ======================================================================*/
+
 #include "link.h"
 
-Link::Link(QObject *parent) : QObject(parent)
+Link::Link(QObject *parent) :
+  QObject(parent),
+  m_isConnected(false)
 {
 
 }

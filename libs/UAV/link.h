@@ -31,7 +31,7 @@
 
 #include <QObject>
 
-#include "mavlinkmessage.h"
+#include "MAVLink/mavlinkmessage.h"
 
 /**
  * @brief The Link class is an abstract class used as an interface for the
@@ -78,8 +78,14 @@ signals:
    * forward the link data.
    *
    * @param data the new bytes
+   * @deprecated
    */
   void bytesReceived(ByteBuffer data);
+
+  /**
+   * @brief A valid MAVLink message has been received by the interface
+   */
+  void messageReceived(MAVLinkMessage);
 
   /**
    * @brief This signal is emitted instantly when the link is connected
@@ -91,10 +97,14 @@ signals:
    **/
   void disconnected();
 
-  /** @brief Communication error occured */
+  //errors
+  void connectionError();
   void communicationError(const QString& title, const QString& error);
-
   void communicationUpdate(const QString& linkname, const QString& text);
+  /**
+   * @brief the link has received a MAVLinkMessage, but an error occured (e.g invalid CRC, wrong length...)
+   */
+  void badMessageReceived(MAVLinkMessage);
 
 public slots:
   /**
@@ -102,8 +112,6 @@ public slots:
    * @param message the message to transmit
    */
   virtual void sendMessage(MAVLinkMessage const& message);
-
-  virtual void readBytes() = 0;
 
 protected:
   /**
@@ -115,7 +123,8 @@ protected:
 
   bool m_isConnected;
 
-
+private slots:
+  virtual void _readBytes() = 0;
 };
 
 #endif // LINK_H
