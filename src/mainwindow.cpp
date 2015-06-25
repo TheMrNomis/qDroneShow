@@ -22,12 +22,66 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    m_uav(new UAV(1,255,MAV_COMP_ID_ALL,0)),
+    m_serialPort()
 {
-    ui->setupUi(this);
+  ui->setupUi(this);
+  QObject::connect(ui->ButtonConnectUDP, SIGNAL(released()), this, SLOT(connectUDP()));
+  QObject::connect(ui->ButtonDisconnectUDP, SIGNAL(released()), m_uav, SLOT(disconnectLinks()));
+
+  QObject::connect(ui->ButtonConnectSerial, SIGNAL(released()), this, SLOT(connectSerial()));
+  QObject::connect(ui->ButtonDisconnectSerial, SIGNAL(released()), m_uav, SLOT(disconnectLinks()));
+
+  QObject::connect(ui->comboSelectSerial, SIGNAL(activated(int)), this, SLOT(updateSerialPort(int)));
+  _updateSerialCombobox();
+  updateSerialPort(0);
+
+  QObject::connect(ui->ButtonHeartbeat, SIGNAL(released()), m_uav, SLOT(sendHeartbeat()));
+//  QObject::connect(ui->ButtonParameters, SIGNAL(released()), m_uav, SLOT());
+
+  QObject::connect(ui->ButtonArm, SIGNAL(released()), m_uav, SLOT(armSystem()));
+  QObject::connect(ui->ButtonDisarm, SIGNAL(released()), m_uav, SLOT(disarmSystem()));
+
+  QObject::connect(ui->ButtonLaunch, SIGNAL(released()), m_uav, SLOT(launch()));
+  QObject::connect(ui->ButtonLand, SIGNAL(released()), m_uav, SLOT(land()));
+
+
+
+  updateSerialPort(0);
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+  delete m_uav;
+  delete ui;
+}
+
+void MainWindow::connectUDP()
+{
+  QString IP(ui->EditIP->text());
+  unsigned int port(ui->EditPort->text().toUInt());
+  std::cout << "connecting " << IP.toStdString() << ":" << port << std::endl;
+  m_uav->addLink(new UDPLink(IP, port));
+  m_uav->connectLinks();
+}
+
+void MainWindow::connectSerial()
+{
+  std::cout << "connecting Serial on port [" << m_serialPort.toStdString() << "]" << std::endl;
+  //QString port(ui->comboSelectSerial->it);
+  m_uav->addLink(new SerialLink(m_serialPort));
+  m_uav->connectLinks();
+}
+
+void MainWindow::updateSerialPort(int newSerial)
+{
+  m_serialPort = ui->comboSelectSerial->itemText(newSerial);
+}
+
+void MainWindow::_updateSerialCombobox()
+{
+  QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
+  for(auto it = portList.cbegin(); it != portList.cend(); ++it)
+      ui->comboSelectSerial->addItem(it->portName());
 }
