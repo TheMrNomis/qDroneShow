@@ -50,6 +50,10 @@ public:
 
   virtual void addLink(Link* link);
 
+public slots:
+  void connectLinks();
+  void disconnectLinks();
+
   /** @brief Launches the system **/
   void launch();
   /** @brief Write this waypoint to the list of waypoints */
@@ -98,7 +102,7 @@ public:
   void sendMessage(MAVLinkMessage const& msg);
 
   //mode & state
-  void setMode(MAV_MODE baseMode, uint32_t customMode);
+  void setMode(uint8_t baseMode, uint32_t customMode);
   void updateState();
 
   //positionning
@@ -131,6 +135,7 @@ signals:
   void bearingToWaypointChanged(double val,QString name);
 
 public slots:
+
   /**
    * @brief Sends a command to be executed on the UAV
    * @param command the commandID, as defined bu MAV_CMD enum
