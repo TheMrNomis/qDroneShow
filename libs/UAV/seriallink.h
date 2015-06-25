@@ -40,43 +40,23 @@ public:
   SerialLink(QString serialPort);
   ~SerialLink();
 
-
-  virtual void requestReset();
-
   virtual bool connect();
   virtual bool disconnect();
 
-//signals:
-//  void updateLink();
-
-public slots:
-  virtual void readBytes();
+private slots:
+  virtual void _readBytes();
 
 private:
   virtual void _writeBytes(ByteBuffer bytes);
-  virtual bool _connect();
-  virtual bool _disconnect();
-
-//  void _emitLinkError(const QString& errorMsg);
-//  bool _hardwareConnect(QString &_type);
-//  bool _isBootloader();
-//  void _resetConfiguration();
+  /**
+   * @brief extracts the MAVLink messages from m_dataBuffer
+   * @emits messageReceived() when found a valid message
+   * @emits badMessageReceived() when found a bad message
+   */
+  void _extractMAVLinkMessage();
 
   QSerialPort* m_serialPort;
-
-//  QString m_serialPort;
-//  QSerialPort* m_port;
-//  quint64 m_bytesRead;
-//  int m_timeout;
-//  QString m_type;
-
-//  bool m_stopp;
-//  bool m_reqReset;
-
-//  ByteBuffer m_transmitBuffer;
-
-//private slots:
-//  void _rerouteDisconnected();
+  ByteBuffer m_dataBuffer;
 };
 
 #endif // SERIALLINK_H

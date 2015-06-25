@@ -30,53 +30,28 @@
 
 SerialLink::SerialLink(QString serialPort):
   Link(),
-  m_serialPort(new QSerialPort)//,
-//  m_port(new QSerialPort(this)),
-//  m_bytesRead(0),
-//  m_timeout(0),
-//  m_type(""),
-
-//  m_stopp(false),
-//  m_reqReset(false)
+  m_serialPort(new QSerialPort)
 {
-  //TODO
-  std::cout << "new serialLink" << std::endl;
-
   m_serialPort->setPortName(serialPort);
   m_serialPort->setBaudRate(QSerialPort::Baud115200);
 
-  QObject::connect(m_serialPort, SIGNAL(readyRead()), this, SLOT(readBytes()));
+  QObject::connect(m_serialPort, SIGNAL(readyRead()), this, SLOT(_readBytes()));
 }
 
 SerialLink::~SerialLink()
 {
-  _disconnect();
+  disconnect();
   delete m_serialPort;
   std::cout << "deleting serialLink" << std::endl;
 }
 
-void SerialLink::requestReset()
-{
-//  m_reqReset = true;
-}
-
-//bool SerialLink::connect()
-//{
-//  return _connect();
-//}
-
-//bool SerialLink::disconnect()
-//{
-//  return _disconnect();
-//}
-
 bool SerialLink::connect()
 {
-  bool b = m_serialPort->open(QIODevice::ReadWrite);
-  if(b)
-    std::cout << "successfully connected" << std::endl;
-  else
-    std::cout << "error in connection" << std::endl;
+  if(!m_serialPort->open(QIODevice::ReadWrite))
+  {
+    emit(connectionError());
+    return false;
+  }
 
   //initialization of MAVLink (for pixhawk compatibility)
   const char init[] = {0x0D, 0x0D, 0x0D, 0};
@@ -85,48 +60,32 @@ bool SerialLink::connect()
   m_serialPort->write(cmd, strlen(cmd));
   m_serialPort->write(init, sizeof(init));
 
-  return b;
+  return true;
 }
 
 bool SerialLink::disconnect()
 {
   m_serialPort->close();
+  emit(disconnected());
   return true;
 }
 
-void SerialLink::readBytes()
+void SerialLink::_readBytes()
 {
   //std::cout << "Data on interface !" << std::endl;
   QByteArray data = m_serialPort->readAll();
   ByteBuffer dataBuf(data.data(), data.size());
-  //std::cout << dataBuf << std::endl;
-  //emit(bytesReceived(dataBuf));
+  m_dataBuffer << dataBuf;
+  _extractMAVLinkMessage();
+}
+
+void SerialLink::_extractMAVLinkMessage()
+{
+  //TODO
 }
 
 void SerialLink::_writeBytes(ByteBuffer bytes)
 {
-  std::cout << "sending : " << bytes << std::endl;
+  //std::cout << "sending : " << bytes << std::endl;
   m_serialPort->write((const char *)bytes, bytes.size());
-}
-
-bool SerialLink::_connect()
-{
-//  std::cout << "opening port :";
-//  m_port->setPortName(m_serialPort);
-//  m_port->setBaudRate(QSerialPort::Baud115200);
-//  bool ret = m_port->open(QIODevice::ReadWrite);
-//  if(ret)
-//    std::cout << "[OK]" << std::endl;
-//  else
-//    std::cout << "[NOK]" << std::endl;
-//  return ret;
-  return false;
-}
-
-bool SerialLink::_disconnect()
-{
-//  if(m_port->isOpen())
-//    m_port->close();
-//  return true;
-  return false;
 }
