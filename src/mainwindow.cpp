@@ -41,11 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
   QObject::connect(ui->ButtonArm, SIGNAL(released()), m_uav, SLOT(armSystem()));
   QObject::connect(ui->ButtonDisarm, SIGNAL(released()), m_uav, SLOT(disarmSystem()));
 
-  QObject::connect(ui->ButtonLaunch, SIGNAL(released()), m_uav, SLOT(launch()));
-  QObject::connect(ui->ButtonLand, SIGNAL(released()), m_uav, SLOT(land()));
-
-
-
   updateSerialPort(0);
 }
 
