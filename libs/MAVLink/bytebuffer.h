@@ -48,6 +48,13 @@ public:
   void operator <<(ByteBuffer const&);
 
   /**
+   * @brief get a variable of type T, at the index n
+   * @param n the index of the value to get
+   */
+  template <typename T>
+  T get(unsigned int n) const;
+
+  /**
    * @brief puts sizeof(T) bytes onto a variable
    * @param n The variable to put the bytes
    * @warning the first sizeof(T) bytes will be removed from <this> !
@@ -130,13 +137,27 @@ void ByteBuffer::operator <<(T n)
 template <typename T>
 void ByteBuffer::operator >>(T &n)
 {
-  n = 0;
-  for(int i = sizeof(n); i > 0; --i)
-  {
-    n *= 255;
-    n += m_buffer[0];
-    m_buffer.pop_front();
-  }
+  n = get<T>(0);
+  pop_front(sizeof(T));
+}
+
+template <typename T>
+T ByteBuffer::get(unsigned int n) const
+{
+  // we put our data into a char array
+  const size_t length(sizeof(T));
+
+  char * t = new char[length];
+  for(size_t i = 0; i < length; ++i)
+    t[i] = m_buffer[n + (m_MAVLINK_NEED_BYTE_SWAP ? length-1-i : i)];
+
+  // we cast the char array pointer to a T pointer,
+  // then we create a new T, having the content of the array as value
+  // (*(T*) = T)
+  T ret(*(reinterpret_cast<T*>(t)));
+
+  delete[] t;
+  return ret;
 }
 
 #endif // BYTEBUFFER_H
