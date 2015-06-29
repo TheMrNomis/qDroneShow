@@ -27,6 +27,7 @@
  * ======================================================================*/
 
 #include "seriallink.h"
+#include <limits>
 
 SerialLink::SerialLink(QString serialPort):
   Link(),
@@ -83,9 +84,11 @@ void SerialLink::_readBytes()
 
 void SerialLink::_extractMAVLinkMessage()
 {
-  //MAVLink messages start by a 0xFE byte
-  while(m_dataBuffer[0] != 0xFE)
+  //MAVLink messages always start by a 0xFE byte
+  while(m_dataBuffer.size() > 0 && (uint8_t) m_dataBuffer[0] != (uint8_t) 0xFE)
     m_dataBuffer.pop_front();
+
+
   //MAVLink messages are at least 8 bytes long (6 bytes header + 2 bytes CRC)
   if(m_dataBuffer.size() >= 8)
   {
@@ -97,10 +100,13 @@ void SerialLink::_extractMAVLinkMessage()
       ByteBuffer messageBuffer;
       for(unsigned int i = 0; i < msgLength; ++i)
         m_dataBuffer >> messageBuffer;
+
       //cast the Buffer to a MAVLink message, and send it
-      emit(messageReceived(MAVLinkMessage(m_dataBuffer)));
+      emit(messageReceived(MAVLinkMessage(messageBuffer)));
+
       //then, check again if there is another message
       _extractMAVLinkMessage();
+
     }
   }
 }
