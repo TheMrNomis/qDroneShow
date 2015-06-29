@@ -24,6 +24,8 @@
 #include "../mavlink_enums.h"
 #include "../bytebuffer.h"
 
+#include "messagetypes.h"
+
 #include "mavlink_msg_cmd.h"
 #include "mavlink_msg_cmd_ack.h"
 #include "mavlink_msg_heartbeat.h"

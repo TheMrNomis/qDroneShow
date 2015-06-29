@@ -6,7 +6,12 @@
 class MAVLink_msg_set_mode : public MAVLinkMessage
 {
 public:
-  MAVLink_msg_set_mode(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber, uint8_t target_system, uint8_t base_mode, uint32_t custom_mode);
+  MAVLink_msg_set_mode(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,
+                       uint8_t target_system, uint8_t base_mode, uint32_t custom_mode);
+
+  uint8_t get_arget_system() const;
+  uint8_t get_base_mode() const;
+  uint32_t get_custom_mode() const;
 };
 
 #endif // MAVLINK_MSG_SET_MODE_H

@@ -48,3 +48,29 @@ MAVLink_msg_cmd::MAVLink_msg_cmd(uint8_t systemID, uint8_t componentID, uint8_t 
   m_payload << target_component;
   m_payload << confirmation;
 }
+
+float MAVLink_msg_cmd::get_param1() const
+  {return m_payload.get<float>(0);}
+float MAVLink_msg_cmd::get_param2() const
+  {return m_payload.get<float>(1*sizeof(float));}
+float MAVLink_msg_cmd::get_param3() const
+  {return m_payload.get<float>(2*sizeof(float));}
+float MAVLink_msg_cmd::get_param4() const
+  {return m_payload.get<float>(3*sizeof(float));}
+float MAVLink_msg_cmd::get_param5() const
+  {return m_payload.get<float>(4*sizeof(float));}
+float MAVLink_msg_cmd::get_param6() const
+  {return m_payload.get<float>(5*sizeof(float));}
+float MAVLink_msg_cmd::get_param7() const
+  {return m_payload.get<float>(6*sizeof(float));}
+
+uint16_t MAVLink_msg_cmd::get_command() const
+  {return m_payload.get<uint16_t>(7*sizeof(float));}
+
+uint8_t MAVLink_msg_cmd::get_target_system() const
+  {return m_payload.get<uint8_t>(7*sizeof(float) + sizeof(uint16_t));}
+uint8_t MAVLink_msg_cmd::get_target_component() const
+  {return m_payload.get<uint8_t>(7*sizeof(float) + sizeof(uint16_t) + 1*sizeof(uint8_t));}
+uint8_t MAVLink_msg_cmd::get_confirmation() const
+  {return m_payload.get<uint8_t>(7*sizeof(float) + sizeof(uint16_t) + 2*sizeof(uint8_t));}
+

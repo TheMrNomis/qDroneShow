@@ -40,3 +40,18 @@ MAVLink_msg_heartbeat::MAVLink_msg_heartbeat(uint8_t systemID, uint8_t component
   m_payload << systemStatus;
   m_payload << (uint8_t)3; //protocol version
 }
+
+
+uint32_t MAVLink_msg_heartbeat::get_customMode() const
+  {return m_payload.get<uint32_t>(0);}
+
+uint8_t MAVLink_msg_heartbeat::get_type() const
+  {return m_payload.get<uint8_t>(sizeof(uint32_t) + 0*sizeof(uint8_t));}
+uint8_t MAVLink_msg_heartbeat::get_autopilot() const
+  {return m_payload.get<uint8_t>(sizeof(uint32_t) + 1*sizeof(uint8_t));}
+uint8_t MAVLink_msg_heartbeat::get_baseMode() const
+  {return m_payload.get<uint8_t>(sizeof(uint32_t) + 2*sizeof(uint8_t));}
+uint8_t MAVLink_msg_heartbeat::get_systemStatus() const
+  {return m_payload.get<uint8_t>(sizeof(uint32_t) + 3*sizeof(uint8_t));}
+uint8_t MAVLink_msg_heartbeat::get_protocol_version() const
+  {return m_payload.get<uint8_t>(sizeof(uint32_t) + 4*sizeof(uint8_t));}

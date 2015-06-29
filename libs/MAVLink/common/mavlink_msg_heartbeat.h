@@ -46,8 +46,17 @@ public:
    * @param customMode A bitfield for use for autopilot-specific flags.
    * @param systemStatus System status flag, see MAV_STATE ENUM
    */
-  MAVLink_msg_heartbeat(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,uint8_t type, uint8_t autopilot,
-                   uint8_t baseMode, uint32_t customMode, uint8_t systemStatus);
+  MAVLink_msg_heartbeat(uint8_t systemID, uint8_t componentID, uint8_t sequenceNumber,
+                        uint8_t type, uint8_t autopilot,
+                        uint8_t baseMode, uint32_t customMode,
+                        uint8_t systemStatus);
+
+  uint8_t get_type() const;
+  uint8_t get_autopilot() const;
+  uint8_t get_baseMode() const;
+  uint32_t get_customMode() const;
+  uint8_t get_systemStatus() const;
+  uint8_t get_protocol_version() const;
 };
 
 #endif // MAVLINKHEARTBEAT_H

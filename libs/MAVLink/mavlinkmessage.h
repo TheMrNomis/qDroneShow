@@ -48,6 +48,16 @@ public:
    */
   ByteBuffer toByteBuffer() const;
 
+  uint8_t get_header() const;
+  uint8_t get_length() const;
+  uint8_t get_sequenceNumber() const;
+  uint8_t get_systemID() const;
+  uint8_t get_componentID() const;
+  uint8_t get_messageID() const;
+  ByteBuffer get_payload() const;
+
+  bool isValid() const;
+
 protected:
   MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra = true, uint8_t crc_extra_value = 0);
 
@@ -84,7 +94,7 @@ private:
   uint8_t m_systemID;       ///< system ID
   uint8_t m_componentID;    ///< component ID
   uint8_t m_messageID;      ///< message ID
-  //ByteBuffer m_checksum;          ///< checksum for error detection
+  ByteBuffer m_checksum;    ///< checksum for error detection
 
 };
 

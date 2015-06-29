@@ -61,6 +61,42 @@ MAVLinkMessage::MAVLinkMessage(ByteBuffer & buffer, bool crc_extra, uint8_t crc_
   buffer >> m_messageID;
   for(int i = 0; i < m_length; ++i)
     buffer >> m_payload;
+  for(int i = 0; i < 2; ++i)
+    buffer >> m_checksum;
+}
+
+uint8_t MAVLinkMessage::get_header() const
+  {return m_header;}
+uint8_t MAVLinkMessage::get_length() const
+  {return m_length;}
+uint8_t MAVLinkMessage::get_sequenceNumber() const
+  {return m_sequenceNumber;}
+uint8_t MAVLinkMessage::get_systemID() const
+  {return m_systemID;}
+uint8_t MAVLinkMessage::get_componentID() const
+  {return m_componentID;}
+uint8_t MAVLinkMessage::get_messageID() const
+  {return m_messageID;}
+ByteBuffer MAVLinkMessage::get_payload() const
+  {return ByteBuffer(m_payload);}
+
+bool MAVLinkMessage::isValid() const
+{
+  if(m_checksum.size() == 0)
+    return true;
+  else
+  {
+    ByteBuffer buffer;
+
+    buffer << m_header;
+    buffer << m_length;
+    buffer << m_sequenceNumber;
+    buffer << m_systemID;
+    buffer << m_componentID;
+    buffer << m_messageID;
+    buffer << m_payload;
+    return m_checksum == _calculateChecksum(buffer);
+  }
 }
 
 ByteBuffer MAVLinkMessage::toByteBuffer() const

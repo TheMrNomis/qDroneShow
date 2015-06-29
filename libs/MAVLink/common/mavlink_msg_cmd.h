@@ -40,6 +40,18 @@ public:
                  float param1 = 0, float param2 = 0, float param3 = 0,
                  float param4 = 0, float param5 = 0, float param6 = 0,
                  float param7 = 0);
+
+  uint8_t get_target_system() const;
+  uint8_t get_target_component() const;
+  uint16_t get_command() const;
+  uint8_t get_confirmation() const;
+  float get_param1() const;
+  float get_param2() const;
+  float get_param3() const;
+  float get_param4() const;
+  float get_param5() const;
+  float get_param6() const;
+  float get_param7() const;
 };
 
 #endif // MAVLINK_MSG_CMD_H
