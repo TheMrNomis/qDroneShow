@@ -28,7 +28,10 @@ SOURCES += src/main.cpp \
     libs/MAVLink/bytebuffer.cpp \
     libs/MAVLink/mavlinkmessage.cpp \
     libs/MAVLink/common/mavlink_msg_set_mode.cpp \
-    libs/UAV/seriallink.cpp
+    libs/UAV/seriallink.cpp \
+    libs/MAVLink/common/mavlink_msg_global_position_int.cpp \
+    libs/MAVLink/common/mavlink_msg_attitude.cpp \
+    libs/MAVLink/common/mavlink_msg_vfr_hud.cpp
 
 HEADERS  += include/mainwindow.h \
     libs/UAV/uav.h \
@@ -48,7 +51,12 @@ HEADERS  += include/mainwindow.h \
     libs/MAVLink/mavlinkmessage.h \
     libs/MAVLink/common/mavlink.h \
     libs/MAVLink/common/mavlink_msg_set_mode.h \
-    libs/UAV/seriallink.h
+    libs/UAV/seriallink.h \
+    libs/MAVLink/common/messagetypes.h \
+    libs/MAVLink/common/mavlink_msg_global_position_int.h \
+    libs/MAVLink/common/mavlink_msg_attitude.h \
+    libs/MAVLink/common/mavlink_msg_vfr_hud.h \
+    libs/MAVLink/common/mavlink_msg_heartbeat.h
 
 FORMS    += mainwindow.ui \
     formationwidget.ui
