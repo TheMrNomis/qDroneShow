@@ -23,7 +23,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    m_uav(new UAV(1,255,MAV_COMP_ID_ALL,0)),
+    m_uav(new UAV(1,255, this)),
     m_serialPort()
 {
   ui->setupUi(this);
@@ -54,7 +54,7 @@ void MainWindow::connectSerial()
 {
   std::cout << "connecting Serial on port [" << m_serialPort.toStdString() << "]" << std::endl;
   //QString port(ui->comboSelectSerial->it);
-  m_uav->addLink(new SerialLink(m_serialPort));
+  m_uav->addLink(new SerialLink(m_serialPort, QSerialPort::Baud57600));
   m_uav->connectLinks();
 }
 

@@ -21,7 +21,6 @@ SOURCES += src/main.cpp \
     src/mainwindow.cpp \
     libs/UAV/uav.cpp \
     libs/UAV/link.cpp \
-    formationwidget.cpp \
     libs/MAVLink/common/mavlink_msg_cmd.cpp \
     libs/MAVLink/common/mavlink_msg_cmd_ack.cpp \
     libs/MAVLink/common/mavlink_msg_heartbeat.cpp \
@@ -31,9 +30,11 @@ SOURCES += src/main.cpp \
     libs/UAV/seriallink.cpp \
     libs/MAVLink/common/mavlink_msg_global_position_int.cpp \
     libs/MAVLink/common/mavlink_msg_attitude.cpp \
-    libs/MAVLink/common/mavlink_msg_vfr_hud.cpp
+    libs/MAVLink/common/mavlink_msg_vfr_hud.cpp \
+    src/dronelist.cpp \
+    src/uavwidget.cpp
 
-HEADERS  += include/mainwindow.h \
+HEADERS  += \
     libs/UAV/uav.h \
     libs/UAV/mavlinkmessage.h \
     libs/UAV/link.h \
@@ -41,7 +42,6 @@ HEADERS  += include/mainwindow.h \
     libs/UAV/mavlinkcommand.h \
     libs/UAV/bytebuffer.h \
     libs/UAV/ardupilotmega.h \
-    formationwidget.h \
     libs/UAV/enums.h \
     libs/UAV/mavlink_msg_cmd_ack.h \
     libs/MAVLink/common/mavlink_msg_cmd.h \
@@ -56,7 +56,10 @@ HEADERS  += include/mainwindow.h \
     libs/MAVLink/common/mavlink_msg_global_position_int.h \
     libs/MAVLink/common/mavlink_msg_attitude.h \
     libs/MAVLink/common/mavlink_msg_vfr_hud.h \
-    libs/MAVLink/common/mavlink_msg_heartbeat.h
+    libs/MAVLink/common/mavlink_msg_heartbeat.h \
+    src/dronelist.h \
+    src/mainwindow.h \
+    src/uavwidget.h
 
-FORMS    += mainwindow.ui \
-    formationwidget.ui
+FORMS    += src/mainwindow.ui \
+    src/dronelist.ui
