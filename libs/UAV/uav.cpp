@@ -19,89 +19,25 @@
 
 #include "uav.h"
 
-UAV::UAV(uint8_t UAVsystemId, uint8_t GCSsystemId, uint8_t UAVcomponentId, uint8_t GCScomponentId, QObject *parent):
+UAV::UAV(uint8_t UAVsystemId, uint8_t GCSsystemId, QObject *parent):
   QObject(parent),
   m_links(),
   HEARTBEAT_TIMEOUT(5*1000), //5 seconds
+  m_UAV_systemID(UAVsystemId),
+  m_GCS_systemID(GCSsystemId),
 
-  //basic infos
-  m_name(""),
-  m_sequenceNumber(1),
-  m_type(MAV_TYPE_GENERIC),
-  m_airframe(),
-  m_autopilot(MAV_AUTOPILOT_GENERIC),
-  m_systemIsArmed(false),
-  m_baseMode(MAV_MODE_ENUM_END),
-  m_customMode(0),
-  m_status(MAV_STATE_BOOT),
-  //m_shortModeText(),  //NOT INITIALIZED
-  //m_shortStateText(), //NOT INITIALIZED
+  m_UAV_type(),
+  m_UAV_autopilot(),
+  m_UAV_base_mode(),
+  m_UAV_custom_mode(),
+  m_UAV_system_status(),
 
-  m_UAVsystemID(UAVsystemId),
-  m_GCSsystemID(GCSsystemId),
-  m_UAVcomponentID(UAVcomponentId),
-  m_GCScomponentID(GCScomponentId),
+  m_UAV_sequence_number_TX(0),
+  m_UAV_sequence_number_RX(0),
+  m_UAV_number_packet_lost(0),
 
-  //heartbeats
-  m_heartbeatsEnabled(),
-  m_lastHeartbeatTimestamp(),
-
-  //battery
-  startVoltage(-1.0f),
-  tickVoltage(10.5f),
-  lastTickVoltageValue(13.0f),
-  tickLowpassVoltage(12.0f),
-  warnLevelPercent(20),
-  currentVoltage(12.6f),
-  lpVoltage(12.0f),
-  currentCurrent(0.4f),
-  //batteryRemainingEstimateEnabled(),
-  chargeLevel(-1),
-  timeRemaining(0),
-  lowBattAlarm(false),
-
-  //time
-  m_startTime(),//TODO
-  m_onBoardTimeOffset(0),
-
-  //position
-  m_positionLock(false),
-  m_localPositionKnown(false),
-  m_globalPositionKnown(false),
-  m_satelliteCount(0),
-  m_globalEstimatorActive(false),
-
-  m_localX(0.0),
-  m_localY(0.0),
-  m_localZ(0.0),
-
-  m_latitude(0.0),
-  m_longitude(0.0),
-  m_altitudeAMSL(0.0),
-  m_altitudeRelative(0.0),
-
-  m_GPSLatitude(0.0),
-  m_GPSLongitude(0.0),
-  m_GPSAltitude(0.0),
-
-  m_speedX(0.0),
-  m_speedY(0.0),
-  m_speedZ(0.0),
-
-  //waypoints
-  //m_distToWaypoint(),
-  m_airspeed(std::numeric_limits<double>::quiet_NaN()),
-  m_groundSpeed(std::numeric_limits<double>::quiet_NaN()),
-  //m_bearingToWaypoint(),
-
-  //attitude
-  m_attitudeKnown(false),
-  m_attitudeStamped(false),
-  m_lastAttitudeTimestamp(0),
-
-  m_roll(0.0),
-  m_pitch(0.0),
-  m_yaw(0.0)
+   m_heartbeat_received(),
+  m_last_heartbeat_timestamp()
 {
 
   //emit disarmed();
@@ -110,7 +46,6 @@ UAV::UAV(uint8_t UAVsystemId, uint8_t GCSsystemId, uint8_t UAVcomponentId, uint8
 
 UAV::~UAV()
 {
-  std::cout << "~UAV" << std::endl;
   for(auto it = m_links.begin(); it != m_links.end(); ++it)
     delete *it;
 }
@@ -118,7 +53,10 @@ UAV::~UAV()
 void UAV::connectLinks()
 {
   for(auto it = m_links.begin(); it != m_links.end(); ++it)
+  {
     (*it)->connect();
+    QObject::connect(*it, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(receiveMessage(MAVLinkMessage)));
+  }
 }
 
 void UAV::disconnectLinks()
@@ -130,246 +68,119 @@ void UAV::disconnectLinks()
 void UAV::addLink(Link* link)
 {
   m_links.push_back(link);
-  connect(link, SIGNAL(bytesReceived(ByteBuffer)), this, SLOT(receiveBytes(ByteBuffer)));
-}
-
-void UAV::launch()
-{
-  std::cout << "launching" << std::endl;
-  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, 0, MAV_CMD_NAV_TAKEOFF, 1));
-}
-
-void UAV::home()
-{
-  //TODO
-}
-
-/** @brief Order the robot to land **/
-void UAV::land()
-{
-  std::cout << "landing" << std::endl;
-  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCSsystemID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_NAV_LAND,1,0,0,0,0,0,0,0));
-}
-
-/** @brief Order the robot to pair its receiver **/
-void UAV::pairRX(int rxType, int rxSubType)
-{
-  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_START_RX_PAIR, 0, rxType, rxSubType, 0,0,0,0,0));
-}
-
-void UAV::halt()
-{
-  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_OVERRIDE_GOTO, 1, MAV_GOTO_DO_HOLD, MAV_GOTO_HOLD_AT_CURRENT_POSITION,0,0,0,0,0));
-}
-
-void UAV::go()
-{
-  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_OVERRIDE_GOTO, 1, MAV_GOTO_DO_CONTINUE, MAV_GOTO_HOLD_AT_CURRENT_POSITION,0,0,0,0,0));
-}
-
-/** @brief Stops the robot system. If it is an MAV, the robot starts the emergency landing procedure **/
-void UAV::emergencySTOP()
-{
-  //TODO
-  halt();
-}
-
-/** @brief Kills the robot. All systems are immediately shut down (e.g. the main power line is cut). This might lead to a crash **/
-bool UAV::emergencyKILL()
-{
-  //TODO
-  halt();
-  return true;
-}
-
-/** @brief Shut the system cleanly down. Will shut down any onboard computers **/
-void UAV::shutdown()
-{
-  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN, 1,0,2,0,0,0,0,0));
-}
-
-/** @brief Set the target position for the robot to navigate to. */
-void UAV::setTargetPosition(float x, float y, float z, float yaw)
-{
-  execute(MAVLink_msg_cmd(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, MAV_COMP_ID_ALL, MAV_CMD_NAV_PATHPLANNING, 1,1,1,0,yaw,x,y,z));
-}
-
-//low battery alarm
-void UAV::startLowBattAlarm()
-{
-  //TODO
-}
-
-void UAV::stopLowBattAlarm()
-{
-  //TODO
+//  connect(link, SIGNAL(bytesReceived(ByteBuffer)), this, SLOT(receiveBytes(ByteBuffer)));
 }
 
 //arming
 void UAV::armSystem()
 {
   std::cout << "arming" << std::endl;
-  setMode(m_baseMode | MAV_MODE_FLAG_SAFETY_ARMED, m_customMode);
+  //setMode(m_baseMode | MAV_MODE_FLAG_SAFETY_ARMED, m_customMode);
 }
 
 void UAV::disarmSystem()
 {
   std::cout << "disarming" << std::endl;
-  setMode(m_baseMode & ~(MAV_MODE_FLAG_SAFETY_ARMED), m_customMode);
-}
-
-void UAV::toggleArmedState()
-{
-  setMode(m_baseMode ^ MAV_MODE_FLAG_SAFETY_ARMED, m_customMode);
+  //setMode(m_baseMode & ~(MAV_MODE_FLAG_SAFETY_ARMED), m_customMode);
 }
 
 //autonomy
 void UAV::goAutonomous()
 {
   std::cout << "going autonomous" << std::endl;
-  setMode((m_baseMode & ~(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)) | (MAV_MODE_FLAG_AUTO_ENABLED | MAV_MODE_FLAG_STABILIZE_ENABLED | MAV_MODE_FLAG_GUIDED_ENABLED), 0);
+  //setMode((m_baseMode & ~(MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)) | (MAV_MODE_FLAG_AUTO_ENABLED | MAV_MODE_FLAG_STABILIZE_ENABLED | MAV_MODE_FLAG_GUIDED_ENABLED), 0);
 }
 
 void UAV::goManual()
 {
   std::cout << "going manual" << std::endl;
-  setMode((m_baseMode & ~(MAV_MODE_FLAG_AUTO_ENABLED | MAV_MODE_FLAG_STABILIZE_ENABLED | MAV_MODE_FLAG_GUIDED_ENABLED))  | MAV_MODE_FLAG_MANUAL_INPUT_ENABLED, 0);
-}
-
-void UAV::toggleAutonomy()
-{
-  setMode(m_baseMode ^ MAV_MODE_FLAG_AUTO_ENABLED ^ MAV_MODE_FLAG_MANUAL_INPUT_ENABLED ^ MAV_MODE_FLAG_GUIDED_ENABLED ^ MAV_MODE_FLAG_STABILIZE_ENABLED, 0);
+  //setMode((m_baseMode & ~(MAV_MODE_FLAG_AUTO_ENABLED | MAV_MODE_FLAG_STABILIZE_ENABLED | MAV_MODE_FLAG_GUIDED_ENABLED))  | MAV_MODE_FLAG_MANUAL_INPUT_ENABLED, 0);
 }
 
 //messages
 void UAV::receiveMessage(MAVLinkMessage const& msg)
 {
-  //TODO : REALLY deal with the message
-  receiveMessage(msg.toByteBuffer());
-}
+  if(msg.get_systemID() != m_UAV_systemID)
+    return;
 
-void UAV::receiveMessage(ByteBuffer const& msg)
-{
-  //TODO : REALLY deal with the msg
-//  ByteBuffer buf(msg);
-//  receiveMessage(MAVLinkMessage(buf));
-  std::cout << "message recu : " << msg << std::endl;
+  //updating connection data
+  if(m_heartbeat_received)
+    _updateConnectionStatus(msg.get_sequenceNumber());
+
+  switch(msg.get_messageID())
+    {
+    case MAV_MSG_HEARTBEAT:
+    {
+      const MAVLink_msg_heartbeat * message = static_cast<MAVLink_msg_heartbeat const*>(&msg);
+      //first hearbeat not received, data update
+      if(!m_heartbeat_received)
+      {
+        m_heartbeat_received = true;
+
+        m_UAV_type = static_cast<MAV_TYPE>(message->get_type());
+        m_UAV_autopilot = static_cast<MAV_AUTOPILOT>(message->get_autopilot());
+        m_UAV_base_mode = message->get_baseMode();
+        m_UAV_custom_mode = message->get_customMode();
+        m_UAV_system_status = static_cast<MAV_STATE>(message->get_systemStatus());
+        m_UAV_sequence_number_RX = message->get_sequenceNumber();
+      }
+      m_last_heartbeat_timestamp = QDateTime::currentDateTime();
+      break;
+    }
+    case MAV_MSG_SYS_STATUS:
+    {
+      //TODO
+      break;
+    }
+    case MAV_MSG_ATTITUDE:
+      //TODO
+      //std::cout << "MAV_MSG_ATTITUDE received" << std::endl;
+      break;
+    case MAV_MSG_GLOBAL_POSITION_INT:
+      //TODO
+      //std::cout << "MAV_MSG_GLOBAL_POSITION_INT received" << std::endl;
+      break;
+    case MAV_MSG_VFR_HUD:
+      //TODO
+      //std::cout << "MAV_MSG_VFR_HUD received" << std::endl;
+      break;
+    case MAV_MSG_GPS_RAW_INT:
+      //TODO
+      break;
+    //deliberately ignored messages
+    case MAV_MSG_RC_CHANNELS_RAW:
+    case MAV_MSG_RAW_IMU:
+    case MAV_MSG_SCALED_PRESSURE:
+    case MAV_MSG_SERVO_OUTPUT_RAW:
+    case MAV_MSG_MISSION_CURRENT:
+    case MAV_MSG_NAV_CONTROLLER_OUTPUT:
+      break;
+    default:
+      std::cout << "unrecognized message received : " << (int)msg.get_messageID() << std::endl;
+      break;
+    }
 }
 
 void UAV::sendMessage(MAVLinkMessage const& msg)
 {
-  execute(msg);
-}
-
-//mode & state
-void UAV::setMode(uint8_t baseMode, uint32_t customMode)
-{
-  if(receivedMode)
-  {
-    execute(MAVLink_msg_set_mode(m_GCSsystemID, m_GCScomponentID, m_sequenceNumber++, m_UAVsystemID, baseMode, customMode));
-  }
-}
-
-void UAV::updateState()
-{
-  //TODO : emit heartBeatTimeout
-  uint64_t heartbeatInterval = QDateTime::currentDateTime().toTime_t() - m_lastHeartbeatTimestamp;
-  if((heartbeatInterval > HEARTBEAT_TIMEOUT))
-    m_connectionLost = true;
-  else
-    m_connectionLost = false;
-}
-
-
-//positionning
-void UAV::setLocalOriginAtCurrentGPSPosition()
-{
-  executeCommand(MAV_CMD_DO_SET_HOME,1,1,0,0,0,0,0,0);
-}
-
-void UAV::setHomePosition(double latitude, double longitude, double altitude)
-{
-  //TODO
+  std::cout << "Sending message " << msg.toByteBuffer() << std::endl;
+  for(auto i = m_links.cbegin(); i != m_links.cend(); i++)
+    (*i)->sendMessage(msg);
 }
 
 void UAV::executeCommand(MAV_CMD command, int confirmation, float param1, float param2, float param3, float param4, float param5, float param6, float param7)
 {
-  execute(MAVLink_msg_cmd(m_GCSsystemID,m_GCScomponentID,m_sequenceNumber++,m_UAVsystemID,m_UAVcomponentID,command,confirmation,param1,param2,param3,param4,param5,param6,param7));
-}
-
-void UAV::executeCommandAck(int num, bool success)
-{
-  execute(MAVLink_msg_cmd_ack(m_GCSsystemID,m_GCSsystemID,m_sequenceNumber++,num, success? 0:1));
-}
-
-void UAV::execute(MAVLinkMessage what)
-{
-  std::cout << "Sending message " << what.toByteBuffer() << std::endl;
-  for(auto i = m_links.cbegin(); i != m_links.cend(); i++)
-    (*i)->sendMessage(what);
+  sendMessage(MAVLink_msg_cmd(m_GCS_systemID,MAV_COMP_ID_ALL,_sequenceNumber(),m_UAV_systemID,MAV_COMP_ID_ALL,command,confirmation,param1,param2,param3,param4,param5,param6,param7));
 }
 
 void UAV::sendHeartbeat()
 {
-  //TODO : check if params are OK
-  execute(MAVLink_msg_heartbeat(m_UAVsystemID, 1, m_sequenceNumber++,m_type,m_autopilot,m_baseMode,m_customMode,m_status));
+  sendMessage(MAVLink_msg_heartbeat(m_UAV_systemID, 1, _sequenceNumber(), MAV_TYPE_GCS, MAV_AUTOPILOT_INVALID, MAV_MODE_PREFLIGHT, 0, MAV_STATE_ACTIVE));
 }
 
-void UAV::receiveBytes(ByteBuffer buf)
+void UAV::_updateConnectionStatus(uint8_t newSequenceNumberRX)
 {
-  receiveMessage(buf);
+  m_UAV_number_packet_lost = (uint8_t) newSequenceNumberRX - m_UAV_sequence_number_RX - 1;
+  m_UAV_sequence_number_RX = newSequenceNumberRX;
+  std::cout << "connexion : " << (int)(255 - m_UAV_number_packet_lost)*100.0/0xff << "%" << std::endl;
 }
-
-//getters & setters
-QString UAV::getName() const{return m_name;}
-uint8_t UAV::getSystemID() const{return m_UAVsystemID;}
-uint8_t UAV::getSequenceNumber() const{return m_sequenceNumber;}
-MAV_TYPE UAV::getType() const{return m_type;}
-MAV_FRAME UAV::getAirframe() const{return m_airframe;}
-MAV_AUTOPILOT UAV::getAutopilot() const{return m_autopilot;}
-MAV_MODE UAV::getBaseMode() const{return m_baseMode;}
-uint32_t UAV::getCustomMode() const{return m_customMode;}
-MAV_STATE UAV::getStatus() const{return m_status;}
-QString UAV::getShortModeText() const{return m_shortModeText;}
-QString UAV::getShortStateText() const{return m_shortStateText;}
-
-bool UAV::isArmed() const{return m_systemIsArmed;}
-
-uint64_t UAV::getStartTime() const{return m_startTime;}
-uint64_t UAV::getOnBoardTimeOffset() const{return m_onBoardTimeOffset;}
-
-bool UAV::isPositionLock() const{return m_positionLock;}
-bool UAV::isLocalPositionKnown() const{return m_localPositionKnown;}
-bool UAV::isGlobalPositionKnown() const{return m_globalPositionKnown;}
-double UAV::getSatelliteCount() const{return m_satelliteCount;}
-bool UAV::isGlobalEstimatorActive() const{return m_globalEstimatorActive;}
-
-double UAV::getLocalX() const{return m_localX;}
-double UAV::getLocalY() const{return m_localY;}
-double UAV::getLocalZ() const{return m_localZ;}
-
-double UAV::getLatitude() const{return m_latitude;}
-double UAV::getLongitude() const{return m_longitude;}
-double UAV::getAltitudeAMSL() const{return m_altitudeAMSL;}
-double UAV::getAltitudeRelative() const{return m_altitudeRelative;}
-
-double UAV::getGPSLatitude() const{return m_GPSAltitude;}
-double UAV::getGPSLongitude() const{return m_GPSLatitude;}
-double UAV::getGPSAltitude() const{return m_GPSLongitude;}
-
-double UAV::getSpeedX() const{return m_speedX;}
-double UAV::getSpeedY() const{return m_speedY;}
-double UAV::getSpeedZ() const{return m_speedZ;}
-
-double UAV::getDistToWaypoint() const{return m_distToWaypoint;}
-double UAV::getAirspeed() const{return m_airspeed;}
-double UAV::getGroundSpeed() const{return m_groundSpeed;}
-double UAV::getBearingToWaypoint() const{return m_bearingToWaypoint;}
-
-bool UAV::isAttitudeKnown() const{return m_attitudeKnown;}
-bool UAV::isAttitudeStamped() const{return m_attitudeStamped;}
-uint64_t UAV::getLastAttitudeTimestamp() const{return m_lastAttitudeTimestamp;}
-
-double UAV::getRoll() const{return m_roll;}
-double UAV::getPitch() const{return m_pitch;}
-double UAV::getYaw() const{return m_yaw;}
