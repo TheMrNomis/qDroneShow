@@ -29,12 +29,12 @@
 #include "seriallink.h"
 #include <limits>
 
-SerialLink::SerialLink(QString serialPort):
+SerialLink::SerialLink(QString serialPort, QSerialPort::BaudRate baudRate):
   Link(),
   m_serialPort(new QSerialPort)
 {
   m_serialPort->setPortName(serialPort);
-  m_serialPort->setBaudRate(QSerialPort::Baud115200);
+  m_serialPort->setBaudRate(baudRate);
 
   QObject::connect(m_serialPort, SIGNAL(readyRead()), this, SLOT(_readBytes()));
 }

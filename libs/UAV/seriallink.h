@@ -37,7 +37,7 @@
 class SerialLink : public Link
 {
 public:
-  SerialLink(QString serialPort);
+  SerialLink(QString serialPort, QSerialPort::BaudRate baudRate);
   ~SerialLink();
 
   virtual bool connect();
