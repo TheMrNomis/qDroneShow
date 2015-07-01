@@ -40,6 +40,7 @@ class MAVLinkMessage
 {
 public:
   MAVLinkMessage(ByteBuffer & buffer, bool crc_extra = true, uint8_t crc_extra_value = 0);
+  MAVLinkMessage(MAVLinkMessage const& msg);
   /**
    * @brief transforms the MAVLinkMessage into a ByteBuffer
    *

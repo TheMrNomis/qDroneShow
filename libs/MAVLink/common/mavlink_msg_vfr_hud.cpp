@@ -11,18 +11,18 @@ MAVLink_msg_vfr_hud::MAVLink_msg_vfr_hud(uint8_t systemID, uint8_t componentID, 
   m_payload << throttle;
 }
 
-float get_airspeed() const
+float MAVLink_msg_vfr_hud::get_airspeed() const
   {return m_payload.get<float>(0*sizeof(float));}
-float get_groundspeed() const
+float MAVLink_msg_vfr_hud::get_groundspeed() const
   {return m_payload.get<float>(1*sizeof(float));}
 
-float get_alt() const
+float MAVLink_msg_vfr_hud::get_alt() const
   {return m_payload.get<float>(2*sizeof(float));}
-float get_climb() const
+float MAVLink_msg_vfr_hud::get_climb() const
   {return m_payload.get<float>(3*sizeof(float));}
 
-int16_t get_heading() const
+int16_t MAVLink_msg_vfr_hud::get_heading() const
   {return m_payload.get<int16_t>(4*sizeof(float));}
 
-uint16_t get_throttle() const
+uint16_t MAVLink_msg_vfr_hud::get_throttle() const
   {return m_payload.get<uint16_t>(4*sizeof(float) + sizeof(int16_t));}

@@ -42,6 +42,20 @@ MAVLinkMessage::MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t s
 
 }
 
+MAVLinkMessage::MAVLinkMessage(MAVLinkMessage const& msg):
+  m_MAVLINK_CRC_EXTRA(msg.m_MAVLINK_CRC_EXTRA),
+  m_CRC_EXTRA(msg.m_CRC_EXTRA),
+  m_header(msg.m_header),
+  m_length(msg.m_length),
+  m_sequenceNumber(msg.m_sequenceNumber),
+  m_systemID(msg.m_systemID),
+  m_componentID(msg.m_componentID),
+  m_messageID(msg.m_messageID),
+  m_payload(msg.m_payload)
+{
+
+}
+
 MAVLinkMessage::MAVLinkMessage(ByteBuffer & buffer, bool crc_extra, uint8_t crc_extra_value):
   m_MAVLINK_CRC_EXTRA(crc_extra),
   m_CRC_EXTRA(crc_extra_value),

@@ -56,7 +56,7 @@ public:
   uint8_t get_baseMode() const;
   uint32_t get_customMode() const;
   uint8_t get_systemStatus() const;
-  uint8_t get_protocol_version() const;
+  uint8_t get_mavlink_version() const;
 };
 
 #endif // MAVLINKHEARTBEAT_H
