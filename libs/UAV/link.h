@@ -70,19 +70,6 @@ public:
 
 signals:
   /**
-   * @brief New data arrived
-   *
-   * The new data is contained in the QByteArray data. The data is copied for each
-   * receiving protocol. For high-speed links like image transmission this might
-   * affect performance, for control links it is however desirable to directly
-   * forward the link data.
-   *
-   * @param data the new bytes
-   * @deprecated
-   */
-  void bytesReceived(ByteBuffer data);
-
-  /**
    * @brief A valid MAVLink message has been received by the interface
    */
   void messageReceived(MAVLinkMessage);
