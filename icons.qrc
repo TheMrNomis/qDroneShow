@@ -9,6 +9,11 @@
         <file alias="save">icons/gui/save.png</file>
         <file alias="settings">icons/gui/settings.png</file>
         <file alias="exit">icons/gui/exit.png</file>
+        <file alias="ne">icons/gui/new.png</file>
+        <file alias="open">icons/gui/open.png</file>
+        <file alias="open_outline">icons/gui/open_outline.png</file>
+        <file alias="play">icons/gui/play.png</file>
+        <file alias="play_outline">icons/gui/play_outline.png</file>
     </qresource>
     <qresource prefix="/battery">
         <file alias="10">icons/battery/battery_10.png</file>
