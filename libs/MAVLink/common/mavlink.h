@@ -33,6 +33,7 @@
 #include "mavlink_msg_cmd.h"
 #include "mavlink_msg_cmd_ack.h"
 #include "mavlink_msg_global_position_int.h"
+#include "mavlink_msg_gps_raw_int.h"
 #include "mavlink_msg_heartbeat.h"
 #include "mavlink_msg_request_rata_stream.h"
 #include "mavlink_msg_set_mode.h"

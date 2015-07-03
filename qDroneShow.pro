@@ -35,7 +35,8 @@ SOURCES += src/main.cpp \
     src/uavwidget.cpp \
     libs/MAVLink/common/mavlink_msg_sys_status.cpp \
     libs/MAVLink/common/mavlink_msg_request_rata_stream.cpp \
-    libs/MAVLink/common/mavlink_msg_statustext.cpp
+    libs/MAVLink/common/mavlink_msg_statustext.cpp \
+    libs/MAVLink/common/mavlink_msg_gps_raw_int.cpp
 
 HEADERS  += \
     libs/UAV/uav.h \
@@ -67,7 +68,8 @@ HEADERS  += \
     libs/MAVLink/common/messagecrcs.h \
     libs/MAVLink/common/messagelengths.h \
     libs/MAVLink/common/mavlink_msg_request_rata_stream.h \
-    libs/MAVLink/common/mavlink_msg_statustext.h
+    libs/MAVLink/common/mavlink_msg_statustext.h \
+    libs/MAVLink/common/mavlink_msg_gps_raw_int.h
 
 RESOURCES += \
     icons.qrc
