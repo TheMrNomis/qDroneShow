@@ -190,7 +190,7 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
     {
       //TODO
       const MAVLink_msg_gps_raw_int * message = static_cast<MAVLink_msg_gps_raw_int const*>(&msg);
-      emit(numberOfGPSChanged(message->get_satellites_visible()));
+      emit(GPSChanged(message->get_satellites_visible(),message->get_fix_type()));
       break;
     }
     case mavlink_message::statustext:

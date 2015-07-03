@@ -94,7 +94,7 @@ signals:
   void tooManyPacketsLost(int);
 
   void armingStateChanged(bool);
-  void numberOfGPSChanged(uint8_t);
+  void GPSChanged(uint8_t satellites, uint8_t fix);
   void connectivityChanged(int8_t);
   void batteryPercentChanged(int8_t);
 
