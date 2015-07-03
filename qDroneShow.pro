@@ -32,7 +32,10 @@ SOURCES += src/main.cpp \
     libs/MAVLink/common/mavlink_msg_attitude.cpp \
     libs/MAVLink/common/mavlink_msg_vfr_hud.cpp \
     src/dronelist.cpp \
-    src/uavwidget.cpp
+    src/uavwidget.cpp \
+    libs/MAVLink/common/mavlink_msg_sys_status.cpp \
+    libs/MAVLink/common/mavlink_msg_request_rata_stream.cpp \
+    libs/MAVLink/common/mavlink_msg_statustext.cpp
 
 HEADERS  += \
     libs/UAV/uav.h \
@@ -59,7 +62,12 @@ HEADERS  += \
     libs/MAVLink/common/mavlink_msg_heartbeat.h \
     src/dronelist.h \
     src/mainwindow.h \
-    src/uavwidget.h
+    src/uavwidget.h \
+    libs/MAVLink/common/mavlink_msg_sys_status.h \
+    libs/MAVLink/common/messagecrcs.h \
+    libs/MAVLink/common/messagelengths.h \
+    libs/MAVLink/common/mavlink_msg_request_rata_stream.h \
+    libs/MAVLink/common/mavlink_msg_statustext.h
 
-FORMS    += src/mainwindow.ui \
-    src/dronelist.ui
+RESOURCES += \
+    icons.qrc
