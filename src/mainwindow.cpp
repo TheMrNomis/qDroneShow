@@ -20,33 +20,88 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
+    QMainWindow(parent),
+    /*----members common to show & plan modes----*/
+    m_actionQuit(new QAction("&Quit", this)),
+
+    m_menuHelp(new QMenu("&Help", this)),
+    m_actionAbout(new QAction("&About", this)),
+
+    /*----show mode members----*/
+    m_show_menuBar(new QMenuBar(0)),
+      m_show_menuFile(new QMenu("&File", this)),
+      m_show_menuConnect(new QMenu("&Connect", this)),
+        m_show_menuSerialPort(new QMenu("Serial Port", this)),
+        m_show_menuBaud(new QMenu("Connexion Speed", this)),
+        m_show_actionConnect(new QAction("&Connect", this)),
+        m_show_actionResearchUAVs(new QAction("&Research UAVs", this)),
+
+    m_show_centralWidget(new QWidget(this)),
+
+    m_show_dockUAVList(new QDockWidget(this)),
+      m_show_droneList(new DroneList(new SerialLink("COM11", QSerialPort::Baud57600),this)),
+
+    /*----plan mode members----*/
+    m_plan_menuBar(new QMenuBar(0)),
+      m_plan_menuFile(new QMenu("&File", this)),
+        m_plan_actionNew(new QAction("&New", this)),
+        m_plan_actionOpen(new QAction("&Open", this)),
+        m_plan_actionSave(new QAction("&Save", this)),
+        m_plan_actionSaveAs(new QAction("Save as...", this))
 {
-  QWidget *mainZone = new QWidget;
-  setCentralWidget(mainZone);
-
-  QMenu *menuFichier = menuBar()->addMenu("&Fichier");
-  //QMenu *menuEdition = menuBar()->addMenu("&Edition");
-
-  QAction *actionQuitter = new QAction("&Quitter", this);
-  actionQuitter->setIcon(QIcon(":/gui/exit"));
-  QObject::connect(actionQuitter, SIGNAL(triggered()), qApp, SLOT(quit()));
-  menuFichier->addAction(actionQuitter);
-
-  QToolBar *toolBar = addToolBar("toolbar");
-  toolBar->setMovable(false);
-  toolBar->addAction(actionQuitter);
-
-  toolBar->addSeparator();
-  QAction * actionRefreshSerial = new QAction("Refresh serial list", this);
-  actionRefreshSerial->setIcon(QIcon(":/gui/refresh"));
-  toolBar->addAction(actionRefreshSerial);
-
-  DroneList * dl = new DroneList(new SerialLink("COM11", QSerialPort::Baud57600), this);
-  setCentralWidget(dl);
+  _setupCommon();
+  _setupPlanMenuBar();
+  _setupShowMenuBar();
+  _setShowMode();
 }
 
 MainWindow::~MainWindow()
+{
+
+}
+
+void MainWindow::_setShowMode()
+{
+  setMenuBar(m_show_menuBar);
+
+  QWidget *mainZone = new QWidget;
+  setCentralWidget(mainZone);
+
+  m_show_dockUAVList->setWidget(m_show_droneList);
+  addDockWidget(Qt::LeftDockWidgetArea, m_show_dockUAVList);
+}
+
+void MainWindow::_setPlanMode()
+{
+  //TODO
+}
+
+void MainWindow::_setupCommon()
+{
+  m_actionAbout->setIcon(QIcon(":/gui/info_outline"));
+
+  m_menuHelp->addAction(m_actionAbout);
+
+  m_actionQuit->setIcon(QIcon(":/gui/exit"));
+  QObject::connect(m_actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+}
+
+void MainWindow::_setupShowMenuBar()
+{
+  m_show_menuFile->addAction(m_actionQuit);
+  m_show_menuBar->addMenu(m_show_menuFile);
+
+  m_show_menuConnect->addMenu(m_show_menuSerialPort);
+  m_show_menuConnect->addMenu(m_show_menuBaud);
+  m_show_menuConnect->addAction(m_show_actionConnect);
+  m_show_menuConnect->addSeparator();
+  m_show_menuConnect->addAction(m_show_actionResearchUAVs);
+  m_show_menuBar->addMenu(m_show_menuConnect);
+
+  m_show_menuBar->addMenu(m_menuHelp);
+}
+
+void MainWindow::_setupPlanMenuBar()
 {
 
 }

@@ -25,15 +25,14 @@
 #include <QMenuBar>
 #include <QAction>
 #include <QToolBar>
+#include <QDockWidget>
+
 #include <QtSerialPort/QSerialPortInfo>
+
 #include "UAV/uav.h"
 #include "UAV/seriallink.h"
 
 #include "dronelist.h"
-
-namespace Ui {
-class MainWindow;
-}
 
 class MainWindow : public QMainWindow
 {
@@ -43,7 +42,43 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+private slots:
+  void _setShowMode();
+  void _setPlanMode();
+
+
+
 private:
+  /*----members common to show & plan modes----*/
+  void _setupCommon();
+  QAction * m_actionQuit;
+
+  QMenu * m_menuHelp;
+    QAction * m_actionAbout;
+
+  /*----show mode members----*/
+  void _setupShowMenuBar();
+  QMenuBar * m_show_menuBar;
+    QMenu * m_show_menuFile;
+    QMenu * m_show_menuConnect;
+      QMenu * m_show_menuSerialPort;
+      QMenu * m_show_menuBaud;
+      QAction * m_show_actionConnect;
+      QAction * m_show_actionResearchUAVs;
+
+  QWidget * m_show_centralWidget;
+
+  QDockWidget * m_show_dockUAVList;
+    DroneList * m_show_droneList;
+
+  /*----plan mode members----*/
+  void _setupPlanMenuBar();
+  QMenuBar * m_plan_menuBar;
+    QMenu * m_plan_menuFile;
+      QAction * m_plan_actionNew;
+      QAction * m_plan_actionOpen;
+      QAction * m_plan_actionSave;
+      QAction * m_plan_actionSaveAs;
 };
 
 #endif // MAINWINDOW_H
