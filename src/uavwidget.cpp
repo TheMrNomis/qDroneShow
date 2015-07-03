@@ -29,7 +29,7 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   firstLine->addWidget(m_armedState);
 
   QHBoxLayout * secondLine = new QHBoxLayout(m_mainLayout->widget());
-  _setGPS(-1);
+  _setGPS(255);
   _setConnectivity(-101);
   _setBattery(-1);
   secondLine->addWidget(m_GPSIcon);
@@ -46,7 +46,7 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   setLayout(m_mainLayout);
 
   QObject::connect(m_uav, SIGNAL(armingStateChanged(bool)), this, SLOT(_setArmedState(bool)));
-  QObject::connect(m_uav, SIGNAL(numberOfGPSChanged(int8_t)), this, SLOT(_setGPS(int8_t)));
+  QObject::connect(m_uav, SIGNAL(numberOfGPSChanged(uint8_t)), this, SLOT(_setGPS(uint8_t)));
   QObject::connect(m_uav, SIGNAL(connectivityChanged(int8_t)), this, SLOT(_setConnectivity(int8_t)));
   QObject::connect(m_uav, SIGNAL(batteryPercentChanged(int8_t)), this, SLOT(_setBattery(int8_t)));
 
@@ -76,9 +76,9 @@ void UAVWidget::_setArmedState(bool isArmed)
   }
 }
 
-void UAVWidget::_setGPS(int8_t satelliteNumber)
+void UAVWidget::_setGPS(uint8_t satelliteNumber)
 {
-  if(satelliteNumber < 0)
+  if(satelliteNumber == 255)
   {
     m_GPSIcon->setPixmap(QPixmap(":/gps/off"));
     m_GPS->setText("<span style='"+m_style_error+"'>ERROR</span>");

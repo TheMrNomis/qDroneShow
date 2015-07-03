@@ -187,8 +187,12 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
       //std::cout << "MAV_MSG_VFR_HUD received" << std::endl;
     break;
     case mavlink_message::gps_raw_int:
+    {
       //TODO
-    break;
+      const MAVLink_msg_gps_raw_int * message = static_cast<MAVLink_msg_gps_raw_int const*>(&msg);
+      emit(numberOfGPSChanged(message->get_satellites_visible()));
+      break;
+    }
     case mavlink_message::statustext:
     {
       //TODO

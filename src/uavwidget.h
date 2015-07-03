@@ -27,7 +27,7 @@ signals:
 
 private slots:
   void _setArmedState(bool isArmed);
-  void _setGPS(int8_t satelliteNumber);
+  void _setGPS(uint8_t satelliteNumber);
   void _setConnectivity(int8_t percent);
   void _setBattery(int8_t percent);
 
