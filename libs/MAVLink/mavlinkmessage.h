@@ -58,9 +58,11 @@ public:
   ByteBuffer get_payload() const;
 
   bool isValid() const;
+  bool isValid(uint8_t crc_extra) const;
 
 protected:
-  MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra = true, uint8_t crc_extra_value = 0);
+  MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID);
+  MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID,uint8_t crc_extra_value = 0);
 
   ByteBuffer m_payload;
 

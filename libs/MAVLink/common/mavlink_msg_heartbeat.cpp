@@ -26,12 +26,16 @@
  * Copyright (C) 2009-2014 Lorenz Meier <mail@qgroundcontrol.org>
  * ======================================================================*/
 
-#include "mavlink_msg_heartbeat.h"
+#include "./mavlink.h"
 
-MAVLink_msg_heartbeat::MAVLink_msg_heartbeat(uint8_t systemID, uint8_t componentID,
-				uint8_t sequenceNumber,uint8_t type, uint8_t autopilot,
-                uint8_t baseMode, uint32_t customMode, uint8_t systemStatus):
-  MAVLinkMessage(9,sequenceNumber,systemID,componentID,0,true,0x32)
+MAVLink_msg_heartbeat::MAVLink_msg_heartbeat( uint8_t systemID, uint8_t componentID,
+                                              uint8_t sequenceNumber,uint8_t type, uint8_t autopilot,
+                                              uint8_t baseMode, uint32_t customMode, uint8_t systemStatus):
+
+  MAVLinkMessage( mavlink_message::lengths[mavlink_message::heartbeat],
+                  sequenceNumber,systemID,componentID,
+                  mavlink_message::heartbeat,
+                  mavlink_message::crcs[mavlink_message::heartbeat])
 {
   m_payload << customMode;
   m_payload << type;

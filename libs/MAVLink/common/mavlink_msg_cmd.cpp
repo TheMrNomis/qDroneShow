@@ -34,7 +34,11 @@ MAVLink_msg_cmd::MAVLink_msg_cmd(uint8_t systemID, uint8_t componentID, uint8_t 
                float param1, float param2, float param3,
                float param4, float param5, float param6,
                float param7):
-  MAVLinkMessage(33,sequenceNumber,systemID,componentID,76,true,152)
+
+  MAVLinkMessage( mavlink_message::lengths[mavlink_message::command_long],
+                  sequenceNumber,systemID,componentID,
+                  mavlink_message::command_long,
+                  mavlink_message::crcs[mavlink_message::command_long])
 {
   m_payload << param1;
   m_payload << param2;

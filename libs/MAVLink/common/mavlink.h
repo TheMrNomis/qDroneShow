@@ -24,12 +24,21 @@
 #include "../mavlink_enums.h"
 #include "../bytebuffer.h"
 
-#include "messagetypes.h"
 
+#include "messagetypes.h"
+#include "messagecrcs.h"
+#include "messagelengths.h"
+
+#include "mavlink_msg_attitude.h"
 #include "mavlink_msg_cmd.h"
 #include "mavlink_msg_cmd_ack.h"
+#include "mavlink_msg_global_position_int.h"
 #include "mavlink_msg_heartbeat.h"
+#include "mavlink_msg_request_rata_stream.h"
 #include "mavlink_msg_set_mode.h"
+#include "mavlink_msg_statustext.h"
+#include "mavlink_msg_sys_status.h"
+#include "mavlink_msg_vfr_hud.h"
 
 #endif // MAVLINK_H
 

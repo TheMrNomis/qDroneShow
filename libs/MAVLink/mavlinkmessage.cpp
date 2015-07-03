@@ -28,8 +28,22 @@
 
 #include "mavlinkmessage.h"
 
-MAVLinkMessage::MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID, bool crc_extra, uint8_t crc_extra_value) :
-  m_MAVLINK_CRC_EXTRA(crc_extra),
+MAVLinkMessage::MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID) :
+  m_MAVLINK_CRC_EXTRA(false),
+  m_CRC_EXTRA(0),
+  m_header(0xFE),
+  m_length(length),
+  m_sequenceNumber(sequenceNumber),
+  m_systemID(systemID),
+  m_componentID(componentID),
+  m_messageID(messageID),
+  m_payload()
+{
+
+}
+
+MAVLinkMessage::MAVLinkMessage(uint8_t length, uint8_t sequenceNumber, uint8_t systemID, uint8_t componentID, uint8_t messageID,uint8_t crc_extra_value) :
+  m_MAVLINK_CRC_EXTRA(true),
   m_CRC_EXTRA(crc_extra_value),
   m_header(0xFE),
   m_length(length),
@@ -80,19 +94,19 @@ MAVLinkMessage::MAVLinkMessage(ByteBuffer & buffer, bool crc_extra, uint8_t crc_
 }
 
 uint8_t MAVLinkMessage::get_header() const
-  {return m_header;}
+{return m_header;}
 uint8_t MAVLinkMessage::get_length() const
-  {return m_length;}
+{return m_length;}
 uint8_t MAVLinkMessage::get_sequenceNumber() const
-  {return m_sequenceNumber;}
+{return m_sequenceNumber;}
 uint8_t MAVLinkMessage::get_systemID() const
-  {return m_systemID;}
+{return m_systemID;}
 uint8_t MAVLinkMessage::get_componentID() const
-  {return m_componentID;}
+{return m_componentID;}
 uint8_t MAVLinkMessage::get_messageID() const
-  {return m_messageID;}
+{return m_messageID;}
 ByteBuffer MAVLinkMessage::get_payload() const
-  {return ByteBuffer(m_payload);}
+{return ByteBuffer(m_payload);}
 
 bool MAVLinkMessage::isValid() const
 {
@@ -111,6 +125,14 @@ bool MAVLinkMessage::isValid() const
     buffer << m_payload;
     return m_checksum == _calculateChecksum(buffer);
   }
+}
+
+bool MAVLinkMessage::isValid(uint8_t crc_extra) const
+{
+  MAVLinkMessage msg(m_length, m_sequenceNumber, m_systemID, m_componentID, m_messageID,crc_extra);
+  msg.m_payload << m_payload;
+
+  return msg.isValid();
 }
 
 ByteBuffer MAVLinkMessage::toByteBuffer() const

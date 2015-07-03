@@ -1,124 +1,129 @@
 #ifndef MESSAGETYPES
 #define MESSAGETYPES
 
-#define MAV_MSG_HEARTBEAT 0
-#define MAV_MSG_SYS_STATUS 1
-#define MAV_MSG_SYSTEM_TIME 2
-#define MAV_MSG_PING 4
-#define MAV_MSG_CHANGE_OPERATOR_CONTROL 5
-#define MAV_MSG_CHANGE_OPERATOR_CONTROL_ACK 6
-#define MAV_MSG_AUTH_KEY 7
-#define MAV_MSG_SET_MODE 11
-#define MAV_MSG_PARAM_REQUEST_READ 20
-#define MAV_MSG_PARAM_REQUEST_LIST 21
-#define MAV_MSG_PARAM_VALUE 22
-#define MAV_MSG_PARAM_SET 23
-#define MAV_MSG_GPS_RAW_INT 24
-#define MAV_MSG_GPS_STATUS 25
-#define MAV_MSG_SCALED_IMU 26
-#define MAV_MSG_RAW_IMU 27
-#define MAV_MSG_RAW_PRESSURE 28
-#define MAV_MSG_SCALED_PRESSURE 29
-#define MAV_MSG_ATTITUDE 30
-#define MAV_MSG_ATTITUDE_QUATERNION 31
-#define MAV_MSG_LOCAL_POSITION_NED 32
-#define MAV_MSG_GLOBAL_POSITION_INT 33
-#define MAV_MSG_RC_CHANNELS_SCALED 34
-#define MAV_MSG_RC_CHANNELS_RAW 35
-#define MAV_MSG_SERVO_OUTPUT_RAW 36
-#define MAV_MSG_MISSION_REQUEST_PARTIAL_LIST 37
-#define MAV_MSG_MISSION_WRITE_PARTIAL_LIST 38
-#define MAV_MSG_MISSION_ITEM 39
-#define MAV_MSG_MISSION_REQUEST 40
-#define MAV_MSG_MISSION_SET_CURRENT 41
-#define MAV_MSG_MISSION_CURRENT 42
-#define MAV_MSG_MISSION_REQUEST_LIST 43
-#define MAV_MSG_MISSION_COUNT 44
-#define MAV_MSG_MISSION_CLEAR_ALL 45
-#define MAV_MSG_MISSION_ITEM_REACHED 46
-#define MAV_MSG_MISSION_ACK 47
-#define MAV_MSG_SET_GPS_GLOBAL_ORIGIN 48
-#define MAV_MSG_GPS_GLOBAL_ORIGIN 49
-#define MAV_MSG_PARAM_MAP_RC 50
-#define MAV_MSG_SAFETY_SET_ALLOWED_AREA 54
-#define MAV_MSG_SAFETY_ALLOWED_AREA 55
-#define MAV_MSG_ATITUDE_QUATERNION_COV 61
-#define MAV_MSG_NAV_CONTROLLER_OUTPUT 62
-#define MAV_MSG_GLOBAL_POSITION_INT_COV 63
-#define MAV_MSG_LOCAL_POSITION_NED_COV 64
-#define MAV_MSG_RC_CHANNELS 65
-#define MAV_MSG_REQUEST_DATA_STREAM 66
-#define MAV_MSG_DATA_STREAM 67
-#define MAV_MSG_MANUAL_CONTROL 69
-#define MAV_MSG_RC_CHANNELS_OVERRIDE 70
-#define MAV_MSG_MISSION_ITEM_INT 73
-#define MAV_MSG_VFR_HUD 74
-#define MAV_MSG_COMMAND_INT 75
-#define MAV_MSG_COMMAND_LONG 76
-#define MAV_MSG_COMMAND_ACK 77
-#define MAV_MSG_MANUAL_SETPOINT 81
-#define MAV_MSG_SET_ATTITUDE_TARGET 82
-#define MAV_MSG_ATTITUDE_TARGET 83
-#define MAV_MSG_SET_POSITION_TARGET_LOCAL_NED 84
-#define MAV_MSG_POSITION_TARGET_LOCAL_NED 85
-#define MAV_MSG_SET_POSITION_TARGET_GLOBAL_INT 86
-#define MAV_MSG_POSITION_TARGET_GLOBAL_INT 87
-#define MAV_MSG_LOCAL_POSITION_NED_SYSTEM_GLOBAL_OFFSET 89
-#define MAV_MSG_HIL_STATE 90
-#define MAV_MSG_HIL_CONTROLS 91
-#define MAV_MSG_HIL_RC_INPUTS_RAW 92
-#define MAV_MSG_OPTICAL_FLOW 100
-#define MAV_MSG_GLOBAL_VISION_POSITION_ESTIMATE 101
-#define MAV_MSG_VISION_POSITION_ESTIMATE 102
-#define MAV_MSG_VISION_SPEED_ESTIMATE 103
-#define MAV_MSG_VISON_POSITION_ESTIMATE 104
-#define MAV_MSG_HIGHRES_IMU 105
-#define MAV_MSG_OPTICAL_FLOW_RAD 106
-#define MAV_MSG_HIL_SENSOR 107
-#define MAV_MSG_SIM_STATE 108
-#define MAV_MSG_RADIO_STATUS 109
-#define MAV_MSG_FILE_TRANSFER_PROTOCOL 110
-#define MAV_MSG_TIMESYNC 111
-#define MAV_MSG_CAMERA_TRIGGER 112
-#define MAV_MSG_HIL_GPS 113
-#define MAV_MSG_HIL_OPTICAL_FLOW 114
-#define MAV_MSG_HIL_STATE_QUATERNION 115
-#define MAV_MSG_SCALED_IMU2 116
-#define MAV_MSG_LOG_REQUEST_LIST 117
-#define MAV_MSG_LOG_ENTRY 118
-#define MAV_MSG_LOG_REQUEST_DATA 119
-#define MAV_MSG_LOG_DATA 120
-#define MAV_MSG_LOG_ERASE 121
-#define MAV_MSG_LOG_REQUEST_END 122
-#define MAV_MSG_GPS_INJECT_DATA 123
-#define MAV_MSG_GPS2_RAW 124
-#define MAV_MSG_POWER_STATUS 125
-#define MAV_MSG_SERIAL_CONTROL 126
-#define MAV_MSG_GPS_RTK 127
-#define MAV_MSG_GPS2_RTK 128
-#define MAV_MSG_SCALED_IMU3 129
-#define MAV_MSG_DATA_TRANSMISSION_HANDSHAKE 130
-#define MAV_MSG_ENCAPSULATED_DATA 131
-#define MAV_MSG_DISTANCE_SENSOR 132
-#define MAV_MSG_TERRAIN_REQUEST 133
-#define MAV_MSG_TERRAIN_DATA 134
-#define MAV_MSG_TERRAIN_CHECK 135
-#define MAV_MSG_TERRAIN_REPORT 136
-#define MAV_MSG_SCALED_PRESSURE2 137
-#define MAV_MSG_ATT_POS_MOCAP 138
-#define MAV_MSG_SET_ACTUATOR_CONTROL_TARGET 139
-#define MAV_MSG_ACTUATOR_CONTROL_TARGET 140
-#define MAV_MSG_BATTERY_STATUS 147
-#define MAV_MSG_AUTOPILOT_VERSION 148
-#define MAV_MSG_LANDING_TARGET 149
-#define MAV_MSG_VIBRATION 241
-#define MAV_MSG_V2_EXTENSION 248
-#define MAV_MSG_MEMORY_VECT 249
-#define MAV_MSG_DEBUG_VECT 250
-#define MAV_MSG_NAMED_VALUE_FLOAT 251
-#define MAV_MSG_NAMED_VALUE_INT 252
-#define MAV_MSG_STATUSTEXT 253
-#define MAV_MSG_DEBUG 254
+#include <cstdint>
+
+namespace mavlink_message
+{
+  const uint8_t heartbeat = 0;
+  const uint8_t sys_status = 1;
+  const uint8_t system_time = 2;
+  const uint8_t ping = 4;
+  const uint8_t change_operator_control = 5;
+  const uint8_t change_operator_control_ack = 6;
+  const uint8_t auth_key = 7;
+  const uint8_t set_mode = 11;
+  const uint8_t param_request_read = 20;
+  const uint8_t param_request_list = 21;
+  const uint8_t param_value = 22;
+  const uint8_t param_set = 23;
+  const uint8_t gps_raw_int = 24;
+  const uint8_t gps_status = 25;
+  const uint8_t scaled_imu = 26;
+  const uint8_t raw_imu = 27;
+  const uint8_t raw_pressure = 28;
+  const uint8_t scaled_pressure = 29;
+  const uint8_t attitude = 30;
+  const uint8_t attitude_quaternion = 31;
+  const uint8_t local_position_ned = 32;
+  const uint8_t global_position_int = 33;
+  const uint8_t rc_channels_scaled = 34;
+  const uint8_t rc_channels_raw = 35;
+  const uint8_t servo_output_raw = 36;
+  const uint8_t mission_request_partial_list = 37;
+  const uint8_t mission_write_partial_list = 38;
+  const uint8_t mission_item = 39;
+  const uint8_t mission_request = 40;
+  const uint8_t mission_set_current = 41;
+  const uint8_t mission_current = 42;
+  const uint8_t mission_request_list = 43;
+  const uint8_t mission_count = 44;
+  const uint8_t mission_clear_all = 45;
+  const uint8_t mission_item_reached = 46;
+  const uint8_t mission_ack = 47;
+  const uint8_t set_gps_global_origin = 48;
+  const uint8_t gps_global_origin = 49;
+  const uint8_t param_map_rc = 50;
+  const uint8_t safety_set_allowed_area = 54;
+  const uint8_t safety_allowed_area = 55;
+  const uint8_t atitude_quaternion_cov = 61;
+  const uint8_t nav_controller_output = 62;
+  const uint8_t global_position_int_cov = 63;
+  const uint8_t local_position_ned_cov = 64;
+  const uint8_t rc_channels = 65;
+  const uint8_t request_data_stream = 66;
+  const uint8_t data_stream = 67;
+  const uint8_t manual_control = 69;
+  const uint8_t rc_channels_override = 70;
+  const uint8_t mission_item_int = 73;
+  const uint8_t vfr_hud = 74;
+  const uint8_t command_int = 75;
+  const uint8_t command_long = 76;
+  const uint8_t command_ack = 77;
+  const uint8_t manual_setpoint = 81;
+  const uint8_t set_attitude_target = 82;
+  const uint8_t attitude_target = 83;
+  const uint8_t set_position_target_local_ned = 84;
+  const uint8_t position_target_local_ned = 85;
+  const uint8_t set_position_target_global_int = 86;
+  const uint8_t position_target_global_int = 87;
+  const uint8_t local_position_ned_system_global_offset = 89;
+  const uint8_t hil_state = 90;
+  const uint8_t hil_controls = 91;
+  const uint8_t hil_rc_inputs_raw = 92;
+  const uint8_t optical_flow = 100;
+  const uint8_t global_vision_position_estimate = 101;
+  const uint8_t vision_position_estimate = 102;
+  const uint8_t vision_speed_estimate = 103;
+  const uint8_t vison_position_estimate = 104;
+  const uint8_t highres_imu = 105;
+  const uint8_t optical_flow_rad = 106;
+  const uint8_t hil_sensor = 107;
+  const uint8_t sim_state = 108;
+  const uint8_t radio_status = 109;
+  const uint8_t file_transfer_protocol = 110;
+  const uint8_t timesync = 111;
+  const uint8_t camera_trigger = 112;
+  const uint8_t hil_gps = 113;
+  const uint8_t hil_optical_flow = 114;
+  const uint8_t hil_state_quaternion = 115;
+  const uint8_t scaled_imu2 = 116;
+  const uint8_t log_request_list = 117;
+  const uint8_t log_entry = 118;
+  const uint8_t log_request_data = 119;
+  const uint8_t log_data = 120;
+  const uint8_t log_erase = 121;
+  const uint8_t log_request_end = 122;
+  const uint8_t gps_inject_data = 123;
+  const uint8_t gps2_raw = 124;
+  const uint8_t power_status = 125;
+  const uint8_t serial_control = 126;
+  const uint8_t gps_rtk = 127;
+  const uint8_t gps2_rtk = 128;
+  const uint8_t scaled_imu3 = 129;
+  const uint8_t data_transmission_handshake = 130;
+  const uint8_t encapsulated_data = 131;
+  const uint8_t distance_sensor = 132;
+  const uint8_t terrain_request = 133;
+  const uint8_t terrain_data = 134;
+  const uint8_t terrain_check = 135;
+  const uint8_t terrain_report = 136;
+  const uint8_t scaled_pressure2 = 137;
+  const uint8_t att_pos_mocap = 138;
+  const uint8_t set_actuator_control_target = 139;
+  const uint8_t actuator_control_target = 140;
+  const uint8_t battery_status = 147;
+  const uint8_t autopilot_version = 148;
+  const uint8_t landing_target = 149;
+  const uint8_t vibration = 241;
+  const uint8_t v2_extension = 248;
+  const uint8_t memory_vect = 249;
+  const uint8_t debug_vect = 250;
+  const uint8_t named_value_float = 251;
+  const uint8_t named_value_int = 252;
+  const uint8_t statustext = 253;
+  const uint8_t debug = 254;
+}
 
 #endif // MESSAGETYPES
 

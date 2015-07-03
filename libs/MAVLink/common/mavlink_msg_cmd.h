@@ -26,10 +26,10 @@
  * Copyright (C) 2009-2014 Lorenz Meier <mail@qgroundcontrol.org>
  * ======================================================================*/
 
-#include "../mavlinkmessage.h"
-
 #ifndef MAVLINK_MSG_CMD_H
 #define MAVLINK_MSG_CMD_H
+
+#include "./mavlink.h"
 
 class MAVLink_msg_cmd : public MAVLinkMessage
 {

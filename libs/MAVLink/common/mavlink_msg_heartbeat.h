@@ -26,11 +26,10 @@
  * Copyright (C) 2009-2014 Lorenz Meier <mail@qgroundcontrol.org>
  * ======================================================================*/
 
-#include "../mavlinkmessage.h"
-
 #ifndef MAVLINKHEARTBEAT_H
 #define MAVLINKHEARTBEAT_H
 
+#include "./mavlink.h"
 
 class MAVLink_msg_heartbeat : public MAVLinkMessage
 {
