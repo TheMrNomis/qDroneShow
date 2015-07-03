@@ -20,10 +20,16 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QApplication>
 #include <QMainWindow>
+#include <QMenuBar>
+#include <QAction>
+#include <QToolBar>
 #include <QtSerialPort/QSerialPortInfo>
 #include "UAV/uav.h"
 #include "UAV/seriallink.h"
+
+#include "dronelist.h"
 
 namespace Ui {
 class MainWindow;
@@ -37,17 +43,7 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
-private slots:
-  void connectSerial();
-
-  void updateSerialPort(int newSerial);
-
 private:
-  void _updateSerialCombobox();
-
-  Ui::MainWindow *ui;
-  UAV* m_uav;
-  QString m_serialPort;
 };
 
 #endif // MAINWINDOW_H

@@ -18,54 +18,35 @@
  * ======================================================================*/
 
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    m_uav(new UAV(1,255, this)),
-    m_serialPort()
+    QMainWindow(parent)
 {
-  ui->setupUi(this);
+  QWidget *mainZone = new QWidget;
+  setCentralWidget(mainZone);
 
-  QObject::connect(ui->ButtonConnectSerial, SIGNAL(released()), this, SLOT(connectSerial()));
-  QObject::connect(ui->ButtonDisconnectSerial, SIGNAL(released()), m_uav, SLOT(disconnectLinks()));
+  QMenu *menuFichier = menuBar()->addMenu("&Fichier");
+  //QMenu *menuEdition = menuBar()->addMenu("&Edition");
 
-  QObject::connect(ui->comboSelectSerial, SIGNAL(activated(int)), this, SLOT(updateSerialPort(int)));
-  _updateSerialCombobox();
-  updateSerialPort(0);
+  QAction *actionQuitter = new QAction("&Quitter", this);
+  actionQuitter->setIcon(QIcon(":/gui/exit"));
+  QObject::connect(actionQuitter, SIGNAL(triggered()), qApp, SLOT(quit()));
+  menuFichier->addAction(actionQuitter);
 
-  QObject::connect(ui->ButtonHeartbeat, SIGNAL(released()), m_uav, SLOT(sendHeartbeat()));
-//  QObject::connect(ui->ButtonParameters, SIGNAL(released()), m_uav, SLOT());
+  QToolBar *toolBar = addToolBar("toolbar");
+  toolBar->setMovable(false);
+  toolBar->addAction(actionQuitter);
 
-  QObject::connect(ui->ButtonArm, SIGNAL(released()), m_uav, SLOT(armSystem()));
-  QObject::connect(ui->ButtonDisarm, SIGNAL(released()), m_uav, SLOT(disarmSystem()));
+  toolBar->addSeparator();
+  QAction * actionRefreshSerial = new QAction("Refresh serial list", this);
+  actionRefreshSerial->setIcon(QIcon(":/gui/refresh"));
+  toolBar->addAction(actionRefreshSerial);
 
-  updateSerialPort(0);
+  DroneList * dl = new DroneList(new SerialLink("COM11", QSerialPort::Baud57600), this);
+  setCentralWidget(dl);
 }
 
 MainWindow::~MainWindow()
 {
-  delete m_uav;
-  delete ui;
-}
 
-void MainWindow::connectSerial()
-{
-  std::cout << "connecting Serial on port [" << m_serialPort.toStdString() << "]" << std::endl;
-  //QString port(ui->comboSelectSerial->it);
-  m_uav->addLink(new SerialLink(m_serialPort, QSerialPort::Baud57600));
-  m_uav->connectLinks();
-}
-
-void MainWindow::updateSerialPort(int newSerial)
-{
-  m_serialPort = ui->comboSelectSerial->itemText(newSerial);
-}
-
-void MainWindow::_updateSerialCombobox()
-{
-  QList<QSerialPortInfo> portList = QSerialPortInfo::availablePorts();
-  for(auto it = portList.cbegin(); it != portList.cend(); ++it)
-      ui->comboSelectSerial->addItem(it->portName());
 }
