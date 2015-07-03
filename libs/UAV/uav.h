@@ -54,6 +54,8 @@ public slots:
   void connectLinks();
   void disconnectLinks();
 
+  void initialize();
+
   //arming
   void armSystem();
   void disarmSystem();
@@ -64,7 +66,12 @@ public slots:
 
   //messages
   void receiveMessage(MAVLinkMessage const& msg);
-  void sendMessage(MAVLinkMessage const& msg);
+  /**
+   * @brief sends a message to this UAV
+   * @param msg the message to send
+   * @param nb the number of time this message must be sent (1 = once, 2 = twice, etc.)
+   */
+  void sendMessage(MAVLinkMessage const& msg, unsigned int nb = 1);
 
   /**
    * @brief Sends a command to be executed on the UAV
@@ -85,6 +92,13 @@ signals:
    * @param the number of packets lost
    */
   void tooManyPacketsLost(int);
+
+  void armingStateChanged(bool);
+  void numberOfGPSChanged(int8_t);
+  void connectivityChanged(int8_t);
+  void batteryPercentChanged(int8_t);
+
+  void statusText(uint8_t severity, std::string const& text);
 
 private:
   void _updateConnectionStatus(uint8_t newSequenceNumberRX);

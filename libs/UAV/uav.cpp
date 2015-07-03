@@ -36,12 +36,10 @@ UAV::UAV(uint8_t UAVsystemId, uint8_t GCSsystemId, QObject *parent):
   m_UAV_sequence_number_RX(0),
   m_UAV_number_packet_lost(0),
 
-   m_heartbeat_received(),
+  m_heartbeat_received(),
   m_last_heartbeat_timestamp()
 {
-
-  //emit disarmed();
-  //emit armingChanged(false);
+  emit armingStateChanged(false);
 }
 
 UAV::~UAV()
@@ -68,8 +66,48 @@ void UAV::disconnectLinks()
 void UAV::addLink(Link* link)
 {
   m_links.push_back(link);
-//  connect(link, SIGNAL(bytesReceived(ByteBuffer)), this, SLOT(receiveBytes(ByteBuffer)));
+  //  connect(link, SIGNAL(bytesReceived(ByteBuffer)), this, SLOT(receiveBytes(ByteBuffer)));
 }
+
+void UAV::initialize()
+{
+  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
+                                              m_UAV_systemID,1,
+                                              MAV_DATA_STREAM_EXTENDED_STATUS,
+                                              2,1),
+              2);
+  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
+                                              m_UAV_systemID,1,
+                                              MAV_DATA_STREAM_POSITION,
+                                              3,1),
+              2);
+  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
+                                              m_UAV_systemID,1,
+                                              MAV_DATA_STREAM_EXTRA1,
+                                              10,1),
+              2);
+  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
+                                              m_UAV_systemID,1,
+                                              MAV_DATA_STREAM_EXTRA2,
+                                              10,1),
+              2);
+  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
+                                              m_UAV_systemID,1,
+                                              MAV_DATA_STREAM_EXTRA3,
+                                              2,1),
+              2);
+  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
+                                              m_UAV_systemID,1,
+                                              MAV_DATA_STREAM_RAW_SENSORS,
+                                              2,1),
+              2);
+  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
+                                              m_UAV_systemID,1,
+                                              MAV_DATA_STREAM_RC_CHANNELS,
+                                              2,1),
+              2);
+}
+
 
 //arming
 void UAV::armSystem()
@@ -108,8 +146,8 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
     _updateConnectionStatus(msg.get_sequenceNumber());
 
   switch(msg.get_messageID())
-    {
-    case MAV_MSG_HEARTBEAT:
+  {
+    case mavlink_message::heartbeat:
     {
       const MAVLink_msg_heartbeat * message = static_cast<MAVLink_msg_heartbeat const*>(&msg);
       //first hearbeat not received, data update
@@ -127,45 +165,57 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
       m_last_heartbeat_timestamp = QDateTime::currentDateTime();
       break;
     }
-    case MAV_MSG_SYS_STATUS:
+    case mavlink_message::sys_status:
     {
-      //TODO
+      const MAVLink_msg_sys_status * message = static_cast<MAVLink_msg_sys_status const*>(&msg);
+      emit(batteryPercentChanged(message->get_battery_remaining()));
       break;
     }
-    case MAV_MSG_ATTITUDE:
+    case mavlink_message::system_time:
+      //TODO
+    break;
+    case mavlink_message::attitude:
       //TODO
       //std::cout << "MAV_MSG_ATTITUDE received" << std::endl;
-      break;
-    case MAV_MSG_GLOBAL_POSITION_INT:
+    break;
+    case mavlink_message::global_position_int:
       //TODO
       //std::cout << "MAV_MSG_GLOBAL_POSITION_INT received" << std::endl;
-      break;
-    case MAV_MSG_VFR_HUD:
+    break;
+    case mavlink_message::vfr_hud:
       //TODO
       //std::cout << "MAV_MSG_VFR_HUD received" << std::endl;
-      break;
-    case MAV_MSG_GPS_RAW_INT:
+    break;
+    case mavlink_message::gps_raw_int:
       //TODO
-      break;
-    //deliberately ignored messages
-    case MAV_MSG_RC_CHANNELS_RAW:
-    case MAV_MSG_RAW_IMU:
-    case MAV_MSG_SCALED_PRESSURE:
-    case MAV_MSG_SERVO_OUTPUT_RAW:
-    case MAV_MSG_MISSION_CURRENT:
-    case MAV_MSG_NAV_CONTROLLER_OUTPUT:
-      break;
-    default:
-      std::cout << "unrecognized message received : " << (int)msg.get_messageID() << std::endl;
+    break;
+    case mavlink_message::statustext:
+    {
+      //TODO
+      const MAVLink_msg_statustext * message = static_cast<MAVLink_msg_statustext const*>(&msg);
+      emit(statusText(message->get_severity(), message->get_text()));
       break;
     }
+      //deliberately ignored messages
+    case mavlink_message::rc_channels_raw:
+    case mavlink_message::raw_imu:
+    case mavlink_message::scaled_pressure:
+    case mavlink_message::servo_output_raw:
+    case mavlink_message::mission_current:
+    case mavlink_message::nav_controller_output:
+    break;
+    default:
+      std::cout << "unrecognized message received : " << (int)msg.get_messageID() << std::endl;
+    break;
+  }
 }
 
-void UAV::sendMessage(MAVLinkMessage const& msg)
+void UAV::sendMessage(MAVLinkMessage const& msg, unsigned int nb)
 {
   std::cout << "Sending message " << msg.toByteBuffer() << std::endl;
   for(auto i = m_links.cbegin(); i != m_links.cend(); i++)
-    (*i)->sendMessage(msg);
+    for(unsigned int n = 0; n < nb; ++n)
+      (*i)->sendMessage(msg);
 }
 
 void UAV::executeCommand(MAV_CMD command, int confirmation, float param1, float param2, float param3, float param4, float param5, float param6, float param7)
@@ -180,7 +230,8 @@ void UAV::sendHeartbeat()
 
 void UAV::_updateConnectionStatus(uint8_t newSequenceNumberRX)
 {
+  //TODO
   m_UAV_number_packet_lost = (uint8_t) newSequenceNumberRX - m_UAV_sequence_number_RX - 1;
   m_UAV_sequence_number_RX = newSequenceNumberRX;
-  std::cout << "connexion : " << (int)(255 - m_UAV_number_packet_lost)*100.0/0xff << "%" << std::endl;
+  emit connectivityChanged((int8_t)((255 - m_UAV_number_packet_lost)*100.0/0xff));
 }
