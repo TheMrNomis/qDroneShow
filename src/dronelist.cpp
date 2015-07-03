@@ -8,6 +8,7 @@ DroneList::DroneList(Link* connection, QWidget *parent) :
 {
   QObject::connect(m_connection, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(_receiveMessage(MAVLinkMessage)));
 
+  m_mainLayout->setAlignment(Qt::AlignTop);
   setLayout(m_mainLayout);
 
   if(!m_connection->isConnected())
