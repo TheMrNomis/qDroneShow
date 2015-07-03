@@ -42,6 +42,9 @@ public:
 
   virtual bool connect();
   virtual bool disconnect();
+  virtual void initialize();
+
+  virtual QString getName() const;
 
 private slots:
   virtual void _readBytes();
@@ -54,6 +57,8 @@ private:
    * @emits badMessageReceived() when found a bad message
    */
   void _extractMAVLinkMessage();
+
+  QString m_name;
 
   QSerialPort* m_serialPort;
   ByteBuffer m_dataBuffer;

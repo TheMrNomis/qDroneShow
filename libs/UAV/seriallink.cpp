@@ -31,6 +31,7 @@
 
 SerialLink::SerialLink(QString serialPort, QSerialPort::BaudRate baudRate):
   Link(),
+  m_name("["+serialPort+"]"),
   m_serialPort(new QSerialPort)
 {
   m_serialPort->setPortName(serialPort);
@@ -48,20 +49,28 @@ SerialLink::~SerialLink()
 
 bool SerialLink::connect()
 {
+  std::cout << "connecting " << m_name.toStdString() << std::endl;
+
   if(!m_serialPort->open(QIODevice::ReadWrite))
   {
     emit(connectionError());
     return false;
   }
 
+  initialize();
+
+  emit connected();
+  return true;
+}
+
+void SerialLink::initialize()
+{
   //initialization of MAVLink (for pixhawk compatibility)
   const char init[] = {0x0D, 0x0D, 0x0D, 0};
   m_serialPort->write(init, sizeof(init) - 1);
   const char* cmd = "sh /etc/init.d/rc.usb\n";
   m_serialPort->write(cmd, strlen(cmd));
   m_serialPort->write(init, sizeof(init));
-
-  return true;
 }
 
 bool SerialLink::disconnect()
@@ -70,6 +79,8 @@ bool SerialLink::disconnect()
   emit(disconnected());
   return true;
 }
+
+QString SerialLink::getName() const {return m_name;}
 
 void SerialLink::_readBytes()
 {
@@ -92,8 +103,17 @@ void SerialLink::_extractMAVLinkMessage()
   //MAVLink messages are at least 8 bytes long (6 bytes header + 2 bytes CRC)
   if(m_dataBuffer.size() >= 8)
   {
+    uint8_t msgLength = m_dataBuffer.get<uint8_t>(1);
+
+    if(msgLength > (0xff - 8)) //messages are at most 0xff in length, therefore the payload is at most (0xff - 8) in length
+    {
+      m_dataBuffer.pop_front();
+      return;
+    }
+
+    msgLength += 8; //msg length = (payload += (header + CRC))
+
     //check if we have the whole message
-    uint8_t msgLength = m_dataBuffer[1] + 8;
     if(m_dataBuffer.size() >= msgLength)
     {
       //dump the whole message onto a ByteBuffer
@@ -101,8 +121,12 @@ void SerialLink::_extractMAVLinkMessage()
       for(unsigned int i = 0; i < msgLength; ++i)
         m_dataBuffer >> messageBuffer;
 
-      //cast the Buffer to a MAVLink message, and send it
-      emit(messageReceived(MAVLinkMessage(messageBuffer)));
+      //cast the Buffer to a MAVLink message
+      MAVLinkMessage msg(messageBuffer);
+      if(msg.isValid(mavlink_message::crcs[msg.get_messageID()]))
+        emit(messageReceived(msg));
+      else
+        emit(badMessageReceived(msg));
 
       //then, check again if there is another message
       _extractMAVLinkMessage();

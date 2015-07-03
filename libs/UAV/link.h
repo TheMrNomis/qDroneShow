@@ -31,7 +31,7 @@
 
 #include <QObject>
 
-#include "MAVLink/mavlinkmessage.h"
+#include "MAVLink/common/mavlink.h" //only suport for common messages
 
 /**
  * @brief The Link class is an abstract class used as an interface for the
@@ -63,10 +63,21 @@ public:
   virtual bool disconnect() = 0;
 
   /**
+   * @brief initialize the link
+   */
+  virtual void initialize() = 0;
+
+  /**
    * @brief write a MAVLinkMessage to this link
    * @param msg the message to transmit
    */
   Link& operator<<(MAVLinkMessage const& msg);
+
+  /**
+   * @brief get the printable name of this Link
+   * @return the name of this Link
+   */
+  virtual QString getName() const = 0;
 
 signals:
   /**
