@@ -21,6 +21,8 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   m_batteryState(new QLabel(this)),
   m_batteryStateIcon(new QLabel(this))
 {
+  setFixedSize(400, 150);
+
   QHBoxLayout * firstLine = new QHBoxLayout(m_mainLayout->widget());
   m_name->setText("<h1>UAV "+QString::number(uavListID)+"</h1>");
   _setArmedState(false);
