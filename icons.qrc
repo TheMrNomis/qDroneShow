@@ -1,0 +1,51 @@
+<RCC>
+    <qresource prefix="/gui">
+        <file alias="explore">icons/gui/explore.png</file>
+        <file alias="help">icons/gui/help.png</file>
+        <file alias="help_outline">icons/gui/help_outline.png</file>
+        <file alias="info">icons/gui/info.png</file>
+        <file alias="info_outline">icons/gui/info_outline.png</file>
+        <file alias="refresh">icons/gui/refresh.png</file>
+        <file alias="save">icons/gui/save.png</file>
+        <file alias="settings">icons/gui/settings.png</file>
+        <file alias="exit">icons/gui/exit.png</file>
+    </qresource>
+    <qresource prefix="/battery">
+        <file alias="10">icons/battery/battery_10.png</file>
+        <file alias="20">icons/battery/battery_20.png</file>
+        <file alias="30">icons/battery/battery_30.png</file>
+        <file alias="50">icons/battery/battery_50.png</file>
+        <file alias="60">icons/battery/battery_60.png</file>
+        <file alias="80">icons/battery/battery_80.png</file>
+        <file alias="90">icons/battery/battery_90.png</file>
+        <file alias="100">icons/battery/battery_100.png</file>
+        <file alias="unknown">icons/battery/battery_unknown.png</file>
+    </qresource>
+    <qresource prefix="/actions">
+        <file alias="flight_land">icons/actions/flight_land.png</file>
+        <file alias="flight_takeoff">icons/actions/flight_takeoff.png</file>
+        <file alias="home">icons/actions/home.png</file>
+    </qresource>
+    <qresource prefix="/state">
+        <file alias="armed">icons/armed/armed.png</file>
+        <file alias="disarmed">icons/armed/disarmed.png</file>
+    </qresource>
+    <qresource prefix="/gps">
+        <file alias="fixed">icons/gps/gps_fixed.png</file>
+        <file alias="not_fixed">icons/gps/gps_not_fixed.png</file>
+        <file alias="off">icons/gps/gps_off.png</file>
+    </qresource>
+    <qresource prefix="/signal">
+        <file alias="0">icons/signal/signal_0.png</file>
+        <file alias="1">icons/signal/signal_1.png</file>
+        <file alias="2">icons/signal/signal_2.png</file>
+        <file alias="3">icons/signal/signal_3.png</file>
+        <file alias="4">icons/signal/signal_4.png</file>
+        <file alias="error_0">icons/signal/signal_error_0.png</file>
+        <file alias="error_1">icons/signal/signal_error_1.png</file>
+        <file alias="error_2">icons/signal/signal_error_2.png</file>
+        <file alias="error_3">icons/signal/signal_error_3.png</file>
+        <file alias="error_4">icons/signal/signal_error_4.png</file>
+        <file alias="off">icons/signal/signal_off.png</file>
+    </qresource>
+</RCC>

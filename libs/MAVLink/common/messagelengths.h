@@ -1,0 +1,5 @@
+#ifndef MESSAGELENGTHS
+#define MESSAGELENGTHS
+
+#endif // MESSAGELENGTHS
+

@@ -1,0 +1,5 @@
+#ifndef MESSAGECRCS
+#define MESSAGECRCS
+
+#endif // MESSAGECRCS
+
