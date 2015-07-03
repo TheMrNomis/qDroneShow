@@ -27,7 +27,7 @@ signals:
 
 private slots:
   void _setArmedState(bool isArmed);
-  void _setGPS(uint8_t satelliteNumber);
+  void _setGPS(uint8_t satelliteNumber, uint8_t fix);
   void _setConnectivity(int8_t percent);
   void _setBattery(int8_t percent);
 
@@ -42,7 +42,8 @@ private:
   QLabel * m_armedState;
   QLabel * m_armedStateIcon;
 
-  QLabel * m_GPS;
+  QLabel * m_GPS_sat;
+  QLabel * m_GPS_fix;
   QLabel * m_GPSIcon;
 
   QLabel * m_connectionRate;

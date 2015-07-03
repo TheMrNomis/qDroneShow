@@ -11,7 +11,8 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   m_armedState(new QLabel(this)),
   m_armedStateIcon(new QLabel(this)),
 
-  m_GPS(new QLabel(this)),
+  m_GPS_sat(new QLabel(this)),
+  m_GPS_fix(new QLabel(this)),
   m_GPSIcon(new QLabel(this)),
 
   m_connectionRate(new QLabel(this)),
@@ -29,15 +30,21 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   firstLine->addWidget(m_armedState);
 
   QHBoxLayout * secondLine = new QHBoxLayout(m_mainLayout->widget());
-  _setGPS(255);
+  _setGPS(255,0);
   _setConnectivity(-101);
   _setBattery(-1);
   secondLine->addWidget(m_GPSIcon);
-  secondLine->addWidget(m_GPS);
-  firstLine->addSpacing(50);
+
+  QVBoxLayout * GPSLayout = new QVBoxLayout(secondLine->widget());
+  GPSLayout->addWidget(m_GPS_fix);
+  GPSLayout->addWidget(m_GPS_sat);
+
+  secondLine->addLayout(GPSLayout);
+
+  secondLine->addSpacing(50);
   secondLine->addWidget(m_connectionRateIcon);
   secondLine->addWidget(m_connectionRate);
-  firstLine->addSpacing(50);
+  secondLine->addSpacing(50);
   secondLine->addWidget(m_batteryStateIcon);
   secondLine->addWidget(m_batteryState);
 
@@ -76,22 +83,39 @@ void UAVWidget::_setArmedState(bool isArmed)
   }
 }
 
-void UAVWidget::_setGPS(uint8_t satelliteNumber)
+void UAVWidget::_setGPS(uint8_t satelliteNumber, uint8_t fix)
 {
   if(satelliteNumber == 255)
   {
     m_GPSIcon->setPixmap(QPixmap(":/gps/off"));
-    m_GPS->setText("<span style='"+m_style_error+"'>ERROR</span>");
-  }
-  else if(satelliteNumber == 0)
-  {
-    m_GPSIcon->setPixmap(QPixmap(":/gps/not_fixed"));
-    m_GPS->setText("<span style='"+m_style_error+"'>"+QString::number(satelliteNumber)+"</span>");
+    m_GPS_sat->setText("<span style='"+m_style_error+"'>ERROR</span>");
+    m_GPS_fix->setText("<span style='"+m_style_error+"'>ERROR</span>");
   }
   else
   {
-    m_GPSIcon->setPixmap(QPixmap(":/gps/fixed"));
-    m_GPS->setText("<span style='"+m_style_ok+"'>"+QString::number(satelliteNumber)+"</span>");
+    m_GPS_sat->setText("<span style='"+m_style_ok+"'>"+QString::number(satelliteNumber)+"</span>");
+    if(fix < 2)
+    {
+      m_GPSIcon->setPixmap(QPixmap(":/gps/not_fixed"));
+      m_GPS_fix->setText("<span style='"+m_style_error+"'>no fix</span>");
+    }
+    else if(fix <= 5)
+    {
+      m_GPSIcon->setPixmap(QPixmap(":/gps/fixed"));
+      if(fix == 2)
+        m_GPS_fix->setText("<span style='"+m_style_ok+"'>2D fix</span>");
+      else if(fix == 3)
+        m_GPS_fix->setText("<span style='"+m_style_ok+"'>3D fix</span>");
+      else if(fix == 4)
+        m_GPS_fix->setText("<span style='"+m_style_ok+"'>DGPS</span>");
+      else if(fix == 5)
+        m_GPS_fix->setText("<span style='"+m_style_ok+"'>RTK</span>");
+    }
+    else
+    {
+      m_GPSIcon->setPixmap(QPixmap(":/gps/off"));
+      m_GPS_fix->setText("<span style='"+m_style_error+"'>ERROR</span>");
+    }
   }
 }
 
