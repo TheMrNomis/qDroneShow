@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
         m_plan_actionSave(new QAction("&Save", this)),
         m_plan_actionSaveAs(new QAction("Save as...", this))
 {
+  setWindowState(Qt::WindowMaximized);
   _setupCommon();
   _setupPlanMenuBar();
   _setupShowMenuBar();
