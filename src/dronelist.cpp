@@ -39,7 +39,6 @@ void DroneList::deleteConnection()
   {
     std::cout << "[DroneList] deleting connection" << std::endl;
     QObject::disconnect(m_connection, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(_receiveMessage(MAVLinkMessage)));
-    delete m_connection;
     m_connection = nullptr;
   }
 }
