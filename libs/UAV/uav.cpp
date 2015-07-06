@@ -108,6 +108,10 @@ void UAV::initialize()
               2);
 }
 
+void UAV::stop()
+{
+  std::cout << "stopping" << std::endl;
+}
 
 //arming
 void UAV::armSystem()
@@ -122,6 +126,11 @@ void UAV::disarmSystem()
   //setMode(m_baseMode & ~(MAV_MODE_FLAG_SAFETY_ARMED), m_customMode);
 }
 
+void UAV::toggleArmingState()
+{
+  //TODO
+}
+
 //autonomy
 void UAV::goAutonomous()
 {
@@ -133,6 +142,24 @@ void UAV::goManual()
 {
   std::cout << "going manual" << std::endl;
   //setMode((m_baseMode & ~(MAV_MODE_FLAG_AUTO_ENABLED | MAV_MODE_FLAG_STABILIZE_ENABLED | MAV_MODE_FLAG_GUIDED_ENABLED))  | MAV_MODE_FLAG_MANUAL_INPUT_ENABLED, 0);
+}
+
+void UAV::goHome()
+{
+  //TODO
+  std::cout << "going home" << std::endl;
+}
+
+void UAV::takeoff()
+{
+  //TODO
+  std::cout << "take off" << std::endl;
+}
+
+void UAV::land()
+{
+  //TODO
+  std::cout << "land" << std::endl;
 }
 
 //messages

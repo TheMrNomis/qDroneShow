@@ -73,6 +73,12 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   QObject::connect(m_uav, SIGNAL(connectivityChanged(int8_t)), this, SLOT(_setConnectivity(int8_t)));
   QObject::connect(m_uav, SIGNAL(batteryPercentChanged(int8_t)), this, SLOT(_setBattery(int8_t)));
 
+  QObject::connect(m_buttonArm, SIGNAL(clicked()), m_uav, SLOT(armSystem()));
+  QObject::connect(m_buttonStop, SIGNAL(clicked()), m_uav, SLOT(stop());
+  QObject::connect(m_buttonTakeOff, SIGNAL(clicked()), m_uav, SLOT(takeoff());
+  QObject::connect(m_buttonLand, SIGNAL(clicked()), m_uav, SLOT(land());
+  QObject::connect(m_buttonHome, SIGNAL(clicked()), m_uav, SLOT(goHome());
+
   //UAV connection
   m_uav->addLink(link);
   m_uav->initialize();

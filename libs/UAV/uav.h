@@ -56,13 +56,21 @@ public slots:
 
   void initialize();
 
+  void stop();
+
   //arming
   void armSystem();
   void disarmSystem();
+  void toggleArmingState();
 
   //autonomy
   void goAutonomous();
   void goManual();
+
+  //flight
+  void goHome();
+  void takeoff();
+  void land();
 
   //messages
   void receiveMessage(MAVLinkMessage const& msg);
