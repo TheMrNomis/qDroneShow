@@ -26,6 +26,7 @@
 #include <QAction>
 #include <QToolBar>
 #include <QDockWidget>
+#include <QSignalMapper>
 
 #include <QtSerialPort/QSerialPortInfo>
 
@@ -46,7 +47,13 @@ private slots:
   void _setShowMode();
   void _setPlanMode();
 
+  void _show_connectLink();
+  void _show_disconnectLink();
 
+  void _show_updatePortNames();
+
+  void _show_setSerialPortName(QAction* sender);
+  void _show_setSerialPortBaudRate(QAction* baudActionSelected);
 
 private:
   /*----members common to show & plan modes----*/
@@ -62,7 +69,11 @@ private:
     QMenu * m_show_menuFile;
     QMenu * m_show_menuConnect;
       QMenu * m_show_menuSerialPort;
+        QActionGroup * m_show_serialPortActionGroup;
+        std::vector<QAction *> m_show_arraySerialPortActions;
       QMenu * m_show_menuBaud;
+        QActionGroup * m_show_baudActionGroup;
+        QAction * m_show_arrayBaudActions[8];
       QAction * m_show_actionConnect;
       QAction * m_show_actionResearchUAVs;
 
@@ -70,6 +81,9 @@ private:
 
   QDockWidget * m_show_dockUAVList;
     DroneList * m_show_droneList;
+
+  QString m_show_serialPortName;
+  QSerialPort::BaudRate m_show_baudRate;
 
   /*----plan mode members----*/
   void _setupPlanMenuBar();

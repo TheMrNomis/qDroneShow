@@ -1,23 +1,47 @@
 #include "dronelist.h"
 
-DroneList::DroneList(Link* connection, QWidget *parent) :
+DroneList::DroneList(QWidget *parent) :
   QGroupBox(parent),
   m_mainLayout(new QVBoxLayout),
-  m_connection(connection),
+  m_connection(nullptr),
   m_uavWidgets()
 {
-  QObject::connect(m_connection, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(_receiveMessage(MAVLinkMessage)));
-
   m_mainLayout->setAlignment(Qt::AlignTop);
   setLayout(m_mainLayout);
 
-  if(!m_connection->isConnected())
-    if(!m_connection->connect())
-      QMessageBox::critical(this, "Connection error", "Impossible to connect "+m_connection->getName());
+
 }
 
 DroneList::~DroneList()
 {
+  deleteConnection();
+}
+
+void DroneList::setConnection(Link * connection)
+{
+  std::cout << "[DroneList] adding connection" << std::endl;
+  if(m_connection != nullptr)
+    deleteConnection();
+  m_connection = connection;
+  QObject::connect(m_connection, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(_receiveMessage(MAVLinkMessage)));
+
+  if(!m_connection->isConnected())
+    if(!m_connection->connect())
+    {
+      QMessageBox::critical(this, "Connection error", "Impossible to connect "+m_connection->getName());
+      deleteConnection();
+    }
+}
+
+void DroneList::deleteConnection()
+{
+  if(m_connection != nullptr)
+  {
+    std::cout << "[DroneList] deleting connection" << std::endl;
+    QObject::disconnect(m_connection, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(_receiveMessage(MAVLinkMessage)));
+    delete m_connection;
+    m_connection = nullptr;
+  }
 }
 
 void DroneList::_receiveMessage(MAVLinkMessage const& msg)
