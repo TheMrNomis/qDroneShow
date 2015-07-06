@@ -5,6 +5,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 
 #include "UAV/uav.h"
 //#include "dronelist.h"
@@ -51,6 +52,12 @@ private:
 
   QLabel * m_batteryState;
   QLabel * m_batteryStateIcon;
+
+  QPushButton * m_buttonArm;
+  QPushButton * m_buttonStop;
+  QPushButton * m_buttonTakeOff;
+  QPushButton * m_buttonLand;
+  QPushButton * m_buttonHome;
 
   const QString m_style_error = "color:#bb0000; font-size:x-large; font-weight:bold;";
   const QString m_style_ok = "color:#000000; font-size:x-large";

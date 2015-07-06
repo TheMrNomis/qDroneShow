@@ -19,7 +19,13 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   m_connectionRateIcon(new QLabel(this)),
 
   m_batteryState(new QLabel(this)),
-  m_batteryStateIcon(new QLabel(this))
+  m_batteryStateIcon(new QLabel(this)),
+
+  m_buttonArm(new QPushButton(QIcon(":/actions/arm"), "arm", this)),
+  m_buttonStop(new QPushButton(QIcon(":/actions/stop"), "stop", this)),
+  m_buttonTakeOff(new QPushButton(QIcon(":/actions/flight_takeoff"), "takeoff", this)),
+  m_buttonLand(new QPushButton(QIcon(":/actions/flight_land"), "land", this)),
+  m_buttonHome(new QPushButton(QIcon(":/actions/home"), "home", this))
 {
   setFixedSize(400, 150);
 
@@ -50,8 +56,16 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   secondLine->addWidget(m_batteryStateIcon);
   secondLine->addWidget(m_batteryState);
 
+  QHBoxLayout * thirdLine = new QHBoxLayout(m_mainLayout->widget());
+  thirdLine->addWidget(m_buttonArm);
+  thirdLine->addWidget(m_buttonStop);
+  thirdLine->addWidget(m_buttonTakeOff);
+  thirdLine->addWidget(m_buttonLand);
+  thirdLine->addWidget(m_buttonHome);
+
   m_mainLayout->addLayout(firstLine);
   m_mainLayout->addLayout(secondLine);
+  m_mainLayout->addLayout(thirdLine);
   setLayout(m_mainLayout);
 
   QObject::connect(m_uav, SIGNAL(armingStateChanged(bool)), this, SLOT(_setArmedState(bool)));
