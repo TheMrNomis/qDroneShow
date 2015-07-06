@@ -209,14 +209,13 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
     case mavlink_message::nav_controller_output:
     break;
     default:
-      std::cout << "unrecognized message received : " << (int)msg.get_messageID() << std::endl;
+      //unrecognized messages
     break;
   }
 }
 
 void UAV::sendMessage(MAVLinkMessage const& msg, unsigned int nb)
 {
-  std::cout << "Sending message " << msg.toByteBuffer() << std::endl;
   for(auto i = m_links.cbegin(); i != m_links.cend(); i++)
     for(unsigned int n = 0; n < nb; ++n)
       (*i)->sendMessage(msg);

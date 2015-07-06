@@ -44,13 +44,10 @@ SerialLink::~SerialLink()
 {
   disconnect();
   delete m_serialPort;
-  std::cout << "deleting serialLink" << std::endl;
 }
 
 bool SerialLink::connect()
 {
-  std::cout << "connecting " << m_name.toStdString() << std::endl;
-
   if(!m_serialPort->open(QIODevice::ReadWrite))
   {
     emit(connectionError());
