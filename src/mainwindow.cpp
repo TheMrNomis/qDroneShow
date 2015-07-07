@@ -118,11 +118,6 @@ void MainWindow::_show_connectLink()
   {
     std::cout << "[MainWindow] connecting link" << std::endl;
     m_show_droneList->setConnection(new SerialLink(m_show_serialPortName, m_show_baudRate));
-    QObject::disconnect(m_show_actionConnect, SIGNAL(triggered()), this, SLOT(_show_connectLink()));
-    QObject::connect(m_show_actionConnect, SIGNAL(triggered()), this, SLOT(_show_disconnectLink()));
-    m_show_actionConnect->setText("Disconnect");
-    m_show_menuBaud->setDisabled(true);
-    m_show_menuSerialPort->setDisabled(true);
   }
 }
 
@@ -130,11 +125,6 @@ void MainWindow::_show_disconnectLink()
 {
   std::cout << "[MainWindow] disconnecting link" << std::endl;
   m_show_droneList->deleteConnection();
-  QObject::disconnect(m_show_actionConnect, SIGNAL(triggered()), this, SLOT(_show_disconnectLink()));
-  QObject::connect(m_show_actionConnect, SIGNAL(triggered()), this, SLOT(_show_connectLink()));
-  m_show_actionConnect->setText("Connect");
-  m_show_menuBaud->setDisabled(false);
-  m_show_menuSerialPort->setDisabled(false);
 }
 
 void MainWindow::_show_droneListConnected(bool isConnected)
@@ -143,11 +133,21 @@ void MainWindow::_show_droneListConnected(bool isConnected)
   {
     m_show_actionResearchUAVs->setEnabled(true);
     m_show_dockUAVList->setWindowTitle("UAV list [connected]");
+    QObject::disconnect(m_show_actionConnect, SIGNAL(triggered()), this, SLOT(_show_connectLink()));
+    QObject::connect(m_show_actionConnect, SIGNAL(triggered()), this, SLOT(_show_disconnectLink()));
+    m_show_actionConnect->setText("Disconnect");
+    m_show_menuBaud->setDisabled(true);
+    m_show_menuSerialPort->setDisabled(true);
   }
   else
   {
     m_show_actionResearchUAVs->setEnabled(false);
     m_show_dockUAVList->setWindowTitle("UAV list [disconnected]");
+    QObject::disconnect(m_show_actionConnect, SIGNAL(triggered()), this, SLOT(_show_disconnectLink()));
+    QObject::connect(m_show_actionConnect, SIGNAL(triggered()), this, SLOT(_show_connectLink()));
+    m_show_actionConnect->setText("Connect");
+    m_show_menuBaud->setDisabled(false);
+    m_show_menuSerialPort->setDisabled(false);
   }
 }
 
