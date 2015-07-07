@@ -116,14 +116,12 @@ void MainWindow::_show_connectLink()
     QMessageBox::warning(this, "warning", "Impossible to connect\nno serial port specified");
   else
   {
-    std::cout << "[MainWindow] connecting link" << std::endl;
     m_show_droneList->setConnection(new SerialLink(m_show_serialPortName, m_show_baudRate));
   }
 }
 
 void MainWindow::_show_disconnectLink()
 {
-  std::cout << "[MainWindow] disconnecting link" << std::endl;
   m_show_droneList->deleteConnection();
 }
 
@@ -194,7 +192,6 @@ void MainWindow::_show_updatePortNames()
 
 void MainWindow::_show_setSerialPortName(QAction * sender)
 {
-  std::cout << "serial port : " << sender->text().toStdString() << std::endl;
   m_show_serialPortName = sender->text();
 }
 
@@ -216,8 +213,6 @@ void MainWindow::_show_setSerialPortBaudRate(QAction * baudActionSelected)
       m_show_baudRate = QSerialPort::Baud57600;
   else if(baudActionSelected == m_show_arrayBaudActions[7])
       m_show_baudRate = QSerialPort::Baud115200;
-
-  std::cout << "baudRate : " << (int) m_show_baudRate << std::endl;
 }
 
 void MainWindow::_setupCommon()
