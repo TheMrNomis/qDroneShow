@@ -48,6 +48,12 @@ void DroneList::deleteConnection()
   }
 }
 
+void DroneList::searchUAVs()
+{
+  //initializing the connection (useful for setting pixhawk in MAVLink mode)
+  m_connection->initialize();
+}
+
 void DroneList::_receiveMessage(MAVLinkMessage const& msg)
 {
   UAVWidget * UAVYoureLookingFor = nullptr;

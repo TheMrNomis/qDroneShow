@@ -79,6 +79,7 @@ void MainWindow::_setShowMode()
   m_show_dockUAVList->setMinimumWidth(400);
   addDockWidget(Qt::LeftDockWidgetArea, m_show_dockUAVList);
   QObject::connect(m_show_droneList, SIGNAL(connected(bool)), this, SLOT(_show_droneListConnected(bool)));
+  QObject::connect(m_show_actionResearchUAVs, SIGNAL(triggered()), m_show_droneList, SLOT(searchUAVs()));
   _show_droneListConnected(false);
 
   /*--Connectivity---*/

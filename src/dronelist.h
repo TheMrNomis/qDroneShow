@@ -34,11 +34,17 @@ public slots:
    * @warning this function WILL take ownership of the Link*.
    */
   void setConnection(Link * connection);
+
   /**
    * @brief removes the Link used to communicate with UAVs
    * @warning this function WILL delete() the current Link
    */
   void deleteConnection();
+
+  /**
+   * @brief searches the UAVs connected (and reachable)
+   */
+  void searchUAVs();
 
 private slots:
   void _receiveMessage(MAVLinkMessage const& msg);
