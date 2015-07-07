@@ -19,7 +19,6 @@ DroneList::~DroneList()
 
 void DroneList::setConnection(Link * connection)
 {
-  std::cout << "[DroneList] setting connection" << std::endl;
   if(m_connection != nullptr)
     deleteConnection();
   m_connection = connection;
@@ -41,10 +40,14 @@ void DroneList::deleteConnection()
 {
   if(m_connection != nullptr)
   {
-    std::cout << "[DroneList] deleting connection" << std::endl;
     QObject::disconnect(m_connection, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(_receiveMessage(MAVLinkMessage)));
     m_connection = nullptr;
     emit(connected(false));
+
+    //removing all the UAVWidgets from the GUI
+    for(auto it = m_uavWidgets.cbegin(); it != m_uavWidgets.cend(); ++it)
+      delete *it;
+    m_uavWidgets.clear();
   }
 }
 
