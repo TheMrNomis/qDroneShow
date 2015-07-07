@@ -69,6 +69,11 @@ void UAV::addLink(Link* link)
   //  connect(link, SIGNAL(bytesReceived(ByteBuffer)), this, SLOT(receiveBytes(ByteBuffer)));
 }
 
+bool UAV::isArmed() const
+{
+  return m_UAV_base_mode & MAV_MODE_FLAG_SAFETY_ARMED;
+}
+
 void UAV::initialize()
 {
   sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
@@ -116,19 +121,20 @@ void UAV::stop()
 //arming
 void UAV::armSystem()
 {
-  std::cout << "arming" << std::endl;
-  //setMode(m_baseMode | MAV_MODE_FLAG_SAFETY_ARMED, m_customMode);
+  executeCommand(MAV_CMD_COMPONENT_ARM_DISARM,0,1);
 }
 
 void UAV::disarmSystem()
 {
-  std::cout << "disarming" << std::endl;
-  //setMode(m_baseMode & ~(MAV_MODE_FLAG_SAFETY_ARMED), m_customMode);
+  executeCommand(MAV_CMD_COMPONENT_ARM_DISARM,0,0);
 }
 
 void UAV::toggleArmingState()
 {
-  //TODO
+  if(this->isArmed())
+    disarmSystem();
+  else
+    armSystem();
 }
 
 //autonomy
@@ -181,14 +187,11 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
       if(!m_heartbeat_received)
       {
         m_heartbeat_received = true;
-
         m_UAV_type = static_cast<MAV_TYPE>(message->get_type());
         m_UAV_autopilot = static_cast<MAV_AUTOPILOT>(message->get_autopilot());
-        m_UAV_base_mode = message->get_baseMode();
-        m_UAV_custom_mode = message->get_customMode();
-        m_UAV_system_status = static_cast<MAV_STATE>(message->get_systemStatus());
         m_UAV_sequence_number_RX = message->get_sequenceNumber();
       }
+      _updateMode(message->get_baseMode(), message->get_customMode());
       m_last_heartbeat_timestamp = QDateTime::currentDateTime();
       break;
     }
@@ -255,7 +258,13 @@ void UAV::executeCommand(MAV_CMD command, int confirmation, float param1, float 
 
 void UAV::sendHeartbeat()
 {
-  sendMessage(MAVLink_msg_heartbeat(m_UAV_systemID, 1, _sequenceNumber(), MAV_TYPE_GCS, MAV_AUTOPILOT_INVALID, MAV_MODE_PREFLIGHT, 0, MAV_STATE_ACTIVE));
+  sendMessage(MAVLink_msg_heartbeat(m_GCS_systemID, 1, _sequenceNumber(), MAV_TYPE_GCS, MAV_AUTOPILOT_INVALID, MAV_MODE_PREFLIGHT, 0, MAV_STATE_ACTIVE));
+}
+
+void UAV::setMode(uint8_t baseMode, uint32_t customMode)
+{
+  std::cout << "setting mode " << (int) baseMode << " (" << std::bitset<8>(baseMode) << ")" << std::endl;
+  sendMessage(MAVLink_msg_set_mode(m_GCS_systemID,MAV_COMP_ID_MISSIONPLANNER,_sequenceNumber(),m_UAV_systemID,baseMode,customMode));
 }
 
 void UAV::_updateConnectionStatus(uint8_t newSequenceNumberRX)
@@ -264,4 +273,20 @@ void UAV::_updateConnectionStatus(uint8_t newSequenceNumberRX)
   m_UAV_number_packet_lost = (uint8_t) newSequenceNumberRX - m_UAV_sequence_number_RX - 1;
   m_UAV_sequence_number_RX = newSequenceNumberRX;
   emit connectivityChanged((int8_t)((255 - m_UAV_number_packet_lost)*100.0/0xff));
+}
+
+void UAV::_updateMode(uint8_t baseMode, uint32_t customMode)
+{
+  std::cout << "mode : " <<  std::bitset<8>(baseMode) << std::endl;
+
+  bool safety_armed_new = MAV_MODE_FLAG_SAFETY_ARMED & baseMode;
+  bool safety_armed_old = MAV_MODE_FLAG_SAFETY_ARMED & m_UAV_base_mode;
+
+  if(safety_armed_new && !safety_armed_old)
+    emit(armingStateChanged(true));
+  else if(!safety_armed_new && safety_armed_old)
+    emit(armingStateChanged(false));
+
+  m_UAV_base_mode = baseMode;
+  m_UAV_custom_mode = customMode;
 }
