@@ -50,6 +50,8 @@ private slots:
   void _show_connectLink();
   void _show_disconnectLink();
 
+  void _show_droneListConnected(bool isConnected);
+
   void _show_updatePortNames();
 
   void _show_setSerialPortName(QAction* sender);

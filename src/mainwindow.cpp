@@ -68,16 +68,20 @@ void MainWindow::_setShowMode()
 {
   setMenuBar(m_show_menuBar);
 
+  /*--CentralWidget--*/
   QWidget *mainZone = new QWidget;
   setCentralWidget(mainZone);
 
+  /*----DroneList----*/
   m_show_dockUAVList->setWidget(m_show_droneList);
   m_show_dockUAVList->setFeatures(QDockWidget::NoDockWidgetFeatures);
   m_show_dockUAVList->setFloating(false);
-  m_show_dockUAVList->setWindowTitle("UAV list");
   m_show_dockUAVList->setMinimumWidth(400);
   addDockWidget(Qt::LeftDockWidgetArea, m_show_dockUAVList);
+  QObject::connect(m_show_droneList, SIGNAL(connected(bool)), this, SLOT(_show_droneListConnected(bool)));
+  _show_droneListConnected(false);
 
+  /*--Connectivity---*/
   for(unsigned int i = 0; i < 8; ++i)
     m_show_baudActionGroup->addAction(m_show_arrayBaudActions[i]);
 
@@ -85,6 +89,7 @@ void MainWindow::_setShowMode()
   QObject::connect(m_show_serialPortActionGroup, SIGNAL(triggered(QAction*)), this, SLOT(_show_setSerialPortName(QAction*)));
   QObject::connect(m_show_actionConnect, SIGNAL(triggered()), this, SLOT(_show_connectLink()));
 
+  /*---SerialPort----*/
   _show_updatePortNames();
 
   //auto-selecting the first serial port
@@ -129,6 +134,20 @@ void MainWindow::_show_disconnectLink()
   m_show_actionConnect->setText("Connect");
   m_show_menuBaud->setDisabled(false);
   m_show_menuSerialPort->setDisabled(false);
+}
+
+void MainWindow::_show_droneListConnected(bool isConnected)
+{
+  if(isConnected)
+  {
+    m_show_actionResearchUAVs->setEnabled(true);
+    m_show_dockUAVList->setWindowTitle("UAV list [connected]");
+  }
+  else
+  {
+    m_show_actionResearchUAVs->setEnabled(false);
+    m_show_dockUAVList->setWindowTitle("UAV list [disconnected]");
+  }
 }
 
 void MainWindow::_show_updatePortNames()

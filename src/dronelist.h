@@ -19,6 +19,13 @@ public:
   explicit DroneList(QWidget *parent = 0);
   ~DroneList();
 
+signals:
+  /**
+   * @brief signal emitted when the connexion has just been connected or disconnected
+   * @param isConnected true if the signal is connected, false otherwise
+   */
+  void connected(bool isConnected);
+
 public slots:
   /**
    * @brief sets the Link used to communicate with UAVs

@@ -9,7 +9,7 @@ DroneList::DroneList(QWidget *parent) :
   m_mainLayout->setAlignment(Qt::AlignTop);
   setLayout(m_mainLayout);
 
-
+  emit(connected(false));
 }
 
 DroneList::~DroneList()
@@ -19,18 +19,22 @@ DroneList::~DroneList()
 
 void DroneList::setConnection(Link * connection)
 {
-  std::cout << "[DroneList] adding connection" << std::endl;
+  std::cout << "[DroneList] setting connection" << std::endl;
   if(m_connection != nullptr)
     deleteConnection();
   m_connection = connection;
   QObject::connect(m_connection, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(_receiveMessage(MAVLinkMessage)));
 
   if(!m_connection->isConnected())
-    if(!m_connection->connect())
+  {
+    if(m_connection->connect())
+      emit(connected(true));
+    else
     {
       QMessageBox::critical(this, "Connection error", "Impossible to connect "+m_connection->getName());
       deleteConnection();
     }
+  }
 }
 
 void DroneList::deleteConnection()
@@ -40,6 +44,7 @@ void DroneList::deleteConnection()
     std::cout << "[DroneList] deleting connection" << std::endl;
     QObject::disconnect(m_connection, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(_receiveMessage(MAVLinkMessage)));
     m_connection = nullptr;
+    emit(connected(false));
   }
 }
 
