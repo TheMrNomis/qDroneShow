@@ -73,7 +73,7 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   QObject::connect(m_uav, SIGNAL(connectivityChanged(int8_t)), this, SLOT(_setConnectivity(int8_t)));
   QObject::connect(m_uav, SIGNAL(batteryPercentChanged(int8_t)), this, SLOT(_setBattery(int8_t)));
 
-  QObject::connect(m_buttonArm, SIGNAL(clicked()), m_uav, SLOT(armSystem()));
+  QObject::connect(m_buttonArm, SIGNAL(clicked()), m_uav, SLOT(toggleArmingState()));
   QObject::connect(m_buttonStop, SIGNAL(clicked()), m_uav, SLOT(stop()));
   QObject::connect(m_buttonTakeOff, SIGNAL(clicked()), m_uav, SLOT(takeoff()));
   QObject::connect(m_buttonLand, SIGNAL(clicked()), m_uav, SLOT(land()));
@@ -97,11 +97,17 @@ void UAVWidget::_setArmedState(bool isArmed)
   {
     m_armedStateIcon->setPixmap(QPixmap(":/state/armed"));
     m_armedState->setText("<span style='"+m_style_error+"'>Armed</span>");
+    m_buttonHome->setDisabled(false);
+    m_buttonTakeOff->setDisabled(false);
+    m_buttonLand->setDisabled(false);
   }
   else
   {
     m_armedStateIcon->setPixmap(QPixmap(":/state/disarmed"));
     m_armedState->setText("<span style='"+m_style_ok+"'>Disarmed</span>");
+    m_buttonHome->setDisabled(true);
+    m_buttonTakeOff->setDisabled(true);
+    m_buttonLand->setDisabled(true);
   }
 }
 

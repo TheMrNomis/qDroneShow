@@ -50,6 +50,8 @@ public:
 
   virtual void addLink(Link* link);
 
+  bool isArmed() const;
+
 public slots:
   void connectLinks();
   void disconnectLinks();
@@ -94,6 +96,8 @@ public slots:
    */
   void sendHeartbeat();
 
+  void setMode(uint8_t baseMode, uint32_t customMode);
+
 signals:
   /**
    * @brief emitted when too many packets are lost
@@ -111,6 +115,7 @@ signals:
 private:
   void _updateConnectionStatus(uint8_t newSequenceNumberRX);
   uint8_t inline _sequenceNumber() {return m_UAV_sequence_number_TX++;}
+  void _updateMode(uint8_t baseMode, uint32_t customMode);
 
 private:
   //constants
