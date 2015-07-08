@@ -97,11 +97,17 @@ void UAVWidget::_setArmedState(bool isArmed)
   {
     m_armedStateIcon->setPixmap(QPixmap(":/state/armed"));
     m_armedState->setText("<span style='"+m_style_error+"'>Armed</span>");
+    m_buttonHome->setDisabled(false);
+    m_buttonTakeOff->setDisabled(false);
+    m_buttonLand->setDisabled(false);
   }
   else
   {
     m_armedStateIcon->setPixmap(QPixmap(":/state/disarmed"));
     m_armedState->setText("<span style='"+m_style_ok+"'>Disarmed</span>");
+    m_buttonHome->setDisabled(true);
+    m_buttonTakeOff->setDisabled(true);
+    m_buttonLand->setDisabled(true);
   }
 }
 
