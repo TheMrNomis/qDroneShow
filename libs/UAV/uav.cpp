@@ -159,13 +159,32 @@ void UAV::goHome()
 void UAV::takeoff()
 {
   //TODO
-  std::cout << "take off" << std::endl;
+  float x_pos = 0; ///X-axis position (m)
+  float y_pos = 0; ///X-axis position (m)
+  float z_pos = 1; ///X-axis position (m)
+
+  float pitch = 0; ///pitch (rad)
+  float yaw = 0; ///yaw angle (rad)
+  float takeoff_ascent_rate = 5; ///ascent rate (m/s)
+
+  std::cout << "taking off" << std::endl;
+  executeCommand(MAV_CMD_NAV_TAKEOFF_LOCAL, 0,pitch,0/*empty*/,takeoff_ascent_rate,yaw,y_pos,x_pos,z_pos);
 }
 
 void UAV::land()
 {
   //TODO
-  std::cout << "land" << std::endl;
+  float target_number = 0;  ///landing target number (if available)
+  float offset = 1;         ///maximum offset from desired landing position (m)
+  float descent_rate = 5;   ///descent rate (m/s)
+  float yaw = 0;            ///yaw angle
+
+  float x_pos = 0;          ///X-axis position (m)
+  float y_pos = 0;          ///Y-axis position (m)
+  float z_pos = 0;          ///Z-axis position (m)
+
+  std::cout << "landing" << std::endl;
+  executeCommand(MAV_CMD_NAV_LAND_LOCAL,0,target_number,offset,descent_rate,yaw,y_pos,x_pos,z_pos);
 }
 
 //messages
