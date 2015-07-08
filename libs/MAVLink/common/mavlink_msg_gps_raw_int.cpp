@@ -44,6 +44,6 @@ uint16_t MAVLink_msg_gps_raw_int::get_cog() const
   {return m_payload.get<int16_t>(sizeof(uint64_t) + 3*sizeof(int32_t) + 3*sizeof(uint16_t));}
 
 uint8_t MAVLink_msg_gps_raw_int::get_fix_type() const
-  {return m_payload.get<int16_t>(sizeof(uint64_t) + 3*sizeof(int32_t) + 4*sizeof(uint16_t) + 0*sizeof(uint8_t));}
+  {return m_payload.get<int8_t>(sizeof(uint64_t) + 3*sizeof(int32_t) + 4*sizeof(uint16_t) + 0*sizeof(uint8_t));}
 uint8_t MAVLink_msg_gps_raw_int::get_satellites_visible() const
-  {return m_payload.get<int16_t>(sizeof(uint64_t) + 3*sizeof(int32_t) + 4*sizeof(uint16_t) + 0*sizeof(uint8_t));}
+  {return m_payload.get<int8_t>(sizeof(uint64_t) + 3*sizeof(int32_t) + 4*sizeof(uint16_t) + 1*sizeof(uint8_t));}
