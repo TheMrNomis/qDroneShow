@@ -57,12 +57,12 @@ void ByteBuffer::operator >>(ByteBuffer &receiptBuffer)
   m_buffer.pop_front();
 }
 
-char const ByteBuffer::operator [](unsigned int i) const
+char ByteBuffer::operator [](unsigned int i) const
 {
   return m_buffer[i];
 }
 
-char const ByteBuffer::operator [](int i) const
+char ByteBuffer::operator [](int i) const
 {
   return m_buffer[i];
 }
@@ -129,7 +129,7 @@ ByteBuffer::const_iterator  ByteBuffer::const_iterator::operator --(int)
   return tmp;
 }
 
-char const ByteBuffer::const_iterator::operator *() const
+char ByteBuffer::const_iterator::operator *() const
 {
   return *m_it;
 }

@@ -21,8 +21,8 @@
 
 UAV::UAV(uint8_t UAVsystemId, uint8_t GCSsystemId, QObject *parent):
   QObject(parent),
+  HEARTBEAT_TIMEOUT(5*1000), //5
   m_links(),
-  HEARTBEAT_TIMEOUT(5*1000), //5 seconds
   m_UAV_systemID(UAVsystemId),
   m_GCS_systemID(GCSsystemId),
 

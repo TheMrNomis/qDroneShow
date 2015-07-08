@@ -68,8 +68,8 @@ public:
    */
   void operator >>(ByteBuffer &receiptBuffer);
 
-  char const operator [](unsigned int) const;
-  char const operator [](int) const;
+  char operator [](unsigned int) const;
+  char operator [](int) const;
 
   /**
    * @brief deletes n bytes from the front of the buffer
@@ -90,7 +90,7 @@ public:
     ByteBuffer::const_iterator  operator ++(int);
     ByteBuffer::const_iterator& operator --();
     ByteBuffer::const_iterator  operator --(int);
-    char const operator *() const;
+    char operator *() const;
     bool operator ==(ByteBuffer::const_iterator const& i) const;
     bool operator !=(ByteBuffer::const_iterator const& i) const;
   private:
