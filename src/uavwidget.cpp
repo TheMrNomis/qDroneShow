@@ -100,6 +100,7 @@ void UAVWidget::_setArmedState(bool isArmed)
     m_buttonHome->setDisabled(false);
     m_buttonTakeOff->setDisabled(false);
     m_buttonLand->setDisabled(false);
+    m_buttonArm->setText("Disarm");
   }
   else
   {
@@ -108,6 +109,7 @@ void UAVWidget::_setArmedState(bool isArmed)
     m_buttonHome->setDisabled(true);
     m_buttonTakeOff->setDisabled(true);
     m_buttonLand->setDisabled(true);
+    m_buttonArm->setText("Arm");
   }
 }
 
