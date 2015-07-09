@@ -21,7 +21,7 @@
 
 UAV::UAV(uint8_t UAVsystemId, uint8_t GCSsystemId, QObject *parent):
   QObject(parent),
-  HEARTBEAT_TIMEOUT(5*1000), //5
+  HEARTBEAT_TIMEOUT(5*1000), //5 seconds
   m_links(),
   m_UAV_systemID(UAVsystemId),
   m_GCS_systemID(GCSsystemId),
@@ -159,16 +159,16 @@ void UAV::goHome()
 void UAV::takeoff()
 {
   //TODO
-  float x_pos = 0; ///X-axis position (m)
-  float y_pos = 0; ///X-axis position (m)
-  float z_pos = 1; ///X-axis position (m)
+  float x_pos = 0;  ///X-axis position (m)
+  float y_pos = 0;  ///X-axis position (m)
+  float z_pos = 1;  ///X-axis position (m)
 
-  float pitch = 0; ///pitch (rad)
-  float yaw = 0; ///yaw angle (rad)
+  float pitch = 0;  ///pitch (rad)
+  float yaw = 0;    ///yaw angle (rad)
   float takeoff_ascent_rate = 5; ///ascent rate (m/s)
 
   std::cout << "taking off" << std::endl;
-  executeCommand(MAV_CMD_NAV_TAKEOFF_LOCAL, 0,pitch,0/*empty*/,takeoff_ascent_rate,yaw,y_pos,x_pos,z_pos);
+  executeCommand(MAV_CMD_NAV_TAKEOFF_LOCAL, 0,pitch,0/*(empty param)*/,takeoff_ascent_rate,yaw,y_pos,x_pos,z_pos);
 }
 
 void UAV::land()
@@ -240,6 +240,11 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
       //TODO
       const MAVLink_msg_gps_raw_int * message = static_cast<MAVLink_msg_gps_raw_int const*>(&msg);
       emit(GPSChanged(message->get_satellites_visible(),message->get_fix_type()));
+      if(message->get_fix_type() > 1)
+      {
+        std::cout << "GPS : lon=" << message->get_lon() << " lat=" << message->get_lat() << " alt=" << message->get_alt() << std::endl;
+        emit(locationUpdate(message->get_lon(),message->get_lat(),message->get_alt()));
+      }
       break;
     }
     case mavlink_message::statustext:
@@ -282,7 +287,6 @@ void UAV::sendHeartbeat()
 
 void UAV::setMode(uint8_t baseMode, uint32_t customMode)
 {
-  std::cout << "setting mode " << (int) baseMode << " (" << std::bitset<8>(baseMode) << ")" << std::endl;
   sendMessage(MAVLink_msg_set_mode(m_GCS_systemID,MAV_COMP_ID_MISSIONPLANNER,_sequenceNumber(),m_UAV_systemID,baseMode,customMode));
 }
 
@@ -296,8 +300,6 @@ void UAV::_updateConnectionStatus(uint8_t newSequenceNumberRX)
 
 void UAV::_updateMode(uint8_t baseMode, uint32_t customMode)
 {
-  std::cout << "mode : " <<  std::bitset<8>(baseMode) << std::endl;
-
   bool safety_armed_new = MAV_MODE_FLAG_SAFETY_ARMED & baseMode;
   bool safety_armed_old = MAV_MODE_FLAG_SAFETY_ARMED & m_UAV_base_mode;
 

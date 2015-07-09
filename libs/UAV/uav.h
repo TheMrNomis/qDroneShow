@@ -112,6 +112,8 @@ signals:
 
   void statusText(uint8_t severity, std::string const& text);
 
+  void locationUpdate(int32_t lon, int32_t lat, int32_t alt);
+
 private:
   void _updateConnectionStatus(uint8_t newSequenceNumberRX);
   uint8_t inline _sequenceNumber() {return m_UAV_sequence_number_TX++;}
