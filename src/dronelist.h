@@ -54,6 +54,12 @@ signals:
    */
   void locationUpdated(int uavNumber,  int32_t lon, int32_t lat, int32_t alt);
 
+  /**
+   * @brief signal emitted when this creates a new UAVWidget
+   * @param uavNumber the ID of the new UAV
+   */
+  void newUAV(unsigned int uavNumber);
+
 public slots:
   /**
    * @brief sets the Link used to communicate with UAVs
@@ -78,6 +84,8 @@ private slots:
   void _receiveMessage(MAVLinkMessage const& msg);
 
 private:
+  UAVWidget * _createUAV(uint8_t systemID);
+
   Link * m_connection;
   std::vector<UAVWidget *> m_uavWidgets;
   QVBoxLayout * m_mainLayout;

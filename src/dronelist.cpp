@@ -88,12 +88,19 @@ void DroneList::_receiveMessage(MAVLinkMessage const& msg)
 
   //if we don't, we create a new one
   if(UAVYoureLookingFor == nullptr)
-  {
-    UAVYoureLookingFor = new UAVWidget(static_cast<unsigned int>(m_uavWidgets.size()), systemID, m_connection, this);
-    m_uavWidgets.push_back(UAVYoureLookingFor);
-    m_mainLayout->addWidget(UAVYoureLookingFor);
-    QObject::connect(UAVYoureLookingFor, SIGNAL(locationUpdated(int,int32_t,int32_t,int32_t)), this, SIGNAL(locationUpdated(int,int32_t,int32_t,int32_t)));
-  }
+    UAVYoureLookingFor = _createUAV(systemID);
 
   UAVYoureLookingFor->m_uav->receiveMessage(msg);
+}
+
+UAVWidget * DroneList::_createUAV(uint8_t systemID)
+{
+  UAVWidget * uav = new UAVWidget(static_cast<unsigned int>(m_uavWidgets.size()), systemID, m_connection, this);
+
+  m_uavWidgets.push_back(uav);
+  m_mainLayout->addWidget(uav);
+
+  QObject::connect(uav, SIGNAL(locationUpdated(int,int32_t,int32_t,int32_t)), this, SIGNAL(locationUpdated(int,int32_t,int32_t,int32_t)));
+
+  return uav;
 }
