@@ -92,6 +92,7 @@ void DroneList::_receiveMessage(MAVLinkMessage const& msg)
     UAVYoureLookingFor = new UAVWidget(static_cast<unsigned int>(m_uavWidgets.size()), systemID, m_connection, this);
     m_uavWidgets.push_back(UAVYoureLookingFor);
     m_mainLayout->addWidget(UAVYoureLookingFor);
+    QObject::connect(UAVYoureLookingFor, SIGNAL(locationUpdated(int,int32_t,int32_t,int32_t)), this, SIGNAL(locationUpdated(int,int32_t,int32_t,int32_t)));
   }
 
   UAVYoureLookingFor->m_uav->receiveMessage(msg);

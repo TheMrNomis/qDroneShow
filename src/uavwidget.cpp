@@ -21,6 +21,7 @@
 
 UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QWidget *parent) :
   QWidget(parent),
+  m_uavListID(uavListID),
   m_uavSystemID(uavSystemID),
   m_uav(new UAV(uavSystemID)),
 
@@ -97,6 +98,8 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   QObject::connect(m_buttonTakeOff, SIGNAL(clicked()), m_uav, SLOT(takeoff()));
   QObject::connect(m_buttonLand, SIGNAL(clicked()), m_uav, SLOT(land()));
   QObject::connect(m_buttonHome, SIGNAL(clicked()), m_uav, SLOT(goHome()));
+
+  QObject::connect(m_uav, SIGNAL(locationUpdate(int32_t,int32_t,int32_t), this, SLOT(_updateLocation(int32_t,int32_t,int32_t)));
 
   //UAV connection
   m_uav->addLink(link);
@@ -227,4 +230,10 @@ void UAVWidget::_setBattery(int8_t percent)
     else
       m_batteryStateIcon->setPixmap(QPixmap(":/battery/100"));
   }
+}
+
+
+void UAVWidget::_updateLocation(int32_t lon, int32_t lat, int32_t alt)
+{
+  emit(locationUpdated(m_uavListID, lon, lat, alt));
 }

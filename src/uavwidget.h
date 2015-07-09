@@ -27,7 +27,6 @@
 #include <QPushButton>
 
 #include "UAV/uav.h"
-//#include "dronelist.h"
 
 /**
  * @brief This class is the vue for the UAV class (MVC architecture).
@@ -44,14 +43,17 @@ public:
   uint8_t getUAVSystemID() const;
 
 signals:
+  void locationUpdated(int uavNumber,  int32_t lon, int32_t lat, int32_t alt);
 
 private slots:
   void _setArmedState(bool isArmed);
   void _setGPS(uint8_t satelliteNumber, uint8_t fix);
   void _setConnectivity(int8_t percent);
   void _setBattery(int8_t percent);
+  void _updateLocation(int32_t lon, int32_t lat, int32_t alt);
 
 private:
+  const unsigned int m_uavListID;
   uint8_t m_uavSystemID;
   UAV * m_uav;
 

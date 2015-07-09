@@ -45,6 +45,15 @@ signals:
    */
   void connected(bool isConnected);
 
+  /**
+   * @brief signal emitted when a UAV updates its location data
+   * @param uavNumber the ID of the UAV in the list
+   * @param lon longitude (1E7)
+   * @param lat latitude  (1E7)
+   * @param alt altitude  (1E3)
+   */
+  void locationUpdated(int uavNumber,  int32_t lon, int32_t lat, int32_t alt);
+
 public slots:
   /**
    * @brief sets the Link used to communicate with UAVs
