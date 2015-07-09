@@ -7,8 +7,7 @@
 QT       += core \
             gui \
             qml \
-            serialport \
-            webkitwidgets
+            serialport
 
 CONFIG   += c++11
 
@@ -40,7 +39,8 @@ SOURCES += src/main.cpp \
     libs/MAVLink/common/mavlink_msg_request_rata_stream.cpp \
     libs/MAVLink/common/mavlink_msg_statustext.cpp \
     libs/MAVLink/common/mavlink_msg_gps_raw_int.cpp \
-    src/mapwidget.cpp
+    src/mapwidget.cpp \
+    src/aboutwindow.cpp
 
 HEADERS  += \
     libs/UAV/uav.h \
@@ -74,7 +74,8 @@ HEADERS  += \
     libs/MAVLink/common/mavlink_msg_request_rata_stream.h \
     libs/MAVLink/common/mavlink_msg_statustext.h \
     libs/MAVLink/common/mavlink_msg_gps_raw_int.h \
-    src/mapwidget.h
+    src/mapwidget.h \
+    src/aboutwindow.h
 
 RESOURCES += \
     icons.qrc

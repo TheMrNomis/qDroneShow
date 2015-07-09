@@ -25,7 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_actionQuit(new QAction("&Quit", this)),
 
     m_menuHelp(new QMenu("&Help", this)),
-    m_actionAbout(new QAction("&About", this)),
+      m_actionAbout(new QAction("&About", this)),
+
+    m_aboutWindow(new AboutWindow(0)),
 
     /*----show mode members----*/
     m_show_menuBar(new QMenuBar(0)),
@@ -62,6 +64,7 @@ MainWindow::~MainWindow()
 {
   delete m_plan_menuBar;
   delete m_show_menuBar;
+  delete m_aboutWindow;
 }
 
 void MainWindow::_setShowMode()
@@ -223,6 +226,8 @@ void MainWindow::_setupCommon()
 
   m_actionQuit->setIcon(QIcon(":/gui/exit"));
   QObject::connect(m_actionQuit, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+  QObject::connect(m_actionAbout, SIGNAL(triggered()), m_aboutWindow, SLOT(show()));
 }
 
 void MainWindow::_setupShowMenuBar()

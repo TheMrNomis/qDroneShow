@@ -35,6 +35,7 @@
 
 #include "mapwidget.h"
 #include "dronelist.h"
+#include "aboutwindow.h"
 
 class MainWindow : public QMainWindow
 {
@@ -65,6 +66,8 @@ private:
 
   QMenu * m_menuHelp;
     QAction * m_actionAbout;
+
+  AboutWindow * m_aboutWindow;
 
   /*----show mode members----*/
   void _setupShowMenuBar();
