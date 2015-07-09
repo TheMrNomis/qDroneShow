@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
         m_show_actionConnect(new QAction("&Connect", this)),
         m_show_actionResearchUAVs(new QAction("&Research UAVs", this)),
 
-    m_show_centralWidget(new QWidget(this)),
+    m_show_centralWidget(new MapWidget(this)),
 
     m_show_dockUAVList(new QDockWidget(this)),
       m_show_droneList(new DroneList(this)),

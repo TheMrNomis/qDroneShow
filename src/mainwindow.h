@@ -33,6 +33,7 @@
 #include "UAV/uav.h"
 #include "UAV/seriallink.h"
 
+#include "mapwidget.h"
 #include "dronelist.h"
 
 class MainWindow : public QMainWindow
@@ -79,13 +80,15 @@ private:
       QAction * m_show_actionConnect;
       QAction * m_show_actionResearchUAVs;
 
-  QWidget * m_show_centralWidget;
-
   QDockWidget * m_show_dockUAVList;
     DroneList * m_show_droneList;
 
   QString m_show_serialPortName;
   QSerialPort::BaudRate m_show_baudRate;
+
+  MapWidget * m_show_centralWidget;
+
+
 
   /*----plan mode members----*/
   void _setupPlanMenuBar();
