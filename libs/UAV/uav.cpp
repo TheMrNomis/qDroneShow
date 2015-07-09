@@ -187,6 +187,19 @@ void UAV::land()
   executeCommand(MAV_CMD_NAV_LAND_LOCAL,0,target_number,offset,descent_rate,yaw,y_pos,x_pos,z_pos);
 }
 
+
+void UAV::goTo(int32_t lon, int32_t lat, int32_t alt)
+{
+  float holdTime = 0;             ///s
+  float acceptanceRadius = 0.1f;  ///m
+  float yaw = 0;
+  float longitude = (float)lon;
+  float latitude = (float)lat;
+  float altitude = (float)alt;
+
+  executeCommand(MAV_CMD_NAV_WAYPOINT, 0, holdTime, acceptanceRadius, 0/*pass through*/, yaw, latitude, longitude, altitude);
+}
+
 //messages
 void UAV::receiveMessage(MAVLinkMessage const& msg)
 {
@@ -228,9 +241,14 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
       //std::cout << "MAV_MSG_ATTITUDE received" << std::endl;
     break;
     case mavlink_message::global_position_int:
+    {
       //TODO
       //std::cout << "MAV_MSG_GLOBAL_POSITION_INT received" << std::endl;
-    break;
+      const MAVLink_msg_global_position_int * message = static_cast<MAVLink_msg_global_position_int const*>(&msg);
+      std::cout << "GPS : lon=" << message->get_lon() << " lat=" << message->get_lat() << " alt=" << message->get_alt() << std::endl;
+      emit(locationUpdate(message->get_lon(), message->get_lat(), message->get_alt()));
+      break;
+    }
     case mavlink_message::vfr_hud:
       //TODO
       //std::cout << "MAV_MSG_VFR_HUD received" << std::endl;
@@ -240,11 +258,6 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
       //TODO
       const MAVLink_msg_gps_raw_int * message = static_cast<MAVLink_msg_gps_raw_int const*>(&msg);
       emit(GPSChanged(message->get_satellites_visible(),message->get_fix_type()));
-      if(message->get_fix_type() > 1)
-      {
-        std::cout << "GPS : lon=" << message->get_lon() << " lat=" << message->get_lat() << " alt=" << message->get_alt() << std::endl;
-        emit(locationUpdate(message->get_lon(),message->get_lat(),message->get_alt()));
-      }
       break;
     }
     case mavlink_message::statustext:

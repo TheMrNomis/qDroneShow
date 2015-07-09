@@ -80,6 +80,15 @@ public slots:
    */
   void searchUAVs();
 
+  /**
+   * @brief asks a UAV to fly towards a GPS position
+   * @param uavNumber the ID of the UAV
+   * @param lon longitude (1E7)
+   * @param lat latitude (1E7)
+   * @param alt altitude (1E3)
+   */
+  void moveUAVTo(unsigned int uavNumber, int32_t lon, int32_t lat, int32_t alt);
+
 private slots:
   void _receiveMessage(MAVLinkMessage const& msg);
 

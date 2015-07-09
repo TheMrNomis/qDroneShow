@@ -76,6 +76,11 @@ void DroneList::searchUAVs()
   m_connection->initialize();
 }
 
+void DroneList::moveUAVTo(unsigned int uavNumber, int32_t lon, int32_t lat, int32_t alt)
+{
+  m_uavWidgets[uavNumber]->m_uav->goTo(lon,lat,alt);
+}
+
 void DroneList::_receiveMessage(MAVLinkMessage const& msg)
 {
   UAVWidget * UAVYoureLookingFor = nullptr;

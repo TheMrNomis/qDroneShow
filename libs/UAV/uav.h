@@ -73,6 +73,7 @@ public slots:
   void goHome();
   void takeoff();
   void land();
+  void goTo(int32_t lon, int32_t lat, int32_t alt);
 
   //messages
   void receiveMessage(MAVLinkMessage const& msg);
