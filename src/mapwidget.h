@@ -32,7 +32,7 @@ public:
   explicit MapWidget(QWidget *parent = 0);
 
 public slots:
-  void updateLocation(int32_t lon, int32_t lat, int32_t alt);
+  void updateLocation(unsigned int uavNumber, int32_t lon, int32_t lat, int32_t alt);
 
 private:
   QLayout * m_layout;

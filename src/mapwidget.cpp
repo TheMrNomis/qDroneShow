@@ -24,7 +24,7 @@ MapWidget::MapWidget(QWidget *parent) : QWidget(parent),
 {
 }
 
-void MapWidget::updateLocation(int32_t lon, int32_t lat, int32_t alt)
+void MapWidget::updateLocation(unsigned int uavNumber, int32_t lon, int32_t lat, int32_t alt)
 {
   m_lon = lon;
   m_lat = lat;
