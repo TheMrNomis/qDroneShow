@@ -105,7 +105,7 @@ UAVWidget * DroneList::_createUAV(uint8_t systemID)
   m_uavWidgets.push_back(uav);
   m_mainLayout->addWidget(uav);
 
-  QObject::connect(uav, SIGNAL(locationUpdated(int,int32_t,int32_t,int32_t)), this, SIGNAL(locationUpdated(int,int32_t,int32_t,int32_t)));
+  QObject::connect(uav, SIGNAL(locationUpdated(uint,int32_t,int32_t,int32_t)), this, SIGNAL(locationUpdated(uint,int32_t,int32_t,int32_t)));
 
   return uav;
 }

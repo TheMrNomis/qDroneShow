@@ -21,9 +21,15 @@
 #define MAPWIDGET_H
 
 #include <QWidget>
-#include <QHBoxLayout>
+#include <QLayout>
+#include <QFormLayout>
+#include <QPushButton>
+#include <QSpinBox>
+#include <QLabel>
+
 #include <cstdint>
 #include <iostream>
+#include <limits>
 
 class MapWidget : public QWidget
 {
@@ -31,15 +37,40 @@ class MapWidget : public QWidget
 public:
   explicit MapWidget(QWidget *parent = 0);
 
+signals:
+  void goTo(unsigned int uavNumBer, int32_t lon, int32_t lat, int32_t alt);
+
 public slots:
   void updateLocation(unsigned int uavNumber, int32_t lon, int32_t lat, int32_t alt);
 
-private:
-  QLayout * m_layout;
+private slots:
+  void _putCurrentLocationInForm();
+  void _go();
+  void _updateLon(int);
+  void _updateLat(int);
+  void _updateAlt(int);
 
-  int32_t m_lon;
-  int32_t m_lat;
-  int32_t m_alt;
+private:
+  QVBoxLayout * m_layout;
+
+  QLabel * m_labelLon;
+  QLabel * m_labelLat;
+  QLabel * m_labelAlt;
+
+  QSpinBox * m_spinBoxLon;
+  QSpinBox * m_spinBoxLat;
+  QSpinBox * m_spinBoxAlt;
+
+  QPushButton * m_buttonGo;
+  QPushButton * m_buttonSetCurrent;
+
+  int32_t m_current_lon;
+  int32_t m_current_lat;
+  int32_t m_current_alt;
+
+  int32_t m_goto_lon;
+  int32_t m_goto_lat;
+  int32_t m_goto_alt;
 };
 
 #endif // MAPWIDGET_H

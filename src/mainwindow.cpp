@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
         m_plan_actionSave(new QAction("&Save", this)),
         m_plan_actionSaveAs(new QAction("Save as...", this))
 {
-  setWindowState(Qt::WindowMaximized);
+  //setWindowState(Qt::WindowMaximized);
   _setupCommon();
   _setupPlanMenuBar();
   _setupShowMenuBar();
@@ -72,8 +72,9 @@ void MainWindow::_setShowMode()
   setMenuBar(m_show_menuBar);
 
   /*--CentralWidget--*/
-  QWidget *mainZone = new QWidget;
-  setCentralWidget(mainZone);
+  QObject::connect(m_show_droneList, SIGNAL(locationUpdated(uint,int32_t,int32_t,int32_t)), m_show_centralWidget, SLOT(updateLocation(uint,int32_t,int32_t,int32_t)));
+  QObject::connect(m_show_centralWidget, SIGNAL(goTo(uint,int32_t,int32_t,int32_t)), m_show_droneList, SLOT(moveUAVTo(uint,int32_t,int32_t,int32_t)));
+  setCentralWidget(m_show_centralWidget);
 
   /*----DroneList----*/
   m_show_dockUAVList->setWidget(m_show_droneList);
