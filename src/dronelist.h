@@ -52,7 +52,7 @@ signals:
    * @param lat latitude  (1E7)
    * @param alt altitude  (1E3)
    */
-  void locationUpdated(int uavNumber,  int32_t lon, int32_t lat, int32_t alt);
+  void locationUpdated(unsigned int uavNumber,  int32_t lon, int32_t lat, int32_t alt);
 
   /**
    * @brief signal emitted when this creates a new UAVWidget

@@ -43,7 +43,7 @@ public:
   uint8_t getUAVSystemID() const;
 
 signals:
-  void locationUpdated(int uavNumber,  int32_t lon, int32_t lat, int32_t alt);
+  void locationUpdated(unsigned int uavNumber,  int32_t lon, int32_t lat, int32_t alt);
 
 private slots:
   void _setArmedState(bool isArmed);
