@@ -119,6 +119,8 @@ private:
   void _updateConnectionStatus(uint8_t newSequenceNumberRX);
   uint8_t inline _sequenceNumber() {return m_UAV_sequence_number_TX++;}
   void _updateMode(uint8_t baseMode, uint32_t customMode);
+  void _updateLocation(int32_t lon, int32_t lat, int32_t alt);
+  void _updateGPS(uint8_t satellites, uint8_t fix);
 
 private:
   //constants
@@ -145,6 +147,15 @@ private:
   //heartbeat data
   bool m_heartbeat_received;///has the first heartbeat been received ?
   QDateTime m_last_heartbeat_timestamp;
+
+  //position
+  int32_t m_longitude;
+  int32_t m_latitude;
+  int32_t m_altitude;
+
+  //GPS
+  uint8_t m_satellites;
+  uint8_t m_fix;
 };
 
 #endif // UAV_H

@@ -159,32 +159,37 @@ void UAV::goHome()
 void UAV::takeoff()
 {
   //TODO
-  float x_pos = 0;  ///X-axis position (m)
-  float y_pos = 0;  ///X-axis position (m)
-  float z_pos = 1;  ///X-axis position (m)
+//  float x_pos = 0;  ///X-axis position (m)
+//  float y_pos = 0;  ///X-axis position (m)
+//  float z_pos = 1;  ///X-axis position (m)
 
   float pitch = 0;  ///pitch (rad)
-  float yaw = 0;    ///yaw angle (rad)
-  float takeoff_ascent_rate = 5; ///ascent rate (m/s)
+//  float yaw = 0;    ///yaw angle (rad)
+//  float takeoff_ascent_rate = 5; ///ascent rate (m/s)
 
   std::cout << "taking off" << std::endl;
-  executeCommand(MAV_CMD_NAV_TAKEOFF_LOCAL, 0,pitch,0/*(empty param)*/,takeoff_ascent_rate,yaw,y_pos,x_pos,z_pos);
+  if(m_fix > 1)
+    std::cout << "takeoff" << std::endl;
+    //executeCommand(MAV_CMD_NAV_TAKEOFF, 0,pitch,0/*(empty param)*/,0,yaw,m_latitude,m_longitude,m_altitude+1);
+
+  executeCommand(MAV_CMD_NAV_TAKEOFF,1,0,0,0,0,0,0,0);
 }
 
 void UAV::land()
 {
   //TODO
-  float target_number = 0;  ///landing target number (if available)
-  float offset = 1;         ///maximum offset from desired landing position (m)
-  float descent_rate = 5;   ///descent rate (m/s)
-  float yaw = 0;            ///yaw angle
+//  float target_number = 0;  ///landing target number (if available)
+//  float offset = 1;         ///maximum offset from desired landing position (m)
+//  float descent_rate = 5;   ///descent rate (m/s)
+//  float yaw = 0;            ///yaw angle
 
-  float x_pos = 0;          ///X-axis position (m)
-  float y_pos = 0;          ///Y-axis position (m)
-  float z_pos = 0;          ///Z-axis position (m)
+//  float x_pos = 0;          ///X-axis position (m)
+//  float y_pos = 0;          ///Y-axis position (m)
+//  float z_pos = 0;          ///Z-axis position (m)
 
   std::cout << "landing" << std::endl;
-  executeCommand(MAV_CMD_NAV_LAND_LOCAL,0,target_number,offset,descent_rate,yaw,y_pos,x_pos,z_pos);
+//  executeCommand(MAV_CMD_NAV_LAND_LOCAL,0,target_number,offset,descent_rate,yaw,y_pos,x_pos,z_pos);
+  executeCommand(MAV_CMD_NAV_LAND,1,0,0,0,0,0,0,0);
 }
 
 
@@ -224,6 +229,7 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
         m_UAV_sequence_number_RX = message->get_sequenceNumber();
       }
       _updateMode(message->get_baseMode(), message->get_customMode());
+      std::cout << "mode = " << std::bitset<8>(message->get_baseMode()) << std::endl;
       m_last_heartbeat_timestamp = QDateTime::currentDateTime();
       break;
     }
@@ -247,17 +253,30 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
       const MAVLink_msg_global_position_int * message = static_cast<MAVLink_msg_global_position_int const*>(&msg);
       std::cout << "GPS : lon=" << message->get_lon() << " lat=" << message->get_lat() << " alt=" << message->get_alt() << std::endl;
       emit(locationUpdate(message->get_lon(), message->get_lat(), message->get_alt()));
+      _updateLocation(message->get_lon(), message->get_lat(), message->get_alt());
       break;
     }
     case mavlink_message::vfr_hud:
+    {
       //TODO
-      //std::cout << "MAV_MSG_VFR_HUD received" << std::endl;
-    break;
+      std::cout << "vfr hud" << std::endl;
+      const MAVLink_msg_vfr_hud * message = static_cast<MAVLink_msg_vfr_hud const*>(&msg);
+      std::cout << "alt : " << message->get_alt() << std::endl;
+      break;
+    }
+    case mavlink_message::command_ack:
+    {
+      std::cout << "command ack" << std::endl;
+      const MAVLink_msg_cmd_ack * message = static_cast<MAVLink_msg_cmd_ack const*>(&msg);
+      std::cout << "command ack : cmd=" << (int)message->get_command() << ", result = " << (int)message->get_result() << std::endl;
+      break;
+    }
     case mavlink_message::gps_raw_int:
     {
       //TODO
       const MAVLink_msg_gps_raw_int * message = static_cast<MAVLink_msg_gps_raw_int const*>(&msg);
       emit(GPSChanged(message->get_satellites_visible(),message->get_fix_type()));
+      _updateGPS(message->get_satellites_visible(),message->get_fix_type());
       break;
     }
     case mavlink_message::statustext:
@@ -269,14 +288,26 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
     }
       //deliberately ignored messages
     case mavlink_message::rc_channels_raw:
+      std::cout << "rc_channels_raw" << std::endl;
+    break;
     case mavlink_message::raw_imu:
+      std::cout << "raw imu" << std::endl;
+    break;
     case mavlink_message::scaled_pressure:
+      std::cout << "scaled pressure" << std::endl;
+    break;
     case mavlink_message::servo_output_raw:
+      std::cout << "servo output raw" << std::endl;
+    break;
     case mavlink_message::mission_current:
+      std::cout << "mission current" << std::endl;
+    break;
     case mavlink_message::nav_controller_output:
+      std::cout << "controller output" << std::endl;
     break;
     default:
       //unrecognized messages
+      std::cout << "unrecognized message : " << (int) msg.get_messageID() << std::endl;
     break;
   }
 }
@@ -323,4 +354,18 @@ void UAV::_updateMode(uint8_t baseMode, uint32_t customMode)
 
   m_UAV_base_mode = baseMode;
   m_UAV_custom_mode = customMode;
+}
+
+void UAV::_updateLocation(int32_t lon, int32_t lat, int32_t alt)
+{
+  m_longitude = lon;
+  m_latitude = lat;
+  m_altitude = alt;
+}
+
+
+void UAV::_updateGPS(uint8_t satellites, uint8_t fix)
+{
+  m_satellites = satellites;
+  m_fix = fix;
 }
