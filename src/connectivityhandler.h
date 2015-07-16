@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstdint>
 #include <deque>
+#include <cmath>
 
 #include <QObject>
 #include <QDateTime>

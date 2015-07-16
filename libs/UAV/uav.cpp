@@ -212,7 +212,7 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
     return;
 
   //updating connection data
-  emit(messageReceived((int) msg.get_sequenceNumber()));
+  _updateConnectionStatus(msg.get_sequenceNumber());
 
   switch(msg.get_messageID())
   {
@@ -333,6 +333,14 @@ void UAV::sendHeartbeat()
 void UAV::setMode(uint8_t baseMode, uint32_t customMode)
 {
   sendMessage(MAVLink_msg_set_mode(m_GCS_systemID,MAV_COMP_ID_MISSIONPLANNER,_sequenceNumber(),m_UAV_systemID,baseMode,customMode));
+}
+
+void UAV::_updateConnectionStatus(uint8_t newSequenceNumberRX)
+{
+  //TODO
+  m_UAV_number_packet_lost = (uint8_t) newSequenceNumberRX - m_UAV_sequence_number_RX - 1;
+  m_UAV_sequence_number_RX = newSequenceNumberRX;
+  emit messageReceived(m_UAV_number_packet_lost);
 }
 
 void UAV::_updateMode(uint8_t baseMode, uint32_t customMode)

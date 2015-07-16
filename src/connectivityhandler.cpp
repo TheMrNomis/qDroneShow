@@ -57,9 +57,21 @@ void ConnectivityHandler::_timeout()
 
 uint8_t ConnectivityHandler::_connectivity() const
 {
-  int8_t connectivity = 20;
+  /*----Rx----*/
+  int RxDrop = 0;
+  for(auto it = m_RxDrops.cbegin(); it != m_RxDrops.cend(); ++it)
+    RxDrop += (*it).second;
 
-  //TODO
+  int RxError = (int)m_RxErrors.size();
 
-  return connectivity;
+  //we use the log10 to have a huge drop (30%) at the first drop, and a little drop (5/10%) after multiple loss
+  int RxPercent = 100 - 100*log(1+RxDrop+RxError);
+  RxPercent = (RxPercent > 0)? RxPercent : 0;
+
+  /*----Tx----*/
+  int TxPercent = 100 - 100*log(1+m_TxDrops+m_TxErrors);
+  TxPercent = (TxPercent > 0)? TxPercent : 0;
+
+  /*----------*/
+  return (RxPercent + TxPercent)/2;
 }
