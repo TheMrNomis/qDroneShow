@@ -32,6 +32,7 @@
         <file alias="home">icons/actions/home.png</file>
         <file alias="arm">icons/actions/arm.png</file>
         <file alias="stop">icons/actions/stop.png</file>
+        <file alias="refresh">icons/actions/refresh.png</file>
     </qresource>
     <qresource prefix="/state">
         <file alias="armed">icons/armed/armed.png</file>
