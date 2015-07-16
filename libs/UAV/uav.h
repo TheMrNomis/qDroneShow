@@ -108,8 +108,12 @@ signals:
 
   void armingStateChanged(bool);
   void GPSChanged(uint8_t satellites, uint8_t fix);
-  void connectivityChanged(int8_t);
   void batteryPercentChanged(int8_t);
+
+  //connectivity
+  void messageReceived(int sequenceNumber);
+  void badMessageReceived();
+  void txConnectivityUpdate(uint16_t drop_rate, uint16_t errors);
 
   void statusText(uint8_t severity, std::string const& text);
 

@@ -212,8 +212,7 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
     return;
 
   //updating connection data
-  if(m_heartbeat_received)
-    _updateConnectionStatus(msg.get_sequenceNumber());
+  emit(messageReceived((int) msg.get_sequenceNumber()));
 
   switch(msg.get_messageID())
   {
@@ -237,6 +236,8 @@ void UAV::receiveMessage(MAVLinkMessage const& msg)
     {
       const MAVLink_msg_sys_status * message = static_cast<MAVLink_msg_sys_status const*>(&msg);
       emit(batteryPercentChanged(message->get_battery_remaining()));
+
+      emit(txConnectivityUpdate(message->get_drop_rate_comm(), message->get_errors_comm()));
       break;
     }
     case mavlink_message::system_time:
@@ -332,14 +333,6 @@ void UAV::sendHeartbeat()
 void UAV::setMode(uint8_t baseMode, uint32_t customMode)
 {
   sendMessage(MAVLink_msg_set_mode(m_GCS_systemID,MAV_COMP_ID_MISSIONPLANNER,_sequenceNumber(),m_UAV_systemID,baseMode,customMode));
-}
-
-void UAV::_updateConnectionStatus(uint8_t newSequenceNumberRX)
-{
-  //TODO
-  m_UAV_number_packet_lost = (uint8_t) newSequenceNumberRX - m_UAV_sequence_number_RX - 1;
-  m_UAV_sequence_number_RX = newSequenceNumberRX;
-  emit connectivityChanged((int8_t)((255 - m_UAV_number_packet_lost)*100.0/0xff));
 }
 
 void UAV::_updateMode(uint8_t baseMode, uint32_t customMode)

@@ -40,7 +40,8 @@ SOURCES += src/main.cpp \
     libs/MAVLink/common/mavlink_msg_statustext.cpp \
     libs/MAVLink/common/mavlink_msg_gps_raw_int.cpp \
     src/mapwidget.cpp \
-    src/aboutwindow.cpp
+    src/aboutwindow.cpp \
+    src/connectivityhandler.cpp
 
 HEADERS  += \
     libs/UAV/uav.h \
@@ -75,7 +76,8 @@ HEADERS  += \
     libs/MAVLink/common/mavlink_msg_statustext.h \
     libs/MAVLink/common/mavlink_msg_gps_raw_int.h \
     src/mapwidget.h \
-    src/aboutwindow.h
+    src/aboutwindow.h \
+    src/connectivityhandler.h
 
 RESOURCES += \
     icons.qrc
