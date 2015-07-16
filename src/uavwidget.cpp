@@ -45,10 +45,14 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   m_buttonStop(new QPushButton(QIcon(":/actions/stop"), "stop", this)),
   m_buttonTakeOff(new QPushButton(QIcon(":/actions/flight_takeoff"), "takeoff", this)),
   m_buttonLand(new QPushButton(QIcon(":/actions/flight_land"), "land", this)),
-  m_buttonHome(new QPushButton(QIcon(":/actions/home"), "home", this))
+  m_buttonRestart(new QPushButton(QIcon(":/actions/refresh"), "restart", this)),
+
+  m_connectivityHandler(new ConnectivityHandler(this))
 {
   setFixedSize(400, 150);
 
+  /*----layouts----*/
+  //first line
   QHBoxLayout * firstLine = new QHBoxLayout(m_mainLayout->widget());
   m_name->setText("<h1>UAV "+QString::number(uavListID)+"</h1>");
   _setArmedState(false);
@@ -57,6 +61,7 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   firstLine->addWidget(m_armedStateIcon);
   firstLine->addWidget(m_armedState);
 
+  //second line
   QHBoxLayout * secondLine = new QHBoxLayout(m_mainLayout->widget());
   _setGPS(255,0);
   _setConnectivity(-101);
@@ -76,30 +81,42 @@ UAVWidget::UAVWidget(unsigned int uavListID, uint8_t uavSystemID, Link* link, QW
   secondLine->addWidget(m_batteryStateIcon);
   secondLine->addWidget(m_batteryState);
 
+  //third line : buttons
   QHBoxLayout * thirdLine = new QHBoxLayout(m_mainLayout->widget());
   thirdLine->addWidget(m_buttonArm);
   thirdLine->addWidget(m_buttonStop);
   thirdLine->addWidget(m_buttonTakeOff);
   thirdLine->addWidget(m_buttonLand);
-  thirdLine->addWidget(m_buttonHome);
+  thirdLine->addWidget(m_buttonRestart);
 
+  //layouts into
   m_mainLayout->addLayout(firstLine);
   m_mainLayout->addLayout(secondLine);
   m_mainLayout->addLayout(thirdLine);
   setLayout(m_mainLayout);
 
+  /*----QObject connections----*/
+
+  //labels
   QObject::connect(m_uav, SIGNAL(armingStateChanged(bool)), this, SLOT(_setArmedState(bool)));
   QObject::connect(m_uav, SIGNAL(GPSChanged(uint8_t,uint8_t)), this, SLOT(_setGPS(uint8_t, uint8_t)));
-  QObject::connect(m_uav, SIGNAL(connectivityChanged(int8_t)), this, SLOT(_setConnectivity(int8_t)));
   QObject::connect(m_uav, SIGNAL(batteryPercentChanged(int8_t)), this, SLOT(_setBattery(int8_t)));
 
+  //buttons
   QObject::connect(m_buttonArm, SIGNAL(clicked()), m_uav, SLOT(toggleArmingState()));
   QObject::connect(m_buttonStop, SIGNAL(clicked()), m_uav, SLOT(stop()));
   QObject::connect(m_buttonTakeOff, SIGNAL(clicked()), m_uav, SLOT(takeoff()));
   QObject::connect(m_buttonLand, SIGNAL(clicked()), m_uav, SLOT(land()));
-  QObject::connect(m_buttonHome, SIGNAL(clicked()), m_uav, SLOT(goHome()));
+  QObject::connect(m_buttonRestart, SIGNAL(clicked()), this, SLOT(_setFlyMode()));
 
+  //GPS
   QObject::connect(m_uav, SIGNAL(locationUpdate(int32_t,int32_t,int32_t)), this, SLOT(_updateLocation(int32_t,int32_t,int32_t)));
+
+  //connectivity handler
+  QObject::connect(m_connectivityHandler, SIGNAL(connectivityChanged(int8_t)), this, SLOT(_setConnectivity(int8_t)));
+  QObject::connect(m_uav, SIGNAL(messageReceived(int)), m_connectivityHandler, SLOT(messageReceived(int)));
+  QObject::connect(m_uav, SIGNAL(badMessageReceived()), m_connectivityHandler, SLOT(badMessageReceived()));
+  QObject::connect(m_uav, SIGNAL(txConnectivityUpdate(uint16_t,uint16_t)), m_connectivityHandler, SLOT(updateTx(uint16_t,uint16_t)));
 
   //UAV connection
   m_uav->addLink(link);
@@ -119,7 +136,6 @@ void UAVWidget::_setArmedState(bool isArmed)
   {
     m_armedStateIcon->setPixmap(QPixmap(":/state/armed"));
     m_armedState->setText("<span style='"+m_style_error+"'>Armed</span>");
-    m_buttonHome->setDisabled(false);
     m_buttonTakeOff->setDisabled(false);
     m_buttonLand->setDisabled(false);
     m_buttonArm->setText("Disarm");
@@ -128,7 +144,6 @@ void UAVWidget::_setArmedState(bool isArmed)
   {
     m_armedStateIcon->setPixmap(QPixmap(":/state/disarmed"));
     m_armedState->setText("<span style='"+m_style_ok+"'>Disarmed</span>");
-    m_buttonHome->setDisabled(true);
     m_buttonTakeOff->setDisabled(true);
     m_buttonLand->setDisabled(true);
     m_buttonArm->setText("Arm");
@@ -236,4 +251,10 @@ void UAVWidget::_setBattery(int8_t percent)
 void UAVWidget::_updateLocation(int32_t lon, int32_t lat, int32_t alt)
 {
   emit(locationUpdated(m_uavListID, lon, lat, alt));
+}
+
+void UAVWidget::_setFlyMode()
+{
+  //0x59 = 01011001
+  m_uav->setMode(0x59,0);
 }

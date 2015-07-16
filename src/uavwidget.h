@@ -27,6 +27,7 @@
 #include <QPushButton>
 
 #include "UAV/uav.h"
+#include "connectivityhandler.h"
 
 /**
  * @brief This class is the vue for the UAV class (MVC architecture).
@@ -51,6 +52,7 @@ private slots:
   void _setConnectivity(int8_t percent);
   void _setBattery(int8_t percent);
   void _updateLocation(int32_t lon, int32_t lat, int32_t alt);
+  void _setFlyMode();
 
 private:
   const unsigned int m_uavListID;
@@ -78,10 +80,12 @@ private:
   QPushButton * m_buttonStop;
   QPushButton * m_buttonTakeOff;
   QPushButton * m_buttonLand;
-  QPushButton * m_buttonHome;
+  QPushButton * m_buttonRestart;
 
   const QString m_style_error = "color:#bb0000; font-size:x-large; font-weight:bold;";
   const QString m_style_ok = "color:#000000; font-size:x-large";
+
+  ConnectivityHandler * m_connectivityHandler;
 };
 
 #endif // UAVWIDGET_H
