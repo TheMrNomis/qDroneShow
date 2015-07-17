@@ -102,7 +102,7 @@ signals:
   /**
    * @brief the link has received a MAVLinkMessage, but an error occured (e.g invalid CRC, wrong length...)
    */
-  void badMessageReceived(MAVLinkMessage);
+  void badMessageReceived();
 
 public slots:
   /**

@@ -123,7 +123,7 @@ void SerialLink::_extractMAVLinkMessage()
       if(msg.isValid(mavlink_message::crcs[msg.get_messageID()]))
         emit(messageReceived(msg));
       else
-        emit(badMessageReceived(msg));
+        emit(badMessageReceived());
 
       //then, check again if there is another message
       _extractMAVLinkMessage();

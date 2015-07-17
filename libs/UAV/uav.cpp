@@ -54,6 +54,7 @@ void UAV::connectLinks()
   {
     (*it)->connect();
     QObject::connect(*it, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(receiveMessage(MAVLinkMessage)));
+    QObject::connect(*it, SIGNAL(badMessageReceived()), this, SIGNAL(badMessageReceived()));
   }
 }
 
