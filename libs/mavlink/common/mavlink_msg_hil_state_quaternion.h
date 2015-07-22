@@ -14,12 +14,11 @@ namespace mavlink
     class hil_state_quaternion : public mavlink::message
     {
       public:
-        hil_state_quaternion(uint8_t system_id, uint8_t component_id,  uint64_t time_usec, const float *attitude_quaternion, float rollspeed, float pitchspeed, float yawspeed, int32_t lat, int32_t lon, int32_t alt, int16_t vx, int16_t vy, int16_t vz, uint16_t ind_airspeed, uint16_t true_airspeed, int16_t xacc, int16_t yacc, int16_t zacc):
+        hil_state_quaternion(uint8_t system_id, uint8_t component_id,  uint64_t  time_usec, const float * attitude_quaternion, float  rollspeed, float  pitchspeed, float  yawspeed, int32_t  lat, int32_t  lon, int32_t  alt, int16_t  vx, int16_t  vy, int16_t  vz, uint16_t  ind_airspeed, uint16_t  true_airspeed, int16_t  xacc, int16_t  yacc, int16_t  zacc):
           mavlink::message( mavlink::msg::hil_state_quaternion_length,
                             system_id,
                             component_id,
-                            mavlink::msg::hil_state_quaternion_id,
-                            mavlink::msg::hil_state_quaternion_crc)
+                            mavlink::msg::hil_state_quaternion_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp (microseconds since UNIX epoch or microseconds since system boot)
            m_payload.push_back<float>(rollspeed); ///< Body frame roll / phi angular speed (rad/s)
@@ -36,6 +35,8 @@ namespace mavlink
            m_payload.push_back<int16_t>(xacc); ///< X acceleration (mg)
            m_payload.push_back<int16_t>(yacc); ///< Y acceleration (mg)
            m_payload.push_back<int16_t>(zacc); ///< Z acceleration (mg)
+          
+          	m_payload.push_back_array<float>(attitude_quaternion, 4); ///< Vehicle attitude expressed as normalized quaternion in w, x, y, z order (with 1 0 0 0 being the null-rotation)
           
         }
 
@@ -69,6 +70,9 @@ namespace mavlink
           {return m_payload.get<int16_t>(60);}
       	int16_t get_zacc() const
           {return m_payload.get<int16_t>(62);}
+      
+       float * get_attitude_quaternion() const
+          {return m_payload.get_array<float>(8, 4);}
       
     };
   };

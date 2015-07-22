@@ -14,16 +14,17 @@ namespace mavlink
     class gps_inject_data : public mavlink::message
     {
       public:
-        gps_inject_data(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component, uint8_t len, const uint8_t *data):
+        gps_inject_data(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component, uint8_t  len, const uint8_t * data):
           mavlink::message( mavlink::msg::gps_inject_data_length,
                             system_id,
                             component_id,
-                            mavlink::msg::gps_inject_data_id,
-                            mavlink::msg::gps_inject_data_crc)
+                            mavlink::msg::gps_inject_data_id)
         {
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
            m_payload.push_back<uint8_t>(len); ///< data length
+          
+          	m_payload.push_back_array<uint8_t>(data, 110); ///< raw data (110 is enough for 12 satellites of RTCMv2)
           
         }
 
@@ -33,6 +34,9 @@ namespace mavlink
           {return m_payload.get<uint8_t>(1);}
       	uint8_t get_len() const
           {return m_payload.get<uint8_t>(2);}
+      
+       uint8_t * get_data() const
+          {return m_payload.get_array<uint8_t>(3, 110);}
       
     };
   };

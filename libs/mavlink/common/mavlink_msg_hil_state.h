@@ -14,12 +14,11 @@ namespace mavlink
     class hil_state : public mavlink::message
     {
       public:
-        hil_state(uint8_t system_id, uint8_t component_id,  uint64_t time_usec, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed, int32_t lat, int32_t lon, int32_t alt, int16_t vx, int16_t vy, int16_t vz, int16_t xacc, int16_t yacc, int16_t zacc):
+        hil_state(uint8_t system_id, uint8_t component_id,  uint64_t  time_usec, float  roll, float  pitch, float  yaw, float  rollspeed, float  pitchspeed, float  yawspeed, int32_t  lat, int32_t  lon, int32_t  alt, int16_t  vx, int16_t  vy, int16_t  vz, int16_t  xacc, int16_t  yacc, int16_t  zacc):
           mavlink::message( mavlink::msg::hil_state_length,
                             system_id,
                             component_id,
-                            mavlink::msg::hil_state_id,
-                            mavlink::msg::hil_state_crc)
+                            mavlink::msg::hil_state_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp (microseconds since UNIX epoch or microseconds since system boot)
            m_payload.push_back<float>(roll); ///< Roll angle (rad)
@@ -37,6 +36,7 @@ namespace mavlink
            m_payload.push_back<int16_t>(xacc); ///< X acceleration (mg)
            m_payload.push_back<int16_t>(yacc); ///< Y acceleration (mg)
            m_payload.push_back<int16_t>(zacc); ///< Z acceleration (mg)
+          
           
         }
 
@@ -72,6 +72,7 @@ namespace mavlink
           {return m_payload.get<int16_t>(52);}
       	int16_t get_zacc() const
           {return m_payload.get<int16_t>(54);}
+      
       
     };
   };

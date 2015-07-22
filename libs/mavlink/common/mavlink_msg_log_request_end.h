@@ -14,15 +14,15 @@ namespace mavlink
     class log_request_end : public mavlink::message
     {
       public:
-        log_request_end(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component):
+        log_request_end(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component):
           mavlink::message( mavlink::msg::log_request_end_length,
                             system_id,
                             component_id,
-                            mavlink::msg::log_request_end_id,
-                            mavlink::msg::log_request_end_crc)
+                            mavlink::msg::log_request_end_id)
         {
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
+          
           
         }
 
@@ -30,6 +30,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(0);}
       	uint8_t get_target_component() const
           {return m_payload.get<uint8_t>(1);}
+      
       
     };
   };

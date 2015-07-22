@@ -14,17 +14,17 @@ namespace mavlink
     class scaled_pressure2 : public mavlink::message
     {
       public:
-        scaled_pressure2(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, float press_abs, float press_diff, int16_t temperature):
+        scaled_pressure2(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, float  press_abs, float  press_diff, int16_t  temperature):
           mavlink::message( mavlink::msg::scaled_pressure2_length,
                             system_id,
                             component_id,
-                            mavlink::msg::scaled_pressure2_id,
-                            mavlink::msg::scaled_pressure2_crc)
+                            mavlink::msg::scaled_pressure2_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot)
            m_payload.push_back<float>(press_abs); ///< Absolute pressure (hectopascal)
            m_payload.push_back<float>(press_diff); ///< Differential pressure 1 (hectopascal)
            m_payload.push_back<int16_t>(temperature); ///< Temperature measurement (0.01 degrees celsius)
+          
           
         }
 
@@ -36,6 +36,7 @@ namespace mavlink
           {return m_payload.get<float>(8);}
       	int16_t get_temperature() const
           {return m_payload.get<int16_t>(12);}
+      
       
     };
   };

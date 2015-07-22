@@ -14,12 +14,11 @@ namespace mavlink
     class command_int : public mavlink::message
     {
       public:
-        command_int(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component, uint8_t frame, uint16_t command, uint8_t current, uint8_t autocontinue, float param1, float param2, float param3, float param4, int32_t x, int32_t y, float z):
+        command_int(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component, uint8_t  frame, uint16_t  command, uint8_t  current, uint8_t  autocontinue, float  param1, float  param2, float  param3, float  param4, int32_t  x, int32_t  y, float  z):
           mavlink::message( mavlink::msg::command_int_length,
                             system_id,
                             component_id,
-                            mavlink::msg::command_int_id,
-                            mavlink::msg::command_int_crc)
+                            mavlink::msg::command_int_id)
         {
            m_payload.push_back<float>(param1); ///< PARAM1, see MAV_CMD enum
            m_payload.push_back<float>(param2); ///< PARAM2, see MAV_CMD enum
@@ -34,6 +33,7 @@ namespace mavlink
            m_payload.push_back<uint8_t>(frame); ///< The coordinate system of the COMMAND. see MAV_FRAME in mavlink_types.h
            m_payload.push_back<uint8_t>(current); ///< false:0, true:1
            m_payload.push_back<uint8_t>(autocontinue); ///< autocontinue to next wp
+          
           
         }
 
@@ -63,6 +63,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(33);}
       	uint8_t get_autocontinue() const
           {return m_payload.get<uint8_t>(34);}
+      
       
     };
   };

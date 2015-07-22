@@ -14,17 +14,17 @@ namespace mavlink
     class vision_speed_estimate : public mavlink::message
     {
       public:
-        vision_speed_estimate(uint8_t system_id, uint8_t component_id,  uint64_t usec, float x, float y, float z):
+        vision_speed_estimate(uint8_t system_id, uint8_t component_id,  uint64_t  usec, float  x, float  y, float  z):
           mavlink::message( mavlink::msg::vision_speed_estimate_length,
                             system_id,
                             component_id,
-                            mavlink::msg::vision_speed_estimate_id,
-                            mavlink::msg::vision_speed_estimate_crc)
+                            mavlink::msg::vision_speed_estimate_id)
         {
            m_payload.push_back<uint64_t>(usec); ///< Timestamp (microseconds, synced to UNIX time or since system boot)
            m_payload.push_back<float>(x); ///< Global X speed
            m_payload.push_back<float>(y); ///< Global Y speed
            m_payload.push_back<float>(z); ///< Global Z speed
+          
           
         }
 
@@ -36,6 +36,7 @@ namespace mavlink
           {return m_payload.get<float>(12);}
       	float get_z() const
           {return m_payload.get<float>(16);}
+      
       
     };
   };

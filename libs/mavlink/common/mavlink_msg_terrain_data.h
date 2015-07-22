@@ -14,17 +14,18 @@ namespace mavlink
     class terrain_data : public mavlink::message
     {
       public:
-        terrain_data(uint8_t system_id, uint8_t component_id,  int32_t lat, int32_t lon, uint16_t grid_spacing, uint8_t gridbit, const int16_t *data):
+        terrain_data(uint8_t system_id, uint8_t component_id,  int32_t  lat, int32_t  lon, uint16_t  grid_spacing, uint8_t  gridbit, const int16_t * data):
           mavlink::message( mavlink::msg::terrain_data_length,
                             system_id,
                             component_id,
-                            mavlink::msg::terrain_data_id,
-                            mavlink::msg::terrain_data_crc)
+                            mavlink::msg::terrain_data_id)
         {
            m_payload.push_back<int32_t>(lat); ///< Latitude of SW corner of first grid (degrees *10^7)
            m_payload.push_back<int32_t>(lon); ///< Longitude of SW corner of first grid (in degrees *10^7)
            m_payload.push_back<uint16_t>(grid_spacing); ///< Grid spacing in meters
            m_payload.push_back<uint8_t>(gridbit); ///< bit within the terrain request mask
+          
+          	m_payload.push_back_array<int16_t>(data, 16); ///< Terrain data in meters AMSL
           
         }
 
@@ -36,6 +37,9 @@ namespace mavlink
           {return m_payload.get<uint16_t>(8);}
       	uint8_t get_gridbit() const
           {return m_payload.get<uint8_t>(42);}
+      
+       int16_t * get_data() const
+          {return m_payload.get_array<int16_t>(10, 16);}
       
     };
   };

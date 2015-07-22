@@ -14,18 +14,18 @@ namespace mavlink
     class log_request_data : public mavlink::message
     {
       public:
-        log_request_data(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component, uint16_t id, uint32_t ofs, uint32_t count):
+        log_request_data(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component, uint16_t  id, uint32_t  ofs, uint32_t  count):
           mavlink::message( mavlink::msg::log_request_data_length,
                             system_id,
                             component_id,
-                            mavlink::msg::log_request_data_id,
-                            mavlink::msg::log_request_data_crc)
+                            mavlink::msg::log_request_data_id)
         {
            m_payload.push_back<uint32_t>(ofs); ///< Offset into the log
            m_payload.push_back<uint32_t>(count); ///< Number of bytes
            m_payload.push_back<uint16_t>(id); ///< Log id (from LOG_ENTRY reply)
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
+          
           
         }
 
@@ -39,6 +39,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(10);}
       	uint8_t get_target_component() const
           {return m_payload.get<uint8_t>(11);}
+      
       
     };
   };

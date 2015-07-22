@@ -14,18 +14,18 @@ namespace mavlink
     class request_data_stream : public mavlink::message
     {
       public:
-        request_data_stream(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component, uint8_t req_stream_id, uint16_t req_message_rate, uint8_t start_stop):
+        request_data_stream(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component, uint8_t  req_stream_id, uint16_t  req_message_rate, uint8_t  start_stop):
           mavlink::message( mavlink::msg::request_data_stream_length,
                             system_id,
                             component_id,
-                            mavlink::msg::request_data_stream_id,
-                            mavlink::msg::request_data_stream_crc)
+                            mavlink::msg::request_data_stream_id)
         {
            m_payload.push_back<uint16_t>(req_message_rate); ///< The requested interval between two messages of this type
            m_payload.push_back<uint8_t>(target_system); ///< The target requested to send the message stream.
            m_payload.push_back<uint8_t>(target_component); ///< The target requested to send the message stream.
            m_payload.push_back<uint8_t>(req_stream_id); ///< The ID of the requested data stream
            m_payload.push_back<uint8_t>(start_stop); ///< 1 to start sending, 0 to stop sending.
+          
           
         }
 
@@ -39,6 +39,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(4);}
       	uint8_t get_start_stop() const
           {return m_payload.get<uint8_t>(5);}
+      
       
     };
   };

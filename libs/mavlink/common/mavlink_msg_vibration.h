@@ -14,12 +14,11 @@ namespace mavlink
     class vibration : public mavlink::message
     {
       public:
-        vibration(uint8_t system_id, uint8_t component_id,  uint64_t time_usec, float vibration_x, float vibration_y, float vibration_z, uint32_t clipping_0, uint32_t clipping_1, uint32_t clipping_2):
+        vibration(uint8_t system_id, uint8_t component_id,  uint64_t  time_usec, float  vibration_x, float  vibration_y, float  vibration_z, uint32_t  clipping_0, uint32_t  clipping_1, uint32_t  clipping_2):
           mavlink::message( mavlink::msg::vibration_length,
                             system_id,
                             component_id,
-                            mavlink::msg::vibration_id,
-                            mavlink::msg::vibration_crc)
+                            mavlink::msg::vibration_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp (micros since boot or Unix epoch)
            m_payload.push_back<float>(vibration_x); ///< Vibration levels on X-axis
@@ -28,6 +27,7 @@ namespace mavlink
            m_payload.push_back<uint32_t>(clipping_0); ///< first accelerometer clipping count
            m_payload.push_back<uint32_t>(clipping_1); ///< second accelerometer clipping count
            m_payload.push_back<uint32_t>(clipping_2); ///< third accelerometer clipping count
+          
           
         }
 
@@ -45,6 +45,7 @@ namespace mavlink
           {return m_payload.get<uint32_t>(24);}
       	uint32_t get_clipping_2() const
           {return m_payload.get<uint32_t>(28);}
+      
       
     };
   };

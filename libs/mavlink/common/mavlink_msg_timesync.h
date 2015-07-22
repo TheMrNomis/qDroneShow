@@ -14,15 +14,15 @@ namespace mavlink
     class timesync : public mavlink::message
     {
       public:
-        timesync(uint8_t system_id, uint8_t component_id,  int64_t tc1, int64_t ts1):
+        timesync(uint8_t system_id, uint8_t component_id,  int64_t  tc1, int64_t  ts1):
           mavlink::message( mavlink::msg::timesync_length,
                             system_id,
                             component_id,
-                            mavlink::msg::timesync_id,
-                            mavlink::msg::timesync_crc)
+                            mavlink::msg::timesync_id)
         {
            m_payload.push_back<int64_t>(tc1); ///< Time sync timestamp 1
            m_payload.push_back<int64_t>(ts1); ///< Time sync timestamp 2
+          
           
         }
 
@@ -30,6 +30,7 @@ namespace mavlink
           {return m_payload.get<int64_t>(0);}
       	int64_t get_ts1() const
           {return m_payload.get<int64_t>(8);}
+      
       
     };
   };

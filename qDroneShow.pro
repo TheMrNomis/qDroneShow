@@ -28,7 +28,8 @@ SOURCES += src/main.cpp \
     src/uavwidget.cpp \
     src/mapwidget.cpp \
     src/aboutwindow.cpp \
-    src/connectivityhandler.cpp
+    src/connectivityhandler.cpp \
+    libs/mavlink/protocol.cpp
 
 HEADERS  += \
     libs/UAV/uav.h \

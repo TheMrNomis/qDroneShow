@@ -14,18 +14,18 @@ namespace mavlink
     class log_entry : public mavlink::message
     {
       public:
-        log_entry(uint8_t system_id, uint8_t component_id,  uint16_t id, uint16_t num_logs, uint16_t last_log_num, uint32_t time_utc, uint32_t size):
+        log_entry(uint8_t system_id, uint8_t component_id,  uint16_t  id, uint16_t  num_logs, uint16_t  last_log_num, uint32_t  time_utc, uint32_t  size):
           mavlink::message( mavlink::msg::log_entry_length,
                             system_id,
                             component_id,
-                            mavlink::msg::log_entry_id,
-                            mavlink::msg::log_entry_crc)
+                            mavlink::msg::log_entry_id)
         {
            m_payload.push_back<uint32_t>(time_utc); ///< UTC timestamp of log in seconds since 1970, or 0 if not available
            m_payload.push_back<uint32_t>(size); ///< Size of the log (may be approximate) in bytes
            m_payload.push_back<uint16_t>(id); ///< Log id
            m_payload.push_back<uint16_t>(num_logs); ///< Total number of logs
            m_payload.push_back<uint16_t>(last_log_num); ///< High log number
+          
           
         }
 
@@ -39,6 +39,7 @@ namespace mavlink
           {return m_payload.get<uint16_t>(10);}
       	uint16_t get_last_log_num() const
           {return m_payload.get<uint16_t>(12);}
+      
       
     };
   };

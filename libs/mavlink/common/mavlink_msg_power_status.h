@@ -14,16 +14,16 @@ namespace mavlink
     class power_status : public mavlink::message
     {
       public:
-        power_status(uint8_t system_id, uint8_t component_id,  uint16_t Vcc, uint16_t Vservo, uint16_t flags):
+        power_status(uint8_t system_id, uint8_t component_id,  uint16_t  Vcc, uint16_t  Vservo, uint16_t  flags):
           mavlink::message( mavlink::msg::power_status_length,
                             system_id,
                             component_id,
-                            mavlink::msg::power_status_id,
-                            mavlink::msg::power_status_crc)
+                            mavlink::msg::power_status_id)
         {
            m_payload.push_back<uint16_t>(Vcc); ///< 5V rail voltage in millivolts
            m_payload.push_back<uint16_t>(Vservo); ///< servo rail voltage in millivolts
            m_payload.push_back<uint16_t>(flags); ///< power supply status flags (see MAV_POWER_STATUS enum)
+          
           
         }
 
@@ -33,6 +33,7 @@ namespace mavlink
           {return m_payload.get<uint16_t>(2);}
       	uint16_t get_flags() const
           {return m_payload.get<uint16_t>(4);}
+      
       
     };
   };

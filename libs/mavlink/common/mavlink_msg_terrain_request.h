@@ -14,17 +14,17 @@ namespace mavlink
     class terrain_request : public mavlink::message
     {
       public:
-        terrain_request(uint8_t system_id, uint8_t component_id,  int32_t lat, int32_t lon, uint16_t grid_spacing, uint64_t mask):
+        terrain_request(uint8_t system_id, uint8_t component_id,  int32_t  lat, int32_t  lon, uint16_t  grid_spacing, uint64_t  mask):
           mavlink::message( mavlink::msg::terrain_request_length,
                             system_id,
                             component_id,
-                            mavlink::msg::terrain_request_id,
-                            mavlink::msg::terrain_request_crc)
+                            mavlink::msg::terrain_request_id)
         {
            m_payload.push_back<uint64_t>(mask); ///< Bitmask of requested 4x4 grids (row major 8x7 array of grids, 56 bits)
            m_payload.push_back<int32_t>(lat); ///< Latitude of SW corner of first grid (degrees *10^7)
            m_payload.push_back<int32_t>(lon); ///< Longitude of SW corner of first grid (in degrees *10^7)
            m_payload.push_back<uint16_t>(grid_spacing); ///< Grid spacing in meters
+          
           
         }
 
@@ -36,6 +36,7 @@ namespace mavlink
           {return m_payload.get<int32_t>(12);}
       	uint16_t get_grid_spacing() const
           {return m_payload.get<uint16_t>(16);}
+      
       
     };
   };

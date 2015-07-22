@@ -14,15 +14,15 @@ namespace mavlink
     class param_request_list : public mavlink::message
     {
       public:
-        param_request_list(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component):
+        param_request_list(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component):
           mavlink::message( mavlink::msg::param_request_list_length,
                             system_id,
                             component_id,
-                            mavlink::msg::param_request_list_id,
-                            mavlink::msg::param_request_list_crc)
+                            mavlink::msg::param_request_list_id)
         {
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
+          
           
         }
 
@@ -30,6 +30,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(0);}
       	uint8_t get_target_component() const
           {return m_payload.get<uint8_t>(1);}
+      
       
     };
   };

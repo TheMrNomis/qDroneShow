@@ -14,12 +14,11 @@ namespace mavlink
     class sim_state : public mavlink::message
     {
       public:
-        sim_state(uint8_t system_id, uint8_t component_id,  float q1, float q2, float q3, float q4, float roll, float pitch, float yaw, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float lat, float lon, float alt, float std_dev_horz, float std_dev_vert, float vn, float ve, float vd):
+        sim_state(uint8_t system_id, uint8_t component_id,  float  q1, float  q2, float  q3, float  q4, float  roll, float  pitch, float  yaw, float  xacc, float  yacc, float  zacc, float  xgyro, float  ygyro, float  zgyro, float  lat, float  lon, float  alt, float  std_dev_horz, float  std_dev_vert, float  vn, float  ve, float  vd):
           mavlink::message( mavlink::msg::sim_state_length,
                             system_id,
                             component_id,
-                            mavlink::msg::sim_state_id,
-                            mavlink::msg::sim_state_crc)
+                            mavlink::msg::sim_state_id)
         {
            m_payload.push_back<float>(q1); ///< True attitude quaternion component 1, w (1 in null-rotation)
            m_payload.push_back<float>(q2); ///< True attitude quaternion component 2, x (0 in null-rotation)
@@ -42,6 +41,7 @@ namespace mavlink
            m_payload.push_back<float>(vn); ///< True velocity in m/s in NORTH direction in earth-fixed NED frame
            m_payload.push_back<float>(ve); ///< True velocity in m/s in EAST direction in earth-fixed NED frame
            m_payload.push_back<float>(vd); ///< True velocity in m/s in DOWN direction in earth-fixed NED frame
+          
           
         }
 
@@ -87,6 +87,7 @@ namespace mavlink
           {return m_payload.get<float>(76);}
       	float get_vd() const
           {return m_payload.get<float>(80);}
+      
       
     };
   };

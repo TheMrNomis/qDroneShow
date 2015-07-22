@@ -14,12 +14,11 @@ namespace mavlink
     class attitude_quaternion : public mavlink::message
     {
       public:
-        attitude_quaternion(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, float q1, float q2, float q3, float q4, float rollspeed, float pitchspeed, float yawspeed):
+        attitude_quaternion(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, float  q1, float  q2, float  q3, float  q4, float  rollspeed, float  pitchspeed, float  yawspeed):
           mavlink::message( mavlink::msg::attitude_quaternion_length,
                             system_id,
                             component_id,
-                            mavlink::msg::attitude_quaternion_id,
-                            mavlink::msg::attitude_quaternion_crc)
+                            mavlink::msg::attitude_quaternion_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot)
            m_payload.push_back<float>(q1); ///< Quaternion component 1, w (1 in null-rotation)
@@ -29,6 +28,7 @@ namespace mavlink
            m_payload.push_back<float>(rollspeed); ///< Roll angular speed (rad/s)
            m_payload.push_back<float>(pitchspeed); ///< Pitch angular speed (rad/s)
            m_payload.push_back<float>(yawspeed); ///< Yaw angular speed (rad/s)
+          
           
         }
 
@@ -48,6 +48,7 @@ namespace mavlink
           {return m_payload.get<float>(24);}
       	float get_yawspeed() const
           {return m_payload.get<float>(28);}
+      
       
     };
   };

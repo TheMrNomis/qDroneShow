@@ -14,16 +14,16 @@ namespace mavlink
     class data_stream : public mavlink::message
     {
       public:
-        data_stream(uint8_t system_id, uint8_t component_id,  uint8_t stream_id, uint16_t message_rate, uint8_t on_off):
+        data_stream(uint8_t system_id, uint8_t component_id,  uint8_t  stream_id, uint16_t  message_rate, uint8_t  on_off):
           mavlink::message( mavlink::msg::data_stream_length,
                             system_id,
                             component_id,
-                            mavlink::msg::data_stream_id,
-                            mavlink::msg::data_stream_crc)
+                            mavlink::msg::data_stream_id)
         {
            m_payload.push_back<uint16_t>(message_rate); ///< The requested interval between two messages of this type
            m_payload.push_back<uint8_t>(stream_id); ///< The ID of the requested data stream
            m_payload.push_back<uint8_t>(on_off); ///< 1 stream is enabled, 0 stream is stopped.
+          
           
         }
 
@@ -33,6 +33,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(2);}
       	uint8_t get_on_off() const
           {return m_payload.get<uint8_t>(3);}
+      
       
     };
   };

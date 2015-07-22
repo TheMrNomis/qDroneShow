@@ -1,7 +1,7 @@
 #ifndef  MAVLINK_CPP_PROTOCOL_H
 #define  MAVLINK_CPP_PROTOCOL_H
 
-#include "string.h"
+#include <cstdint>
 
 /*
    If you want MAVLink on a system that is native big-endian,
@@ -19,7 +19,7 @@ namespace mavlink
      do NOT use _sequenceNumber directly to craft a message.
      use sequenceNumber() instead, which guarantee you that the variable is incremented at each call
    */
-  uint8_t volatile _sequenceNumber = 0;
+  extern volatile uint8_t _sequenceNumber;
   inline uint8_t sequenceNumber(){return _sequenceNumber++;}
 }
 

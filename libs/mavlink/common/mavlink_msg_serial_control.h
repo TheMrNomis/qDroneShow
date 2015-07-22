@@ -14,18 +14,19 @@ namespace mavlink
     class serial_control : public mavlink::message
     {
       public:
-        serial_control(uint8_t system_id, uint8_t component_id,  uint8_t device, uint8_t flags, uint16_t timeout, uint32_t baudrate, uint8_t count, const uint8_t *data):
+        serial_control(uint8_t system_id, uint8_t component_id,  uint8_t  device, uint8_t  flags, uint16_t  timeout, uint32_t  baudrate, uint8_t  count, const uint8_t * data):
           mavlink::message( mavlink::msg::serial_control_length,
                             system_id,
                             component_id,
-                            mavlink::msg::serial_control_id,
-                            mavlink::msg::serial_control_crc)
+                            mavlink::msg::serial_control_id)
         {
            m_payload.push_back<uint32_t>(baudrate); ///< Baudrate of transfer. Zero means no change.
            m_payload.push_back<uint16_t>(timeout); ///< Timeout for reply data in milliseconds
            m_payload.push_back<uint8_t>(device); ///< See SERIAL_CONTROL_DEV enum
            m_payload.push_back<uint8_t>(flags); ///< See SERIAL_CONTROL_FLAG enum
            m_payload.push_back<uint8_t>(count); ///< how many bytes in this transfer
+          
+          	m_payload.push_back_array<uint8_t>(data, 70); ///< serial data
           
         }
 
@@ -39,6 +40,9 @@ namespace mavlink
           {return m_payload.get<uint8_t>(7);}
       	uint8_t get_count() const
           {return m_payload.get<uint8_t>(8);}
+      
+       uint8_t * get_data() const
+          {return m_payload.get_array<uint8_t>(9, 70);}
       
     };
   };

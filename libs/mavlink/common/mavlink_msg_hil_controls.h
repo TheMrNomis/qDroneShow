@@ -14,12 +14,11 @@ namespace mavlink
     class hil_controls : public mavlink::message
     {
       public:
-        hil_controls(uint8_t system_id, uint8_t component_id,  uint64_t time_usec, float roll_ailerons, float pitch_elevator, float yaw_rudder, float throttle, float aux1, float aux2, float aux3, float aux4, uint8_t mode, uint8_t nav_mode):
+        hil_controls(uint8_t system_id, uint8_t component_id,  uint64_t  time_usec, float  roll_ailerons, float  pitch_elevator, float  yaw_rudder, float  throttle, float  aux1, float  aux2, float  aux3, float  aux4, uint8_t  mode, uint8_t  nav_mode):
           mavlink::message( mavlink::msg::hil_controls_length,
                             system_id,
                             component_id,
-                            mavlink::msg::hil_controls_id,
-                            mavlink::msg::hil_controls_crc)
+                            mavlink::msg::hil_controls_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp (microseconds since UNIX epoch or microseconds since system boot)
            m_payload.push_back<float>(roll_ailerons); ///< Control output -1 .. 1
@@ -32,6 +31,7 @@ namespace mavlink
            m_payload.push_back<float>(aux4); ///< Aux 4, -1 .. 1
            m_payload.push_back<uint8_t>(mode); ///< System mode (MAV_MODE)
            m_payload.push_back<uint8_t>(nav_mode); ///< Navigation mode (MAV_NAV_MODE)
+          
           
         }
 
@@ -57,6 +57,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(40);}
       	uint8_t get_nav_mode() const
           {return m_payload.get<uint8_t>(41);}
+      
       
     };
   };

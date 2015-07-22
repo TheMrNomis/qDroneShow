@@ -14,12 +14,11 @@ namespace mavlink
     class scaled_imu : public mavlink::message
     {
       public:
-        scaled_imu(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, int16_t xacc, int16_t yacc, int16_t zacc, int16_t xgyro, int16_t ygyro, int16_t zgyro, int16_t xmag, int16_t ymag, int16_t zmag):
+        scaled_imu(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, int16_t  xacc, int16_t  yacc, int16_t  zacc, int16_t  xgyro, int16_t  ygyro, int16_t  zgyro, int16_t  xmag, int16_t  ymag, int16_t  zmag):
           mavlink::message( mavlink::msg::scaled_imu_length,
                             system_id,
                             component_id,
-                            mavlink::msg::scaled_imu_id,
-                            mavlink::msg::scaled_imu_crc)
+                            mavlink::msg::scaled_imu_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot)
            m_payload.push_back<int16_t>(xacc); ///< X acceleration (mg)
@@ -31,6 +30,7 @@ namespace mavlink
            m_payload.push_back<int16_t>(xmag); ///< X Magnetic field (milli tesla)
            m_payload.push_back<int16_t>(ymag); ///< Y Magnetic field (milli tesla)
            m_payload.push_back<int16_t>(zmag); ///< Z Magnetic field (milli tesla)
+          
           
         }
 
@@ -54,6 +54,7 @@ namespace mavlink
           {return m_payload.get<int16_t>(18);}
       	int16_t get_zmag() const
           {return m_payload.get<int16_t>(20);}
+      
       
     };
   };

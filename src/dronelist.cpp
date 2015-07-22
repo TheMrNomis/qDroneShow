@@ -41,7 +41,7 @@ void DroneList::setConnection(Link * connection)
   if(m_connection != nullptr)
     deleteConnection();
   m_connection = connection;
-  QObject::connect(m_connection, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(_receiveMessage(MAVLinkMessage)));
+  QObject::connect(m_connection, SIGNAL(messageReceived(mavlink::message)), this, SLOT(_receiveMessage(mavlink::message)));
 
   if(!m_connection->isConnected())
   {
@@ -59,7 +59,7 @@ void DroneList::deleteConnection()
 {
   if(m_connection != nullptr)
   {
-    QObject::disconnect(m_connection, SIGNAL(messageReceived(MAVLinkMessage)), this, SLOT(_receiveMessage(MAVLinkMessage)));
+    QObject::disconnect(m_connection, SIGNAL(messageReceived(mavlink::message)), this, SLOT(_receiveMessage(mavlink::message)));
     m_connection = nullptr;
     emit(connected(false));
 
@@ -81,10 +81,10 @@ void DroneList::moveUAVTo(unsigned int uavNumber, int32_t lon, int32_t lat, int3
   m_uavWidgets[uavNumber]->m_uav->goTo(lon,lat,alt);
 }
 
-void DroneList::_receiveMessage(MAVLinkMessage const& msg)
+void DroneList::_receiveMessage(const mavlink::message& msg)
 {
   UAVWidget * UAVYoureLookingFor = nullptr;
-  const uint8_t systemID = msg.get_systemID();
+  const uint8_t systemID = msg.get_system_id();
 
   //checking if we have a UAV with this system id
   for(auto it = m_uavWidgets.begin(); UAVYoureLookingFor == nullptr && it != m_uavWidgets.end(); ++it)

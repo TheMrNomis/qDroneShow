@@ -14,17 +14,18 @@ namespace mavlink
     class debug_vect : public mavlink::message
     {
       public:
-        debug_vect(uint8_t system_id, uint8_t component_id,  const char *name, uint64_t time_usec, float x, float y, float z):
+        debug_vect(uint8_t system_id, uint8_t component_id,  const char * name, uint64_t  time_usec, float  x, float  y, float  z):
           mavlink::message( mavlink::msg::debug_vect_length,
                             system_id,
                             component_id,
-                            mavlink::msg::debug_vect_id,
-                            mavlink::msg::debug_vect_crc)
+                            mavlink::msg::debug_vect_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp
            m_payload.push_back<float>(x); ///< x
            m_payload.push_back<float>(y); ///< y
            m_payload.push_back<float>(z); ///< z
+          
+          	m_payload.push_back_array<char>(name, 10); ///< Name
           
         }
 
@@ -36,6 +37,9 @@ namespace mavlink
           {return m_payload.get<float>(12);}
       	float get_z() const
           {return m_payload.get<float>(16);}
+      
+       char * get_name() const
+          {return m_payload.get_array<char>(20, 10);}
       
     };
   };

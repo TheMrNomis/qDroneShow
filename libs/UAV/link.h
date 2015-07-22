@@ -71,7 +71,7 @@ public:
    * @brief write a MAVLinkMessage to this link
    * @param msg the message to transmit
    */
-  Link& operator<<(MAVLinkMessage const& msg);
+  Link& operator<<(mavlink::message const& msg);
 
   /**
    * @brief get the printable name of this Link
@@ -83,7 +83,7 @@ signals:
   /**
    * @brief A valid MAVLink message has been received by the interface
    */
-  void messageReceived(MAVLinkMessage);
+  void messageReceived(mavlink::message);
 
   /**
    * @brief This signal is emitted instantly when the link is connected
@@ -109,7 +109,7 @@ public slots:
    * @brief Sends a MAVLinkMessage through this link
    * @param message the message to transmit
    */
-  virtual void sendMessage(MAVLinkMessage const& message);
+  virtual void sendMessage(mavlink::message const& message);
 
 protected:
   /**
@@ -117,7 +117,7 @@ protected:
    *
    * @param bytes The buffer of bytes to be written on the interface
    **/
-  virtual void _writeBytes(ByteBuffer bytes) = 0;
+  virtual void _writeBytes(mavlink::ByteBuffer bytes) = 0;
 
   bool m_isConnected;
 

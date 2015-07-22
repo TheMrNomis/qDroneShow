@@ -14,12 +14,11 @@ namespace mavlink
     class distance_sensor : public mavlink::message
     {
       public:
-        distance_sensor(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, uint16_t min_distance, uint16_t max_distance, uint16_t current_distance, uint8_t type, uint8_t id, uint8_t orientation, uint8_t covariance):
+        distance_sensor(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, uint16_t  min_distance, uint16_t  max_distance, uint16_t  current_distance, uint8_t  type, uint8_t  id, uint8_t  orientation, uint8_t  covariance):
           mavlink::message( mavlink::msg::distance_sensor_length,
                             system_id,
                             component_id,
-                            mavlink::msg::distance_sensor_id,
-                            mavlink::msg::distance_sensor_crc)
+                            mavlink::msg::distance_sensor_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Time since system boot
            m_payload.push_back<uint16_t>(min_distance); ///< Minimum distance the sensor can measure in centimeters
@@ -29,6 +28,7 @@ namespace mavlink
            m_payload.push_back<uint8_t>(id); ///< Onboard ID of the sensor
            m_payload.push_back<uint8_t>(orientation); ///< Direction the sensor faces from MAV_SENSOR_ORIENTATION enum.
            m_payload.push_back<uint8_t>(covariance); ///< Measurement covariance in centimeters, 0 for unknown / invalid readings
+          
           
         }
 
@@ -48,6 +48,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(12);}
       	uint8_t get_covariance() const
           {return m_payload.get<uint8_t>(13);}
+      
       
     };
   };

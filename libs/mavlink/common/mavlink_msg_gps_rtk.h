@@ -14,12 +14,11 @@ namespace mavlink
     class gps_rtk : public mavlink::message
     {
       public:
-        gps_rtk(uint8_t system_id, uint8_t component_id,  uint32_t time_last_baseline_ms, uint8_t rtk_receiver_id, uint16_t wn, uint32_t tow, uint8_t rtk_health, uint8_t rtk_rate, uint8_t nsats, uint8_t baseline_coords_type, int32_t baseline_a_mm, int32_t baseline_b_mm, int32_t baseline_c_mm, uint32_t accuracy, int32_t iar_num_hypotheses):
+        gps_rtk(uint8_t system_id, uint8_t component_id,  uint32_t  time_last_baseline_ms, uint8_t  rtk_receiver_id, uint16_t  wn, uint32_t  tow, uint8_t  rtk_health, uint8_t  rtk_rate, uint8_t  nsats, uint8_t  baseline_coords_type, int32_t  baseline_a_mm, int32_t  baseline_b_mm, int32_t  baseline_c_mm, uint32_t  accuracy, int32_t  iar_num_hypotheses):
           mavlink::message( mavlink::msg::gps_rtk_length,
                             system_id,
                             component_id,
-                            mavlink::msg::gps_rtk_id,
-                            mavlink::msg::gps_rtk_crc)
+                            mavlink::msg::gps_rtk_id)
         {
            m_payload.push_back<uint32_t>(time_last_baseline_ms); ///< Time since boot of last baseline message received in ms.
            m_payload.push_back<uint32_t>(tow); ///< GPS Time of Week of last baseline
@@ -34,6 +33,7 @@ namespace mavlink
            m_payload.push_back<uint8_t>(rtk_rate); ///< Rate of baseline messages being received by GPS, in HZ
            m_payload.push_back<uint8_t>(nsats); ///< Current number of sats used for RTK calculation.
            m_payload.push_back<uint8_t>(baseline_coords_type); ///< Coordinate system of baseline. 0 == ECEF, 1 == NED
+          
           
         }
 
@@ -63,6 +63,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(33);}
       	uint8_t get_baseline_coords_type() const
           {return m_payload.get<uint8_t>(34);}
+      
       
     };
   };

@@ -14,12 +14,11 @@ namespace mavlink
     class local_position_ned : public mavlink::message
     {
       public:
-        local_position_ned(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, float x, float y, float z, float vx, float vy, float vz):
+        local_position_ned(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, float  x, float  y, float  z, float  vx, float  vy, float  vz):
           mavlink::message( mavlink::msg::local_position_ned_length,
                             system_id,
                             component_id,
-                            mavlink::msg::local_position_ned_id,
-                            mavlink::msg::local_position_ned_crc)
+                            mavlink::msg::local_position_ned_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot)
            m_payload.push_back<float>(x); ///< X Position
@@ -28,6 +27,7 @@ namespace mavlink
            m_payload.push_back<float>(vx); ///< X Speed
            m_payload.push_back<float>(vy); ///< Y Speed
            m_payload.push_back<float>(vz); ///< Z Speed
+          
           
         }
 
@@ -45,6 +45,7 @@ namespace mavlink
           {return m_payload.get<float>(20);}
       	float get_vz() const
           {return m_payload.get<float>(24);}
+      
       
     };
   };

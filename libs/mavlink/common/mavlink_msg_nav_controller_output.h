@@ -14,12 +14,11 @@ namespace mavlink
     class nav_controller_output : public mavlink::message
     {
       public:
-        nav_controller_output(uint8_t system_id, uint8_t component_id,  float nav_roll, float nav_pitch, int16_t nav_bearing, int16_t target_bearing, uint16_t wp_dist, float alt_error, float aspd_error, float xtrack_error):
+        nav_controller_output(uint8_t system_id, uint8_t component_id,  float  nav_roll, float  nav_pitch, int16_t  nav_bearing, int16_t  target_bearing, uint16_t  wp_dist, float  alt_error, float  aspd_error, float  xtrack_error):
           mavlink::message( mavlink::msg::nav_controller_output_length,
                             system_id,
                             component_id,
-                            mavlink::msg::nav_controller_output_id,
-                            mavlink::msg::nav_controller_output_crc)
+                            mavlink::msg::nav_controller_output_id)
         {
            m_payload.push_back<float>(nav_roll); ///< Current desired roll in degrees
            m_payload.push_back<float>(nav_pitch); ///< Current desired pitch in degrees
@@ -29,6 +28,7 @@ namespace mavlink
            m_payload.push_back<int16_t>(nav_bearing); ///< Current desired heading in degrees
            m_payload.push_back<int16_t>(target_bearing); ///< Bearing to current MISSION/target in degrees
            m_payload.push_back<uint16_t>(wp_dist); ///< Distance to active MISSION in meters
+          
           
         }
 
@@ -48,6 +48,7 @@ namespace mavlink
           {return m_payload.get<int16_t>(22);}
       	uint16_t get_wp_dist() const
           {return m_payload.get<uint16_t>(24);}
+      
       
     };
   };

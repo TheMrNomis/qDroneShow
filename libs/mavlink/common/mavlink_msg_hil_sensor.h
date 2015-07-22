@@ -14,12 +14,11 @@ namespace mavlink
     class hil_sensor : public mavlink::message
     {
       public:
-        hil_sensor(uint8_t system_id, uint8_t component_id,  uint64_t time_usec, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float xmag, float ymag, float zmag, float abs_pressure, float diff_pressure, float pressure_alt, float temperature, uint32_t fields_updated):
+        hil_sensor(uint8_t system_id, uint8_t component_id,  uint64_t  time_usec, float  xacc, float  yacc, float  zacc, float  xgyro, float  ygyro, float  zgyro, float  xmag, float  ymag, float  zmag, float  abs_pressure, float  diff_pressure, float  pressure_alt, float  temperature, uint32_t  fields_updated):
           mavlink::message( mavlink::msg::hil_sensor_length,
                             system_id,
                             component_id,
-                            mavlink::msg::hil_sensor_id,
-                            mavlink::msg::hil_sensor_crc)
+                            mavlink::msg::hil_sensor_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp (microseconds, synced to UNIX time or since system boot)
            m_payload.push_back<float>(xacc); ///< X acceleration (m/s^2)
@@ -36,6 +35,7 @@ namespace mavlink
            m_payload.push_back<float>(pressure_alt); ///< Altitude calculated from pressure
            m_payload.push_back<float>(temperature); ///< Temperature in degrees celsius
            m_payload.push_back<uint32_t>(fields_updated); ///< Bitmask for fields that have updated since last message, bit 0 = xacc, bit 12: temperature
+          
           
         }
 
@@ -69,6 +69,7 @@ namespace mavlink
           {return m_payload.get<float>(56);}
       	uint32_t get_fields_updated() const
           {return m_payload.get<uint32_t>(60);}
+      
       
     };
   };

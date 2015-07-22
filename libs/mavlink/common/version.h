@@ -9,8 +9,8 @@ namespace mavlink
 {
   namespace version
   {
-    const char* build_date = "Tue Jul 21 16:34:16 2015";
-    const char* wire_protocol = "1.0";
+    const char * const build_date = "Wed Jul 22 16:54:06 2015";
+    const char * const wire_protocol = "1.0";
     const uint8_t max_dialect_payload_size = 255;
   };
 };

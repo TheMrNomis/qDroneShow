@@ -14,17 +14,18 @@ namespace mavlink
     class att_pos_mocap : public mavlink::message
     {
       public:
-        att_pos_mocap(uint8_t system_id, uint8_t component_id,  uint64_t time_usec, const float *q, float x, float y, float z):
+        att_pos_mocap(uint8_t system_id, uint8_t component_id,  uint64_t  time_usec, const float * q, float  x, float  y, float  z):
           mavlink::message( mavlink::msg::att_pos_mocap_length,
                             system_id,
                             component_id,
-                            mavlink::msg::att_pos_mocap_id,
-                            mavlink::msg::att_pos_mocap_crc)
+                            mavlink::msg::att_pos_mocap_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp (micros since boot or Unix epoch)
            m_payload.push_back<float>(x); ///< X position in meters (NED)
            m_payload.push_back<float>(y); ///< Y position in meters (NED)
            m_payload.push_back<float>(z); ///< Z position in meters (NED)
+          
+          	m_payload.push_back_array<float>(q, 4); ///< Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
           
         }
 
@@ -36,6 +37,9 @@ namespace mavlink
           {return m_payload.get<float>(28);}
       	float get_z() const
           {return m_payload.get<float>(32);}
+      
+       float * get_q() const
+          {return m_payload.get_array<float>(8, 4);}
       
     };
   };

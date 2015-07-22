@@ -14,12 +14,11 @@ namespace mavlink
     class data_transmission_handshake : public mavlink::message
     {
       public:
-        data_transmission_handshake(uint8_t system_id, uint8_t component_id,  uint8_t type, uint32_t size, uint16_t width, uint16_t height, uint16_t packets, uint8_t payload, uint8_t jpg_quality):
+        data_transmission_handshake(uint8_t system_id, uint8_t component_id,  uint8_t  type, uint32_t  size, uint16_t  width, uint16_t  height, uint16_t  packets, uint8_t  payload, uint8_t  jpg_quality):
           mavlink::message( mavlink::msg::data_transmission_handshake_length,
                             system_id,
                             component_id,
-                            mavlink::msg::data_transmission_handshake_id,
-                            mavlink::msg::data_transmission_handshake_crc)
+                            mavlink::msg::data_transmission_handshake_id)
         {
            m_payload.push_back<uint32_t>(size); ///< total data size in bytes (set on ACK only)
            m_payload.push_back<uint16_t>(width); ///< Width of a matrix or image
@@ -28,6 +27,7 @@ namespace mavlink
            m_payload.push_back<uint8_t>(type); ///< type of requested/acknowledged data (as defined in ENUM DATA_TYPES in mavlink/include/mavlink_types.h)
            m_payload.push_back<uint8_t>(payload); ///< payload size per packet (normally 253 byte, see DATA field size in message ENCAPSULATED_DATA) (set on ACK only)
            m_payload.push_back<uint8_t>(jpg_quality); ///< JPEG quality out of [1,100]
+          
           
         }
 
@@ -45,6 +45,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(11);}
       	uint8_t get_jpg_quality() const
           {return m_payload.get<uint8_t>(12);}
+      
       
     };
   };

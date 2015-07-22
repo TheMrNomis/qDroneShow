@@ -37,13 +37,13 @@ Link::Link(QObject *parent) :
 
 bool Link::isConnected() const {return m_isConnected;}
 
-Link& Link::operator<<(MAVLinkMessage const& msg)
+Link& Link::operator<<(mavlink::message const& msg)
 {
   sendMessage(msg);
   return *this;
 }
 
-void Link::sendMessage(MAVLinkMessage const& message)
+void Link::sendMessage(mavlink::message const& message)
 {
   _writeBytes(message.toByteBuffer());
 }

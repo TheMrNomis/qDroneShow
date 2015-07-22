@@ -14,12 +14,11 @@ namespace mavlink
     class set_position_target_local_ned : public mavlink::message
     {
       public:
-        set_position_target_local_ned(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, uint8_t target_system, uint8_t target_component, uint8_t coordinate_frame, uint16_t type_mask, float x, float y, float z, float vx, float vy, float vz, float afx, float afy, float afz, float yaw, float yaw_rate):
+        set_position_target_local_ned(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, uint8_t  target_system, uint8_t  target_component, uint8_t  coordinate_frame, uint16_t  type_mask, float  x, float  y, float  z, float  vx, float  vy, float  vz, float  afx, float  afy, float  afz, float  yaw, float  yaw_rate):
           mavlink::message( mavlink::msg::set_position_target_local_ned_length,
                             system_id,
                             component_id,
-                            mavlink::msg::set_position_target_local_ned_id,
-                            mavlink::msg::set_position_target_local_ned_crc)
+                            mavlink::msg::set_position_target_local_ned_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp in milliseconds since system boot
            m_payload.push_back<float>(x); ///< X Position in NED frame in meters
@@ -37,6 +36,7 @@ namespace mavlink
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
            m_payload.push_back<uint8_t>(coordinate_frame); ///< Valid options are: MAV_FRAME_LOCAL_NED = 1, MAV_FRAME_LOCAL_OFFSET_NED = 7, MAV_FRAME_BODY_NED = 8, MAV_FRAME_BODY_OFFSET_NED = 9
+          
           
         }
 
@@ -72,6 +72,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(51);}
       	uint8_t get_coordinate_frame() const
           {return m_payload.get<uint8_t>(52);}
+      
       
     };
   };

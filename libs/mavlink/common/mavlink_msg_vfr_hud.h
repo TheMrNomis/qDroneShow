@@ -14,12 +14,11 @@ namespace mavlink
     class vfr_hud : public mavlink::message
     {
       public:
-        vfr_hud(uint8_t system_id, uint8_t component_id,  float airspeed, float groundspeed, int16_t heading, uint16_t throttle, float alt, float climb):
+        vfr_hud(uint8_t system_id, uint8_t component_id,  float  airspeed, float  groundspeed, int16_t  heading, uint16_t  throttle, float  alt, float  climb):
           mavlink::message( mavlink::msg::vfr_hud_length,
                             system_id,
                             component_id,
-                            mavlink::msg::vfr_hud_id,
-                            mavlink::msg::vfr_hud_crc)
+                            mavlink::msg::vfr_hud_id)
         {
            m_payload.push_back<float>(airspeed); ///< Current airspeed in m/s
            m_payload.push_back<float>(groundspeed); ///< Current ground speed in m/s
@@ -27,6 +26,7 @@ namespace mavlink
            m_payload.push_back<float>(climb); ///< Current climb rate in meters/second
            m_payload.push_back<int16_t>(heading); ///< Current heading in degrees, in compass units (0..360, 0=north)
            m_payload.push_back<uint16_t>(throttle); ///< Current throttle setting in integer percent, 0 to 100
+          
           
         }
 
@@ -42,6 +42,7 @@ namespace mavlink
           {return m_payload.get<int16_t>(16);}
       	uint16_t get_throttle() const
           {return m_payload.get<uint16_t>(18);}
+      
       
     };
   };

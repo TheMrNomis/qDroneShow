@@ -32,6 +32,7 @@
 #include <iostream>
 #include <QObject>
 #include <QDateTime>
+#include <bitset>
 
 #include "MAVLink/common/mavlink.h"
 
@@ -76,13 +77,13 @@ public slots:
   void goTo(int32_t lon, int32_t lat, int32_t alt);
 
   //messages
-  void receiveMessage(MAVLinkMessage const& msg);
+  void receiveMessage(mavlink::message const& msg);
   /**
    * @brief sends a message to this UAV
    * @param msg the message to send
    * @param nb the number of time this message must be sent (1 = once, 2 = twice, etc.)
    */
-  void sendMessage(MAVLinkMessage const& msg, unsigned int nb = 1);
+  void sendMessage(mavlink::message const& msg, unsigned int nb = 1);
 
   /**
    * @brief Sends a command to be executed on the UAV
@@ -90,7 +91,7 @@ public slots:
    * @param confirmation 0: first transmission of the command, 1->255: confirmating the transmission (for ex: the kill command)
    * @param param1-7 the params, as defined by MAV_CMD enum
    */
-  void executeCommand(MAV_CMD command, int confirmation = 0, float param1 = 0.0f, float param2 = 0.0f, float param3 = 0.0f, float param4 = 0.0f, float param5 = 0.0f, float param6 = 0.0f, float param7 = 0.0f);
+  void executeCommand(mavlink::MAV_CMD command, int confirmation = 0, float param1 = 0.0f, float param2 = 0.0f, float param3 = 0.0f, float param4 = 0.0f, float param5 = 0.0f, float param6 = 0.0f, float param7 = 0.0f);
 
   /**
    * @brief sends a heartbeat to the UAV
@@ -137,11 +138,11 @@ private:
   const uint8_t m_UAV_systemID;
   const uint8_t m_GCS_systemID;
 
-  MAV_TYPE m_UAV_type;
-  MAV_AUTOPILOT m_UAV_autopilot;
+  mavlink::MAV_TYPE m_UAV_type;
+  mavlink::MAV_AUTOPILOT m_UAV_autopilot;
   uint8_t m_UAV_base_mode;
   uint32_t m_UAV_custom_mode;
-  MAV_STATE m_UAV_system_status;
+  mavlink::MAV_STATE m_UAV_system_status;
 
   //connection status
   uint8_t m_UAV_sequence_number_TX;///the sequence number to use for transmission

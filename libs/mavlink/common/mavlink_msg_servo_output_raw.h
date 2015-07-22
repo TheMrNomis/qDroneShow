@@ -14,12 +14,11 @@ namespace mavlink
     class servo_output_raw : public mavlink::message
     {
       public:
-        servo_output_raw(uint8_t system_id, uint8_t component_id,  uint32_t time_usec, uint8_t port, uint16_t servo1_raw, uint16_t servo2_raw, uint16_t servo3_raw, uint16_t servo4_raw, uint16_t servo5_raw, uint16_t servo6_raw, uint16_t servo7_raw, uint16_t servo8_raw):
+        servo_output_raw(uint8_t system_id, uint8_t component_id,  uint32_t  time_usec, uint8_t  port, uint16_t  servo1_raw, uint16_t  servo2_raw, uint16_t  servo3_raw, uint16_t  servo4_raw, uint16_t  servo5_raw, uint16_t  servo6_raw, uint16_t  servo7_raw, uint16_t  servo8_raw):
           mavlink::message( mavlink::msg::servo_output_raw_length,
                             system_id,
                             component_id,
-                            mavlink::msg::servo_output_raw_id,
-                            mavlink::msg::servo_output_raw_crc)
+                            mavlink::msg::servo_output_raw_id)
         {
            m_payload.push_back<uint32_t>(time_usec); ///< Timestamp (microseconds since system boot)
            m_payload.push_back<uint16_t>(servo1_raw); ///< Servo output 1 value, in microseconds
@@ -31,6 +30,7 @@ namespace mavlink
            m_payload.push_back<uint16_t>(servo7_raw); ///< Servo output 7 value, in microseconds
            m_payload.push_back<uint16_t>(servo8_raw); ///< Servo output 8 value, in microseconds
            m_payload.push_back<uint8_t>(port); ///< Servo output port (set of 8 outputs = 1 port). Most MAVs will just use one, but this allows to encode more than 8 servos.
+          
           
         }
 
@@ -54,6 +54,7 @@ namespace mavlink
           {return m_payload.get<uint16_t>(18);}
       	uint8_t get_port() const
           {return m_payload.get<uint8_t>(20);}
+      
       
     };
   };

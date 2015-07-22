@@ -14,12 +14,11 @@ namespace mavlink
     class set_attitude_target : public mavlink::message
     {
       public:
-        set_attitude_target(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, uint8_t target_system, uint8_t target_component, uint8_t type_mask, const float *q, float body_roll_rate, float body_pitch_rate, float body_yaw_rate, float thrust):
+        set_attitude_target(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, uint8_t  target_system, uint8_t  target_component, uint8_t  type_mask, const float * q, float  body_roll_rate, float  body_pitch_rate, float  body_yaw_rate, float  thrust):
           mavlink::message( mavlink::msg::set_attitude_target_length,
                             system_id,
                             component_id,
-                            mavlink::msg::set_attitude_target_id,
-                            mavlink::msg::set_attitude_target_crc)
+                            mavlink::msg::set_attitude_target_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp in milliseconds since system boot
            m_payload.push_back<float>(body_roll_rate); ///< Body roll rate in radians per second
@@ -29,6 +28,8 @@ namespace mavlink
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
            m_payload.push_back<uint8_t>(type_mask); ///< Mappings: If any of these bits are set, the corresponding input should be ignored: bit 1: body roll rate, bit 2: body pitch rate, bit 3: body yaw rate. bit 4-bit 6: reserved, bit 7: throttle, bit 8: attitude
+          
+          	m_payload.push_back_array<float>(q, 4); ///< Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
           
         }
 
@@ -48,6 +49,9 @@ namespace mavlink
           {return m_payload.get<uint8_t>(37);}
       	uint8_t get_type_mask() const
           {return m_payload.get<uint8_t>(38);}
+      
+       float * get_q() const
+          {return m_payload.get_array<float>(4, 4);}
       
     };
   };

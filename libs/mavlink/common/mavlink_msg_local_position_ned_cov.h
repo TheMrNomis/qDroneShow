@@ -14,12 +14,11 @@ namespace mavlink
     class local_position_ned_cov : public mavlink::message
     {
       public:
-        local_position_ned_cov(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, uint64_t time_utc, uint8_t estimator_type, float x, float y, float z, float vx, float vy, float vz, float ax, float ay, float az, const float *covariance):
+        local_position_ned_cov(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, uint64_t  time_utc, uint8_t  estimator_type, float  x, float  y, float  z, float  vx, float  vy, float  vz, float  ax, float  ay, float  az, const float * covariance):
           mavlink::message( mavlink::msg::local_position_ned_cov_length,
                             system_id,
                             component_id,
-                            mavlink::msg::local_position_ned_cov_id,
-                            mavlink::msg::local_position_ned_cov_crc)
+                            mavlink::msg::local_position_ned_cov_id)
         {
            m_payload.push_back<uint64_t>(time_utc); ///< Timestamp (microseconds since UNIX epoch) in UTC. 0 for unknown. Commonly filled by the precision time source of a GPS receiver.
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot). 0 for system without monotonic timestamp
@@ -33,6 +32,8 @@ namespace mavlink
            m_payload.push_back<float>(ay); ///< Y Acceleration (m/s^2)
            m_payload.push_back<float>(az); ///< Z Acceleration (m/s^2)
            m_payload.push_back<uint8_t>(estimator_type); ///< Class id of the estimator this estimate originated from.
+          
+          	m_payload.push_back_array<float>(covariance, 45); ///< Covariance matrix upper right triangular (first nine entries are the first ROW, next eight entries are the second row, etc.)
           
         }
 
@@ -60,6 +61,9 @@ namespace mavlink
           {return m_payload.get<float>(44);}
       	uint8_t get_estimator_type() const
           {return m_payload.get<uint8_t>(228);}
+      
+       float * get_covariance() const
+          {return m_payload.get_array<float>(48, 45);}
       
     };
   };

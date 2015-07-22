@@ -14,15 +14,16 @@ namespace mavlink
     class named_value_int : public mavlink::message
     {
       public:
-        named_value_int(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, const char *name, int32_t value):
+        named_value_int(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, const char * name, int32_t  value):
           mavlink::message( mavlink::msg::named_value_int_length,
                             system_id,
                             component_id,
-                            mavlink::msg::named_value_int_id,
-                            mavlink::msg::named_value_int_crc)
+                            mavlink::msg::named_value_int_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot)
            m_payload.push_back<int32_t>(value); ///< Signed integer value
+          
+          	m_payload.push_back_array<char>(name, 10); ///< Name of the debug variable
           
         }
 
@@ -30,6 +31,9 @@ namespace mavlink
           {return m_payload.get<uint32_t>(0);}
       	int32_t get_value() const
           {return m_payload.get<int32_t>(4);}
+      
+       char * get_name() const
+          {return m_payload.get_array<char>(8, 10);}
       
     };
   };

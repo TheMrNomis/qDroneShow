@@ -83,7 +83,7 @@ void SerialLink::_readBytes()
 {
   //we get the data from the serial port
   QByteArray data = m_serialPort->readAll();
-  ByteBuffer dataBuf(data.data(), data.size());
+  mavlink::ByteBuffer dataBuf(data.data(), data.size());
   //put it on the data buffer
   m_dataBuffer << dataBuf;
   //and extract (if any) the messages on the data buffer
@@ -114,13 +114,16 @@ void SerialLink::_extractMAVLinkMessage()
     if(m_dataBuffer.size() >= msgLength)
     {
       //dump the whole message onto a ByteBuffer
-      ByteBuffer messageBuffer;
+      mavlink::ByteBuffer messageBuffer;
       for(unsigned int i = 0; i < msgLength; ++i)
-        m_dataBuffer >> messageBuffer;
+      {
+        messageBuffer.push_back<uint8_t>(m_dataBuffer.get<uint8_t>(0));
+        m_dataBuffer.pop_front();
+      }
 
       //cast the Buffer to a MAVLink message
-      MAVLinkMessage msg(messageBuffer);
-      if(msg.isValid(mavlink_message::crcs[msg.get_messageID()]))
+      mavlink::message msg(messageBuffer);
+      if(msg.isValid())
         emit(messageReceived(msg));
       else
         emit(badMessageReceived());
@@ -132,7 +135,7 @@ void SerialLink::_extractMAVLinkMessage()
   }
 }
 
-void SerialLink::_writeBytes(ByteBuffer bytes)
+void SerialLink::_writeBytes(mavlink::ByteBuffer bytes)
 {
   //std::cout << "sending : " << bytes << std::endl;
   m_serialPort->write((const char *)bytes, bytes.size());

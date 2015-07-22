@@ -14,12 +14,11 @@ namespace mavlink
     class hil_rc_inputs_raw : public mavlink::message
     {
       public:
-        hil_rc_inputs_raw(uint8_t system_id, uint8_t component_id,  uint64_t time_usec, uint16_t chan1_raw, uint16_t chan2_raw, uint16_t chan3_raw, uint16_t chan4_raw, uint16_t chan5_raw, uint16_t chan6_raw, uint16_t chan7_raw, uint16_t chan8_raw, uint16_t chan9_raw, uint16_t chan10_raw, uint16_t chan11_raw, uint16_t chan12_raw, uint8_t rssi):
+        hil_rc_inputs_raw(uint8_t system_id, uint8_t component_id,  uint64_t  time_usec, uint16_t  chan1_raw, uint16_t  chan2_raw, uint16_t  chan3_raw, uint16_t  chan4_raw, uint16_t  chan5_raw, uint16_t  chan6_raw, uint16_t  chan7_raw, uint16_t  chan8_raw, uint16_t  chan9_raw, uint16_t  chan10_raw, uint16_t  chan11_raw, uint16_t  chan12_raw, uint8_t  rssi):
           mavlink::message( mavlink::msg::hil_rc_inputs_raw_length,
                             system_id,
                             component_id,
-                            mavlink::msg::hil_rc_inputs_raw_id,
-                            mavlink::msg::hil_rc_inputs_raw_crc)
+                            mavlink::msg::hil_rc_inputs_raw_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp (microseconds since UNIX epoch or microseconds since system boot)
            m_payload.push_back<uint16_t>(chan1_raw); ///< RC channel 1 value, in microseconds
@@ -35,6 +34,7 @@ namespace mavlink
            m_payload.push_back<uint16_t>(chan11_raw); ///< RC channel 11 value, in microseconds
            m_payload.push_back<uint16_t>(chan12_raw); ///< RC channel 12 value, in microseconds
            m_payload.push_back<uint8_t>(rssi); ///< Receive signal strength indicator, 0: 0%, 255: 100%
+          
           
         }
 
@@ -66,6 +66,7 @@ namespace mavlink
           {return m_payload.get<uint16_t>(30);}
       	uint8_t get_rssi() const
           {return m_payload.get<uint8_t>(32);}
+      
       
     };
   };

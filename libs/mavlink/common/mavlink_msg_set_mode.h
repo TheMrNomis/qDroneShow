@@ -14,16 +14,16 @@ namespace mavlink
     class set_mode : public mavlink::message
     {
       public:
-        set_mode(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t base_mode, uint32_t custom_mode):
+        set_mode(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  base_mode, uint32_t  custom_mode):
           mavlink::message( mavlink::msg::set_mode_length,
                             system_id,
                             component_id,
-                            mavlink::msg::set_mode_id,
-                            mavlink::msg::set_mode_crc)
+                            mavlink::msg::set_mode_id)
         {
            m_payload.push_back<uint32_t>(custom_mode); ///< The new autopilot-specific mode. This field can be ignored by an autopilot.
            m_payload.push_back<uint8_t>(target_system); ///< The system setting the mode
            m_payload.push_back<uint8_t>(base_mode); ///< The new base mode
+          
           
         }
 
@@ -33,6 +33,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(4);}
       	uint8_t get_base_mode() const
           {return m_payload.get<uint8_t>(5);}
+      
       
     };
   };

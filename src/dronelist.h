@@ -90,7 +90,7 @@ public slots:
   void moveUAVTo(unsigned int uavNumber, int32_t lon, int32_t lat, int32_t alt);
 
 private slots:
-  void _receiveMessage(MAVLinkMessage const& msg);
+  void _receiveMessage(mavlink::message const& msg);
 
 private:
   UAVWidget * _createUAV(uint8_t systemID);

@@ -21,9 +21,6 @@
 #include <iostream>
 #include <bitset>
 
-#include "MAVLink/common/mavlink.h"
-#include "UAV/uav.h"
-
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])

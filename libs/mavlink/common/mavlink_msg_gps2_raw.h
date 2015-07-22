@@ -14,12 +14,11 @@ namespace mavlink
     class gps2_raw : public mavlink::message
     {
       public:
-        gps2_raw(uint8_t system_id, uint8_t component_id,  uint64_t time_usec, uint8_t fix_type, int32_t lat, int32_t lon, int32_t alt, uint16_t eph, uint16_t epv, uint16_t vel, uint16_t cog, uint8_t satellites_visible, uint8_t dgps_numch, uint32_t dgps_age):
+        gps2_raw(uint8_t system_id, uint8_t component_id,  uint64_t  time_usec, uint8_t  fix_type, int32_t  lat, int32_t  lon, int32_t  alt, uint16_t  eph, uint16_t  epv, uint16_t  vel, uint16_t  cog, uint8_t  satellites_visible, uint8_t  dgps_numch, uint32_t  dgps_age):
           mavlink::message( mavlink::msg::gps2_raw_length,
                             system_id,
                             component_id,
-                            mavlink::msg::gps2_raw_id,
-                            mavlink::msg::gps2_raw_crc)
+                            mavlink::msg::gps2_raw_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp (microseconds since UNIX epoch or microseconds since system boot)
            m_payload.push_back<int32_t>(lat); ///< Latitude (WGS84), in degrees * 1E7
@@ -33,6 +32,7 @@ namespace mavlink
            m_payload.push_back<uint8_t>(fix_type); ///< 0-1: no fix, 2: 2D fix, 3: 3D fix, 4: DGPS fix, 5: RTK Fix. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.
            m_payload.push_back<uint8_t>(satellites_visible); ///< Number of satellites visible. If unknown, set to 255
            m_payload.push_back<uint8_t>(dgps_numch); ///< Number of DGPS satellites
+          
           
         }
 
@@ -60,6 +60,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(33);}
       	uint8_t get_dgps_numch() const
           {return m_payload.get<uint8_t>(34);}
+      
       
     };
   };

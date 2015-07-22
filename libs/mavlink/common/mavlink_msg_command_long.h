@@ -14,12 +14,11 @@ namespace mavlink
     class command_long : public mavlink::message
     {
       public:
-        command_long(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component, uint16_t command, uint8_t confirmation, float param1, float param2, float param3, float param4, float param5, float param6, float param7):
+        command_long(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component, uint16_t  command, uint8_t  confirmation, float  param1, float  param2, float  param3, float  param4, float  param5, float  param6, float  param7):
           mavlink::message( mavlink::msg::command_long_length,
                             system_id,
                             component_id,
-                            mavlink::msg::command_long_id,
-                            mavlink::msg::command_long_crc)
+                            mavlink::msg::command_long_id)
         {
            m_payload.push_back<float>(param1); ///< Parameter 1, as defined by MAV_CMD enum.
            m_payload.push_back<float>(param2); ///< Parameter 2, as defined by MAV_CMD enum.
@@ -32,6 +31,7 @@ namespace mavlink
            m_payload.push_back<uint8_t>(target_system); ///< System which should execute the command
            m_payload.push_back<uint8_t>(target_component); ///< Component which should execute the command, 0 for all components
            m_payload.push_back<uint8_t>(confirmation); ///< 0: First transmission of this command. 1-255: Confirmation transmissions (e.g. for kill command)
+          
           
         }
 
@@ -57,6 +57,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(31);}
       	uint8_t get_confirmation() const
           {return m_payload.get<uint8_t>(32);}
+      
       
     };
   };

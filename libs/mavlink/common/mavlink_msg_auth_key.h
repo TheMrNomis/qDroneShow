@@ -14,16 +14,20 @@ namespace mavlink
     class auth_key : public mavlink::message
     {
       public:
-        auth_key(uint8_t system_id, uint8_t component_id,  const char *key):
+        auth_key(uint8_t system_id, uint8_t component_id,  const char * key):
           mavlink::message( mavlink::msg::auth_key_length,
                             system_id,
                             component_id,
-                            mavlink::msg::auth_key_id,
-                            mavlink::msg::auth_key_crc)
+                            mavlink::msg::auth_key_id)
         {
+          
+          	m_payload.push_back_array<char>(key, 32); ///< key
           
         }
 
+      
+       char * get_key() const
+          {return m_payload.get_array<char>(0, 32);}
       
     };
   };

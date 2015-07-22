@@ -14,12 +14,11 @@ namespace mavlink
     class terrain_report : public mavlink::message
     {
       public:
-        terrain_report(uint8_t system_id, uint8_t component_id,  int32_t lat, int32_t lon, uint16_t spacing, float terrain_height, float current_height, uint16_t pending, uint16_t loaded):
+        terrain_report(uint8_t system_id, uint8_t component_id,  int32_t  lat, int32_t  lon, uint16_t  spacing, float  terrain_height, float  current_height, uint16_t  pending, uint16_t  loaded):
           mavlink::message( mavlink::msg::terrain_report_length,
                             system_id,
                             component_id,
-                            mavlink::msg::terrain_report_id,
-                            mavlink::msg::terrain_report_crc)
+                            mavlink::msg::terrain_report_id)
         {
            m_payload.push_back<int32_t>(lat); ///< Latitude (degrees *10^7)
            m_payload.push_back<int32_t>(lon); ///< Longitude (degrees *10^7)
@@ -28,6 +27,7 @@ namespace mavlink
            m_payload.push_back<uint16_t>(spacing); ///< grid spacing (zero if terrain at this location unavailable)
            m_payload.push_back<uint16_t>(pending); ///< Number of 4x4 terrain blocks waiting to be received or read from disk
            m_payload.push_back<uint16_t>(loaded); ///< Number of 4x4 terrain blocks in memory
+          
           
         }
 
@@ -45,6 +45,7 @@ namespace mavlink
           {return m_payload.get<uint16_t>(18);}
       	uint16_t get_loaded() const
           {return m_payload.get<uint16_t>(20);}
+      
       
     };
   };

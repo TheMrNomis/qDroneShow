@@ -14,12 +14,11 @@ namespace mavlink
     class battery_status : public mavlink::message
     {
       public:
-        battery_status(uint8_t system_id, uint8_t component_id,  uint8_t id, uint8_t battery_function, uint8_t type, int16_t temperature, const uint16_t *voltages, int16_t current_battery, int32_t current_consumed, int32_t energy_consumed, int8_t battery_remaining):
+        battery_status(uint8_t system_id, uint8_t component_id,  uint8_t  id, uint8_t  battery_function, uint8_t  type, int16_t  temperature, const uint16_t * voltages, int16_t  current_battery, int32_t  current_consumed, int32_t  energy_consumed, int8_t  battery_remaining):
           mavlink::message( mavlink::msg::battery_status_length,
                             system_id,
                             component_id,
-                            mavlink::msg::battery_status_id,
-                            mavlink::msg::battery_status_crc)
+                            mavlink::msg::battery_status_id)
         {
            m_payload.push_back<int32_t>(current_consumed); ///< Consumed charge, in milliampere hours (1 = 1 mAh), -1: autopilot does not provide mAh consumption estimate
            m_payload.push_back<int32_t>(energy_consumed); ///< Consumed energy, in 100*Joules (intergrated U*I*dt)  (1 = 100 Joule), -1: autopilot does not provide energy consumption estimate
@@ -29,6 +28,8 @@ namespace mavlink
            m_payload.push_back<uint8_t>(battery_function); ///< Function of the battery
            m_payload.push_back<uint8_t>(type); ///< Type (chemistry) of the battery
            m_payload.push_back<int8_t>(battery_remaining); ///< Remaining battery energy: (0%: 0, 100%: 100), -1: autopilot does not estimate the remaining battery
+          
+          	m_payload.push_back_array<uint16_t>(voltages, 10); ///< Battery voltage of cells, in millivolts (1 = 1 millivolt)
           
         }
 
@@ -48,6 +49,9 @@ namespace mavlink
           {return m_payload.get<uint8_t>(34);}
       	int8_t get_battery_remaining() const
           {return m_payload.get<int8_t>(35);}
+      
+       uint16_t * get_voltages() const
+          {return m_payload.get_array<uint16_t>(10, 10);}
       
     };
   };

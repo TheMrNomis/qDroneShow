@@ -14,16 +14,16 @@ namespace mavlink
     class mission_set_current : public mavlink::message
     {
       public:
-        mission_set_current(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component, uint16_t seq):
+        mission_set_current(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component, uint16_t  seq):
           mavlink::message( mavlink::msg::mission_set_current_length,
                             system_id,
                             component_id,
-                            mavlink::msg::mission_set_current_id,
-                            mavlink::msg::mission_set_current_crc)
+                            mavlink::msg::mission_set_current_id)
         {
            m_payload.push_back<uint16_t>(seq); ///< Sequence
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
+          
           
         }
 
@@ -33,6 +33,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(2);}
       	uint8_t get_target_component() const
           {return m_payload.get<uint8_t>(3);}
+      
       
     };
   };

@@ -14,17 +14,17 @@ namespace mavlink
     class mission_request_partial_list : public mavlink::message
     {
       public:
-        mission_request_partial_list(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component, int16_t start_index, int16_t end_index):
+        mission_request_partial_list(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component, int16_t  start_index, int16_t  end_index):
           mavlink::message( mavlink::msg::mission_request_partial_list_length,
                             system_id,
                             component_id,
-                            mavlink::msg::mission_request_partial_list_id,
-                            mavlink::msg::mission_request_partial_list_crc)
+                            mavlink::msg::mission_request_partial_list_id)
         {
            m_payload.push_back<int16_t>(start_index); ///< Start index, 0 by default
            m_payload.push_back<int16_t>(end_index); ///< End index, -1 by default (-1: send list to end). Else a valid index of the list
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
+          
           
         }
 
@@ -36,6 +36,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(4);}
       	uint8_t get_target_component() const
           {return m_payload.get<uint8_t>(5);}
+      
       
     };
   };

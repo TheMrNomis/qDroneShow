@@ -14,12 +14,11 @@ namespace mavlink
     class set_position_target_global_int : public mavlink::message
     {
       public:
-        set_position_target_global_int(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, uint8_t target_system, uint8_t target_component, uint8_t coordinate_frame, uint16_t type_mask, int32_t lat_int, int32_t lon_int, float alt, float vx, float vy, float vz, float afx, float afy, float afz, float yaw, float yaw_rate):
+        set_position_target_global_int(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, uint8_t  target_system, uint8_t  target_component, uint8_t  coordinate_frame, uint16_t  type_mask, int32_t  lat_int, int32_t  lon_int, float  alt, float  vx, float  vy, float  vz, float  afx, float  afy, float  afz, float  yaw, float  yaw_rate):
           mavlink::message( mavlink::msg::set_position_target_global_int_length,
                             system_id,
                             component_id,
-                            mavlink::msg::set_position_target_global_int_id,
-                            mavlink::msg::set_position_target_global_int_crc)
+                            mavlink::msg::set_position_target_global_int_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp in milliseconds since system boot. The rationale for the timestamp in the setpoint is to allow the system to compensate for the transport delay of the setpoint. This allows the system to compensate processing latency.
            m_payload.push_back<int32_t>(lat_int); ///< X Position in WGS84 frame in 1e7 * meters
@@ -37,6 +36,7 @@ namespace mavlink
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
            m_payload.push_back<uint8_t>(coordinate_frame); ///< Valid options are: MAV_FRAME_GLOBAL_INT = 5, MAV_FRAME_GLOBAL_RELATIVE_ALT_INT = 6, MAV_FRAME_GLOBAL_TERRAIN_ALT_INT = 11
+          
           
         }
 
@@ -72,6 +72,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(51);}
       	uint8_t get_coordinate_frame() const
           {return m_payload.get<uint8_t>(52);}
+      
       
     };
   };

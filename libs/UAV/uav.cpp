@@ -19,6 +19,8 @@
 
 #include "uav.h"
 
+using namespace mavlink;
+
 UAV::UAV(uint8_t UAVsystemId, uint8_t GCSsystemId, QObject *parent):
   QObject(parent),
   HEARTBEAT_TIMEOUT(5*1000), //5 seconds
@@ -77,40 +79,40 @@ bool UAV::isArmed() const
 
 void UAV::initialize()
 {
-  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
-                                              m_UAV_systemID,1,
-                                              MAV_DATA_STREAM_EXTENDED_STATUS,
-                                              2,1),
+  sendMessage(mavlink::msg::request_data_stream(m_GCS_systemID,0,
+                                                m_UAV_systemID,1,
+                                                MAV_DATA_STREAM_EXTENDED_STATUS,
+                                                2,1),
               2);
-  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
-                                              m_UAV_systemID,1,
-                                              MAV_DATA_STREAM_POSITION,
-                                              3,1),
+  sendMessage(mavlink::msg::request_data_stream(m_GCS_systemID,0,
+                                                m_UAV_systemID,1,
+                                                MAV_DATA_STREAM_POSITION,
+                                                3,1),
               2);
-  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
-                                              m_UAV_systemID,1,
-                                              MAV_DATA_STREAM_EXTRA1,
-                                              10,1),
+  sendMessage(mavlink::msg::request_data_stream(m_GCS_systemID,0,
+                                                m_UAV_systemID,1,
+                                                MAV_DATA_STREAM_EXTRA1,
+                                                10,1),
               2);
-  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
-                                              m_UAV_systemID,1,
-                                              MAV_DATA_STREAM_EXTRA2,
-                                              10,1),
+  sendMessage(mavlink::msg::request_data_stream(m_GCS_systemID,0,
+                                                m_UAV_systemID,1,
+                                                MAV_DATA_STREAM_EXTRA2,
+                                                10,1),
               2);
-  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
-                                              m_UAV_systemID,1,
-                                              MAV_DATA_STREAM_EXTRA3,
-                                              2,1),
+  sendMessage(mavlink::msg::request_data_stream(m_GCS_systemID,0,
+                                                m_UAV_systemID,1,
+                                                MAV_DATA_STREAM_EXTRA3,
+                                                2,1),
               2);
-  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
-                                              m_UAV_systemID,1,
-                                              MAV_DATA_STREAM_RAW_SENSORS,
-                                              2,1),
+  sendMessage(mavlink::msg::request_data_stream(m_GCS_systemID,0,
+                                                m_UAV_systemID,1,
+                                                MAV_DATA_STREAM_RAW_SENSORS,
+                                                2,1),
               2);
-  sendMessage(MAVLink_msg_request_rata_stream(m_GCS_systemID,0,_sequenceNumber(),
-                                              m_UAV_systemID,1,
-                                              MAV_DATA_STREAM_RC_CHANNELS,
-                                              2,1),
+  sendMessage(mavlink::msg::request_data_stream(m_GCS_systemID,0,
+                                                m_UAV_systemID,1,
+                                                MAV_DATA_STREAM_RC_CHANNELS,
+                                                2,1),
               2);
 }
 
@@ -207,114 +209,114 @@ void UAV::goTo(int32_t lon, int32_t lat, int32_t alt)
 }
 
 //messages
-void UAV::receiveMessage(MAVLinkMessage const& msg)
+void UAV::receiveMessage(mavlink::message const& msg)
 {
-  if(msg.get_systemID() != m_UAV_systemID)
+  if(msg.get_system_id() != m_UAV_systemID)
     return;
 
   //updating connection data
-  _updateConnectionStatus(msg.get_sequenceNumber());
+  _updateConnectionStatus(msg.get_sequence_number());
 
-  switch(msg.get_messageID())
+  switch(msg.get_message_id())
   {
-    case mavlink_message::heartbeat:
+    case mavlink::msg::heartbeat_id:
     {
-      const MAVLink_msg_heartbeat * message = static_cast<MAVLink_msg_heartbeat const*>(&msg);
+      const mavlink::msg::heartbeat * message = static_cast<mavlink::msg::heartbeat const*>(&msg);
       //first hearbeat not received, data update
       if(!m_heartbeat_received)
       {
         m_heartbeat_received = true;
         m_UAV_type = static_cast<MAV_TYPE>(message->get_type());
         m_UAV_autopilot = static_cast<MAV_AUTOPILOT>(message->get_autopilot());
-        m_UAV_sequence_number_RX = message->get_sequenceNumber();
+        m_UAV_sequence_number_RX = message->get_sequence_number();
       }
-      _updateMode(message->get_baseMode(), message->get_customMode());
-      std::cout << "mode = " << std::bitset<8>(message->get_baseMode()) << std::endl;
+      _updateMode(message->get_base_mode(), message->get_custom_mode());
+      std::cout << "mode = " << std::bitset<8>(message->get_base_mode()) << std::endl;
       m_last_heartbeat_timestamp = QDateTime::currentDateTime();
       break;
     }
-    case mavlink_message::sys_status:
+    case mavlink::msg::sys_status_id:
     {
-      const MAVLink_msg_sys_status * message = static_cast<MAVLink_msg_sys_status const*>(&msg);
+      const mavlink::msg::sys_status * message = static_cast<mavlink::msg::sys_status const*>(&msg);
       emit(batteryPercentChanged(message->get_battery_remaining()));
 
       emit(txConnectivityUpdate(message->get_drop_rate_comm(), message->get_errors_comm()));
       break;
     }
-    case mavlink_message::system_time:
+    case mavlink::msg::system_time_id:
       //TODO
     break;
-    case mavlink_message::attitude:
+    case mavlink::msg::attitude_id:
       //TODO
       //std::cout << "MAV_MSG_ATTITUDE received" << std::endl;
     break;
-    case mavlink_message::global_position_int:
+    case mavlink::msg::global_position_int_id:
     {
       //TODO
       //std::cout << "MAV_MSG_GLOBAL_POSITION_INT received" << std::endl;
-      const MAVLink_msg_global_position_int * message = static_cast<MAVLink_msg_global_position_int const*>(&msg);
+      const mavlink::msg::global_position_int * message = static_cast<mavlink::msg::global_position_int const*>(&msg);
       std::cout << "GPS : lon=" << message->get_lon() << " lat=" << message->get_lat() << " alt=" << message->get_alt() << std::endl;
       emit(locationUpdate(message->get_lon(), message->get_lat(), message->get_alt()));
       _updateLocation(message->get_lon(), message->get_lat(), message->get_alt());
       break;
     }
-    case mavlink_message::vfr_hud:
+    case mavlink::msg::vfr_hud_id:
     {
       //TODO
       std::cout << "vfr hud" << std::endl;
-      const MAVLink_msg_vfr_hud * message = static_cast<MAVLink_msg_vfr_hud const*>(&msg);
+      const mavlink::msg::vfr_hud * message = static_cast<mavlink::msg::vfr_hud const*>(&msg);
       std::cout << "alt : " << message->get_alt() << std::endl;
       break;
     }
-    case mavlink_message::command_ack:
+    case mavlink::msg::command_ack_id:
     {
       std::cout << "command ack" << std::endl;
-      const MAVLink_msg_cmd_ack * message = static_cast<MAVLink_msg_cmd_ack const*>(&msg);
+      const mavlink::msg::command_ack * message = static_cast<mavlink::msg::command_ack const*>(&msg);
       std::cout << "command ack : cmd=" << (int)message->get_command() << ", result = " << (int)message->get_result() << std::endl;
       break;
     }
-    case mavlink_message::gps_raw_int:
+    case mavlink::msg::gps_raw_int_id:
     {
       //TODO
-      const MAVLink_msg_gps_raw_int * message = static_cast<MAVLink_msg_gps_raw_int const*>(&msg);
+      const mavlink::msg::gps_raw_int * message = static_cast<mavlink::msg::gps_raw_int const*>(&msg);
       emit(GPSChanged(message->get_satellites_visible(),message->get_fix_type()));
       _updateGPS(message->get_satellites_visible(),message->get_fix_type());
       break;
     }
-    case mavlink_message::statustext:
+    case mavlink::msg::statustext_id:
     {
       //TODO
-      const MAVLink_msg_statustext * message = static_cast<MAVLink_msg_statustext const*>(&msg);
+      const mavlink::msg::statustext * message = static_cast<mavlink::msg::statustext const*>(&msg);
       emit(statusText(message->get_severity(), message->get_text()));
       break;
     }
       //deliberately ignored messages
-    case mavlink_message::rc_channels_raw:
+    case mavlink::msg::rc_channels_raw_id:
       std::cout << "rc_channels_raw" << std::endl;
     break;
-    case mavlink_message::raw_imu:
+    case mavlink::msg::raw_imu_id:
       std::cout << "raw imu" << std::endl;
     break;
-    case mavlink_message::scaled_pressure:
+    case mavlink::msg::scaled_pressure_id:
       std::cout << "scaled pressure" << std::endl;
     break;
-    case mavlink_message::servo_output_raw:
+    case mavlink::msg::servo_output_raw_id:
       std::cout << "servo output raw" << std::endl;
     break;
-    case mavlink_message::mission_current:
+    case mavlink::msg::mission_current_id:
       std::cout << "mission current" << std::endl;
     break;
-    case mavlink_message::nav_controller_output:
+    case mavlink::msg::nav_controller_output_id:
       std::cout << "controller output" << std::endl;
     break;
     default:
       //unrecognized messages
-      std::cout << "unrecognized message : " << (int) msg.get_messageID() << std::endl;
+      std::cout << "unrecognized message : " << (int) msg.get_message_id() << std::endl;
     break;
   }
 }
 
-void UAV::sendMessage(MAVLinkMessage const& msg, unsigned int nb)
+void UAV::sendMessage(mavlink::message const& msg, unsigned int nb)
 {
   for(auto i = m_links.cbegin(); i != m_links.cend(); i++)
     for(unsigned int n = 0; n < nb; ++n)
@@ -323,17 +325,17 @@ void UAV::sendMessage(MAVLinkMessage const& msg, unsigned int nb)
 
 void UAV::executeCommand(MAV_CMD command, int confirmation, float param1, float param2, float param3, float param4, float param5, float param6, float param7)
 {
-  sendMessage(MAVLink_msg_cmd(m_GCS_systemID,MAV_COMP_ID_ALL,_sequenceNumber(),m_UAV_systemID,MAV_COMP_ID_ALL,command,confirmation,param1,param2,param3,param4,param5,param6,param7));
+  sendMessage(mavlink::msg::command_long(m_GCS_systemID,MAV_COMP_ID_ALL,m_UAV_systemID,MAV_COMP_ID_ALL,command,confirmation,param1,param2,param3,param4,param5,param6,param7));
 }
 
 void UAV::sendHeartbeat()
 {
-  sendMessage(MAVLink_msg_heartbeat(m_GCS_systemID, 1, _sequenceNumber(), MAV_TYPE_GCS, MAV_AUTOPILOT_INVALID, MAV_MODE_PREFLIGHT, 0, MAV_STATE_ACTIVE));
+  sendMessage(mavlink::msg::heartbeat(m_GCS_systemID, 1,MAV_TYPE_GCS, MAV_AUTOPILOT_INVALID, MAV_MODE_PREFLIGHT, 0, MAV_STATE_ACTIVE));
 }
 
 void UAV::setMode(uint8_t baseMode, uint32_t customMode)
 {
-  sendMessage(MAVLink_msg_set_mode(m_GCS_systemID,MAV_COMP_ID_MISSIONPLANNER,_sequenceNumber(),m_UAV_systemID,baseMode,customMode));
+  sendMessage(mavlink::msg::set_mode(m_GCS_systemID,MAV_COMP_ID_MISSIONPLANNER,m_UAV_systemID,baseMode,customMode));
 }
 
 void UAV::_updateConnectionStatus(uint8_t newSequenceNumberRX)

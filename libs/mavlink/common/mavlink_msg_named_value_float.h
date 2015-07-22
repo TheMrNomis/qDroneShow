@@ -14,15 +14,16 @@ namespace mavlink
     class named_value_float : public mavlink::message
     {
       public:
-        named_value_float(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, const char *name, float value):
+        named_value_float(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, const char * name, float  value):
           mavlink::message( mavlink::msg::named_value_float_length,
                             system_id,
                             component_id,
-                            mavlink::msg::named_value_float_id,
-                            mavlink::msg::named_value_float_crc)
+                            mavlink::msg::named_value_float_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot)
            m_payload.push_back<float>(value); ///< Floating point value
+          
+          	m_payload.push_back_array<char>(name, 10); ///< Name of the debug variable
           
         }
 
@@ -30,6 +31,9 @@ namespace mavlink
           {return m_payload.get<uint32_t>(0);}
       	float get_value() const
           {return m_payload.get<float>(4);}
+      
+       char * get_name() const
+          {return m_payload.get_array<char>(8, 10);}
       
     };
   };

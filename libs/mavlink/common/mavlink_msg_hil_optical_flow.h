@@ -14,12 +14,11 @@ namespace mavlink
     class hil_optical_flow : public mavlink::message
     {
       public:
-        hil_optical_flow(uint8_t system_id, uint8_t component_id,  uint64_t time_usec, uint8_t sensor_id, uint32_t integration_time_us, float integrated_x, float integrated_y, float integrated_xgyro, float integrated_ygyro, float integrated_zgyro, int16_t temperature, uint8_t quality, uint32_t time_delta_distance_us, float distance):
+        hil_optical_flow(uint8_t system_id, uint8_t component_id,  uint64_t  time_usec, uint8_t  sensor_id, uint32_t  integration_time_us, float  integrated_x, float  integrated_y, float  integrated_xgyro, float  integrated_ygyro, float  integrated_zgyro, int16_t  temperature, uint8_t  quality, uint32_t  time_delta_distance_us, float  distance):
           mavlink::message( mavlink::msg::hil_optical_flow_length,
                             system_id,
                             component_id,
-                            mavlink::msg::hil_optical_flow_id,
-                            mavlink::msg::hil_optical_flow_crc)
+                            mavlink::msg::hil_optical_flow_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp (microseconds, synced to UNIX time or since system boot)
            m_payload.push_back<uint32_t>(integration_time_us); ///< Integration time in microseconds. Divide integrated_x and integrated_y by the integration time to obtain average flow. The integration time also indicates the.
@@ -33,6 +32,7 @@ namespace mavlink
            m_payload.push_back<int16_t>(temperature); ///< Temperature * 100 in centi-degrees Celsius
            m_payload.push_back<uint8_t>(sensor_id); ///< Sensor ID
            m_payload.push_back<uint8_t>(quality); ///< Optical flow quality / confidence. 0: no valid flow, 255: maximum quality
+          
           
         }
 
@@ -60,6 +60,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(42);}
       	uint8_t get_quality() const
           {return m_payload.get<uint8_t>(43);}
+      
       
     };
   };

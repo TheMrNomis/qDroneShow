@@ -14,12 +14,11 @@ namespace mavlink
     class manual_setpoint : public mavlink::message
     {
       public:
-        manual_setpoint(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, float roll, float pitch, float yaw, float thrust, uint8_t mode_switch, uint8_t manual_override_switch):
+        manual_setpoint(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, float  roll, float  pitch, float  yaw, float  thrust, uint8_t  mode_switch, uint8_t  manual_override_switch):
           mavlink::message( mavlink::msg::manual_setpoint_length,
                             system_id,
                             component_id,
-                            mavlink::msg::manual_setpoint_id,
-                            mavlink::msg::manual_setpoint_crc)
+                            mavlink::msg::manual_setpoint_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp in milliseconds since system boot
            m_payload.push_back<float>(roll); ///< Desired roll rate in radians per second
@@ -28,6 +27,7 @@ namespace mavlink
            m_payload.push_back<float>(thrust); ///< Collective thrust, normalized to 0 .. 1
            m_payload.push_back<uint8_t>(mode_switch); ///< Flight mode switch position, 0.. 255
            m_payload.push_back<uint8_t>(manual_override_switch); ///< Override mode switch position, 0.. 255
+          
           
         }
 
@@ -45,6 +45,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(20);}
       	uint8_t get_manual_override_switch() const
           {return m_payload.get<uint8_t>(21);}
+      
       
     };
   };

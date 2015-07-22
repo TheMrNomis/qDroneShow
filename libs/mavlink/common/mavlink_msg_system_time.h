@@ -14,15 +14,15 @@ namespace mavlink
     class system_time : public mavlink::message
     {
       public:
-        system_time(uint8_t system_id, uint8_t component_id,  uint64_t time_unix_usec, uint32_t time_boot_ms):
+        system_time(uint8_t system_id, uint8_t component_id,  uint64_t  time_unix_usec, uint32_t  time_boot_ms):
           mavlink::message( mavlink::msg::system_time_length,
                             system_id,
                             component_id,
-                            mavlink::msg::system_time_id,
-                            mavlink::msg::system_time_crc)
+                            mavlink::msg::system_time_id)
         {
            m_payload.push_back<uint64_t>(time_unix_usec); ///< Timestamp of the master clock in microseconds since UNIX epoch.
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp of the component clock since boot time in milliseconds.
+          
           
         }
 
@@ -30,6 +30,7 @@ namespace mavlink
           {return m_payload.get<uint64_t>(0);}
       	uint32_t get_time_boot_ms() const
           {return m_payload.get<uint32_t>(8);}
+      
       
     };
   };

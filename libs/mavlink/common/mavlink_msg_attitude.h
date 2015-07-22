@@ -14,12 +14,11 @@ namespace mavlink
     class attitude : public mavlink::message
     {
       public:
-        attitude(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed):
+        attitude(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, float  roll, float  pitch, float  yaw, float  rollspeed, float  pitchspeed, float  yawspeed):
           mavlink::message( mavlink::msg::attitude_length,
                             system_id,
                             component_id,
-                            mavlink::msg::attitude_id,
-                            mavlink::msg::attitude_crc)
+                            mavlink::msg::attitude_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot)
            m_payload.push_back<float>(roll); ///< Roll angle (rad, -pi..+pi)
@@ -28,6 +27,7 @@ namespace mavlink
            m_payload.push_back<float>(rollspeed); ///< Roll angular speed (rad/s)
            m_payload.push_back<float>(pitchspeed); ///< Pitch angular speed (rad/s)
            m_payload.push_back<float>(yawspeed); ///< Yaw angular speed (rad/s)
+          
           
         }
 
@@ -45,6 +45,7 @@ namespace mavlink
           {return m_payload.get<float>(20);}
       	float get_yawspeed() const
           {return m_payload.get<float>(24);}
+      
       
     };
   };

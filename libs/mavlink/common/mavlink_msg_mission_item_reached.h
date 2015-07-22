@@ -14,19 +14,20 @@ namespace mavlink
     class mission_item_reached : public mavlink::message
     {
       public:
-        mission_item_reached(uint8_t system_id, uint8_t component_id,  uint16_t seq):
+        mission_item_reached(uint8_t system_id, uint8_t component_id,  uint16_t  seq):
           mavlink::message( mavlink::msg::mission_item_reached_length,
                             system_id,
                             component_id,
-                            mavlink::msg::mission_item_reached_id,
-                            mavlink::msg::mission_item_reached_crc)
+                            mavlink::msg::mission_item_reached_id)
         {
            m_payload.push_back<uint16_t>(seq); ///< Sequence
+          
           
         }
 
       	uint16_t get_seq() const
           {return m_payload.get<uint16_t>(0);}
+      
       
     };
   };

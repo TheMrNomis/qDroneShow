@@ -14,12 +14,11 @@ namespace mavlink
     class optical_flow : public mavlink::message
     {
       public:
-        optical_flow(uint8_t system_id, uint8_t component_id,  uint64_t time_usec, uint8_t sensor_id, int16_t flow_x, int16_t flow_y, float flow_comp_m_x, float flow_comp_m_y, uint8_t quality, float ground_distance):
+        optical_flow(uint8_t system_id, uint8_t component_id,  uint64_t  time_usec, uint8_t  sensor_id, int16_t  flow_x, int16_t  flow_y, float  flow_comp_m_x, float  flow_comp_m_y, uint8_t  quality, float  ground_distance):
           mavlink::message( mavlink::msg::optical_flow_length,
                             system_id,
                             component_id,
-                            mavlink::msg::optical_flow_id,
-                            mavlink::msg::optical_flow_crc)
+                            mavlink::msg::optical_flow_id)
         {
            m_payload.push_back<uint64_t>(time_usec); ///< Timestamp (UNIX)
            m_payload.push_back<float>(flow_comp_m_x); ///< Flow in meters in x-sensor direction, angular-speed compensated
@@ -29,6 +28,7 @@ namespace mavlink
            m_payload.push_back<int16_t>(flow_y); ///< Flow in pixels * 10 in y-sensor direction (dezi-pixels)
            m_payload.push_back<uint8_t>(sensor_id); ///< Sensor ID
            m_payload.push_back<uint8_t>(quality); ///< Optical flow quality / confidence. 0: bad, 255: maximum quality
+          
           
         }
 
@@ -48,6 +48,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(24);}
       	uint8_t get_quality() const
           {return m_payload.get<uint8_t>(25);}
+      
       
     };
   };

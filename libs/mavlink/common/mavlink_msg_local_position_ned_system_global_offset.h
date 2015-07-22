@@ -14,12 +14,11 @@ namespace mavlink
     class local_position_ned_system_global_offset : public mavlink::message
     {
       public:
-        local_position_ned_system_global_offset(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, float x, float y, float z, float roll, float pitch, float yaw):
+        local_position_ned_system_global_offset(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, float  x, float  y, float  z, float  roll, float  pitch, float  yaw):
           mavlink::message( mavlink::msg::local_position_ned_system_global_offset_length,
                             system_id,
                             component_id,
-                            mavlink::msg::local_position_ned_system_global_offset_id,
-                            mavlink::msg::local_position_ned_system_global_offset_crc)
+                            mavlink::msg::local_position_ned_system_global_offset_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot)
            m_payload.push_back<float>(x); ///< X Position
@@ -28,6 +27,7 @@ namespace mavlink
            m_payload.push_back<float>(roll); ///< Roll
            m_payload.push_back<float>(pitch); ///< Pitch
            m_payload.push_back<float>(yaw); ///< Yaw
+          
           
         }
 
@@ -45,6 +45,7 @@ namespace mavlink
           {return m_payload.get<float>(20);}
       	float get_yaw() const
           {return m_payload.get<float>(24);}
+      
       
     };
   };

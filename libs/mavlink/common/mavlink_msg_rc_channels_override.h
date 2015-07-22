@@ -14,12 +14,11 @@ namespace mavlink
     class rc_channels_override : public mavlink::message
     {
       public:
-        rc_channels_override(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component, uint16_t chan1_raw, uint16_t chan2_raw, uint16_t chan3_raw, uint16_t chan4_raw, uint16_t chan5_raw, uint16_t chan6_raw, uint16_t chan7_raw, uint16_t chan8_raw):
+        rc_channels_override(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component, uint16_t  chan1_raw, uint16_t  chan2_raw, uint16_t  chan3_raw, uint16_t  chan4_raw, uint16_t  chan5_raw, uint16_t  chan6_raw, uint16_t  chan7_raw, uint16_t  chan8_raw):
           mavlink::message( mavlink::msg::rc_channels_override_length,
                             system_id,
                             component_id,
-                            mavlink::msg::rc_channels_override_id,
-                            mavlink::msg::rc_channels_override_crc)
+                            mavlink::msg::rc_channels_override_id)
         {
            m_payload.push_back<uint16_t>(chan1_raw); ///< RC channel 1 value, in microseconds. A value of UINT16_MAX means to ignore this field.
            m_payload.push_back<uint16_t>(chan2_raw); ///< RC channel 2 value, in microseconds. A value of UINT16_MAX means to ignore this field.
@@ -31,6 +30,7 @@ namespace mavlink
            m_payload.push_back<uint16_t>(chan8_raw); ///< RC channel 8 value, in microseconds. A value of UINT16_MAX means to ignore this field.
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
+          
           
         }
 
@@ -54,6 +54,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(16);}
       	uint8_t get_target_component() const
           {return m_payload.get<uint8_t>(17);}
+      
       
     };
   };

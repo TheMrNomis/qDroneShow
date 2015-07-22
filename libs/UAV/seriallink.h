@@ -50,7 +50,7 @@ private slots:
   virtual void _readBytes();
 
 private:
-  virtual void _writeBytes(ByteBuffer bytes);
+  virtual void _writeBytes(mavlink::ByteBuffer bytes);
   /**
    * @brief extracts the MAVLink messages from m_dataBuffer
    * @emits messageReceived() when found a valid message
@@ -61,7 +61,7 @@ private:
   QString m_name;
 
   QSerialPort* m_serialPort;
-  ByteBuffer m_dataBuffer;
+  mavlink::ByteBuffer m_dataBuffer;
 };
 
 #endif // SERIALLINK_H

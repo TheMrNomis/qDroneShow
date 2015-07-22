@@ -14,16 +14,16 @@ namespace mavlink
     class mission_request : public mavlink::message
     {
       public:
-        mission_request(uint8_t system_id, uint8_t component_id,  uint8_t target_system, uint8_t target_component, uint16_t seq):
+        mission_request(uint8_t system_id, uint8_t component_id,  uint8_t  target_system, uint8_t  target_component, uint16_t  seq):
           mavlink::message( mavlink::msg::mission_request_length,
                             system_id,
                             component_id,
-                            mavlink::msg::mission_request_id,
-                            mavlink::msg::mission_request_crc)
+                            mavlink::msg::mission_request_id)
         {
            m_payload.push_back<uint16_t>(seq); ///< Sequence
            m_payload.push_back<uint8_t>(target_system); ///< System ID
            m_payload.push_back<uint8_t>(target_component); ///< Component ID
+          
           
         }
 
@@ -33,6 +33,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(2);}
       	uint8_t get_target_component() const
           {return m_payload.get<uint8_t>(3);}
+      
       
     };
   };

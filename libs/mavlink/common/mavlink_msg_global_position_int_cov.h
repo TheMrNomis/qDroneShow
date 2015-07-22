@@ -14,12 +14,11 @@ namespace mavlink
     class global_position_int_cov : public mavlink::message
     {
       public:
-        global_position_int_cov(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, uint64_t time_utc, uint8_t estimator_type, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, float vx, float vy, float vz, const float *covariance):
+        global_position_int_cov(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, uint64_t  time_utc, uint8_t  estimator_type, int32_t  lat, int32_t  lon, int32_t  alt, int32_t  relative_alt, float  vx, float  vy, float  vz, const float * covariance):
           mavlink::message( mavlink::msg::global_position_int_cov_length,
                             system_id,
                             component_id,
-                            mavlink::msg::global_position_int_cov_id,
-                            mavlink::msg::global_position_int_cov_crc)
+                            mavlink::msg::global_position_int_cov_id)
         {
            m_payload.push_back<uint64_t>(time_utc); ///< Timestamp (microseconds since UNIX epoch) in UTC. 0 for unknown. Commonly filled by the precision time source of a GPS receiver.
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot)
@@ -31,6 +30,8 @@ namespace mavlink
            m_payload.push_back<float>(vy); ///< Ground Y Speed (Longitude), expressed as m/s
            m_payload.push_back<float>(vz); ///< Ground Z Speed (Altitude), expressed as m/s
            m_payload.push_back<uint8_t>(estimator_type); ///< Class id of the estimator this estimate originated from.
+          
+          	m_payload.push_back_array<float>(covariance, 36); ///< Covariance matrix (first six entries are the first ROW, next six entries are the second row, etc.)
           
         }
 
@@ -54,6 +55,9 @@ namespace mavlink
           {return m_payload.get<float>(36);}
       	uint8_t get_estimator_type() const
           {return m_payload.get<uint8_t>(184);}
+      
+       float * get_covariance() const
+          {return m_payload.get_array<float>(40, 36);}
       
     };
   };

@@ -14,12 +14,11 @@ namespace mavlink
     class rc_channels : public mavlink::message
     {
       public:
-        rc_channels(uint8_t system_id, uint8_t component_id,  uint32_t time_boot_ms, uint8_t chancount, uint16_t chan1_raw, uint16_t chan2_raw, uint16_t chan3_raw, uint16_t chan4_raw, uint16_t chan5_raw, uint16_t chan6_raw, uint16_t chan7_raw, uint16_t chan8_raw, uint16_t chan9_raw, uint16_t chan10_raw, uint16_t chan11_raw, uint16_t chan12_raw, uint16_t chan13_raw, uint16_t chan14_raw, uint16_t chan15_raw, uint16_t chan16_raw, uint16_t chan17_raw, uint16_t chan18_raw, uint8_t rssi):
+        rc_channels(uint8_t system_id, uint8_t component_id,  uint32_t  time_boot_ms, uint8_t  chancount, uint16_t  chan1_raw, uint16_t  chan2_raw, uint16_t  chan3_raw, uint16_t  chan4_raw, uint16_t  chan5_raw, uint16_t  chan6_raw, uint16_t  chan7_raw, uint16_t  chan8_raw, uint16_t  chan9_raw, uint16_t  chan10_raw, uint16_t  chan11_raw, uint16_t  chan12_raw, uint16_t  chan13_raw, uint16_t  chan14_raw, uint16_t  chan15_raw, uint16_t  chan16_raw, uint16_t  chan17_raw, uint16_t  chan18_raw, uint8_t  rssi):
           mavlink::message( mavlink::msg::rc_channels_length,
                             system_id,
                             component_id,
-                            mavlink::msg::rc_channels_id,
-                            mavlink::msg::rc_channels_crc)
+                            mavlink::msg::rc_channels_id)
         {
            m_payload.push_back<uint32_t>(time_boot_ms); ///< Timestamp (milliseconds since system boot)
            m_payload.push_back<uint16_t>(chan1_raw); ///< RC channel 1 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
@@ -42,6 +41,7 @@ namespace mavlink
            m_payload.push_back<uint16_t>(chan18_raw); ///< RC channel 18 value, in microseconds. A value of UINT16_MAX implies the channel is unused.
            m_payload.push_back<uint8_t>(chancount); ///< Total number of RC channels being received. This can be larger than 18, indicating that more channels are available but not given in this message. This value should be 0 when no RC channels are available.
            m_payload.push_back<uint8_t>(rssi); ///< Receive signal strength indicator, 0: 0%, 100: 100%, 255: invalid/unknown.
+          
           
         }
 
@@ -87,6 +87,7 @@ namespace mavlink
           {return m_payload.get<uint8_t>(40);}
       	uint8_t get_rssi() const
           {return m_payload.get<uint8_t>(41);}
+      
       
     };
   };
