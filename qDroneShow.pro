@@ -38,7 +38,6 @@ HEADERS  += \
     libs/UAV/mavlinkheartbeat.h \
     libs/UAV/mavlinkcommand.h \
     libs/UAV/bytebuffer.h \
-    libs/UAV/ardupilotmega.h \
     libs/UAV/enums.h \
     libs/UAV/mavlink_msg_cmd_ack.h \
     libs/UAV/seriallink.h \
